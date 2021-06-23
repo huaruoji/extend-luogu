@@ -203,7 +203,7 @@ const mod = {
 mod.reg("dash", "控制面板", "@/*", () => {
   // yjp flaged.
   const $dash = $(`<div id="exlg-dash">exlg</div>`).prependTo($("nav.user-nav, div.user-nav > nav"));
-  ReactDOM.render( /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("text", null, "exlg"), /*#__PURE__*/React.createElement("span", {
+  ReactDOM.render( /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, "exlg"), /*#__PURE__*/React.createElement("span", {
     id: "exlg-dash-window"
   }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "\u7248\u672C"), " ", /*#__PURE__*/React.createElement("a", {
     id: "exlg-dash-version-update"
@@ -216,14 +216,14 @@ mod.reg("dash", "控制面板", "@/*", () => {
   }, "FastGit"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
     href: "https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js"
   }, "JsDelivr"), /*#__PURE__*/React.createElement("i", {
-    class: "exlg-icon exlg-info",
+    className: "exlg-icon exlg-info",
     name: "\u4E00\u952E\u66F4\u65B0"
   }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
     id: "exlg-dash-verison"
   }, GM_info.script.version)), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "\u6A21\u5757\u7BA1\u7406"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
     id: "exlg-dash-mods-save"
   }, "\u4FDD\u5B58"), /*#__PURE__*/React.createElement("i", {
-    class: "exlg-icon exlg-info",
+    className: "exlg-icon exlg-info",
     name: "\u5237\u65B0\u540E\u751F\u6548"
   }), /*#__PURE__*/React.createElement("ul", {
     id: "exlg-dash-mods"
