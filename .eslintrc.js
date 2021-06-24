@@ -38,6 +38,9 @@ module.exports = {
     "key-spacing": 0,
     "no-sequences": 0,
     "space-before-function-paren": 0,
+    "space-before-blocks": 2,
+    "no-irregular-whitespace": 2,
+    "no-trailing-spaces": 2,
     "semi":[2,"always"]
   },
   globals: {
