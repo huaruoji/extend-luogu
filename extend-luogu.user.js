@@ -44,6 +44,11 @@ const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${GM_info.sc
 const uindow = unsafeWindow;
 const $ = jQuery;
 const $$ = jQuery;
+const markdown = window.markdown;
+const ReactDOM = window.ReactDOM;
+const MarkdownPalettes = window.MarkdownPalettes;
+const WordCloud = window.WordCloud;
+const SaveAs = window.saveAs;
 const mdp = uindow.markdownPalettes;
 
 const log = (...s) => uindow.console.log("%c[exlg]", "color: #0e90d2;", ...s);
@@ -201,130 +206,10 @@ const mod = {
   }
 };
 mod.reg("dash", "控制面板", "@/*", () => {
-  // yjp flaged.
-  const $dash = $(`<div id="exlg-dash">exlg</div>`).prependTo($("nav.user-nav, div.user-nav > nav"));
-  ReactDOM.render( /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, "exlg"), /*#__PURE__*/React.createElement("span", {
-    id: "exlg-dash-window"
-  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "\u7248\u672C"), " ", /*#__PURE__*/React.createElement("a", {
-    id: "exlg-dash-version-update"
-  }, "\u68C0\u67E5\u66F4\u65B0"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
-    href: "https://github.com/optimize-2/extend-luogu"
-  }, "GitHub"), " |", /*#__PURE__*/React.createElement("a", {
-    href: "https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js"
-  }, "Raw"), " |", /*#__PURE__*/React.createElement("a", {
-    href: "https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js"
-  }, "FastGit"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
-    href: "https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js"
-  }, "JsDelivr"), /*#__PURE__*/React.createElement("i", {
-    className: "exlg-icon exlg-info",
-    name: "\u4E00\u952E\u66F4\u65B0"
-  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
-    id: "exlg-dash-verison"
-  }, GM_info.script.version)), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "\u6A21\u5757\u7BA1\u7406"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
-    id: "exlg-dash-mods-save"
-  }, "\u4FDD\u5B58"), /*#__PURE__*/React.createElement("i", {
-    className: "exlg-icon exlg-info",
-    name: "\u5237\u65B0\u540E\u751F\u6548"
-  }), /*#__PURE__*/React.createElement("ul", {
-    id: "exlg-dash-mods"
-  })), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "\u5173\u4E8E"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
-    href: "https://www.luogu.com.cn/team/33255"
-  }, "\u5B98\u65B9\u56E2\u961F 33255"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
-    href: "https://qm.qq.com/cgi-bin/qm/qr?k=ODbPTKWbZfGq3ll3yBfjdDKWDPhJhlX4&jump_from=webapi"
-  }, "QQ\u7FA4 817265691"), " ", /*#__PURE__*/React.createElement("br", null)))), document.getElementById("exlg-dash"));
-  const $win = $("#exlg-dash").on("click", e => e.stopPropagation());
-  $(`<i class="exlg-icon exlg-warn"></i>`).hide().appendTo($dash);
-  const $mods = $("#exlg-dash-mods");
-
-  mod._.forEach(m => {
-    if (unclosable_list.includes(m.name)) {
-      mod.map[m.name] = true;
-    }
-
-    const $m = $(`
-<li>
-    <input type="checkbox" />
-    ${m.name} <br/>
-    <i>${m.info}</i>
-</li>
-        `).appendTo($mods);
-    $m.children("input").prop("checked", m.on).prop("disabled", unclosable_list.includes(m.name)).on("change", () => {
-      mod.map[m.name] = !mod.map[m.name];
-    });
-  });
-
-  $("#exlg-dash-mods-save").on("click", () => GM_setValue("mod-map", mod.map));
-  $("#exlg-dash-version-update").on("click", () => mod.execute("^update"));
-  $dash.on("click", _ => $win.toggle());
-}, `
-/* dash */
-#exlg-dash {
-    position: relative;
-    display: inline-block;
-    padding: 1px 10px 3px;
-    background-color: cornflowerblue;
-    color: white;
-    border-radius: 6px;
-    box-shadow: 0 0 7px dodgerblue;
-}
-#exlg-dash-window {
-    position: absolute;
-    top: 35px;
-    left: 0px;
-    z-index: 65536;
-    display: none;
-    overflow-y: scroll;
-    width: 250px;
-    height: 600px;
-    padding: 5px;
-    background: white;
-    color: black;
-    border-radius: 7px;
-    box-shadow: rgb(187 227 255) 0px 0px 7px;
-}
-#exlg-dash-mods {
-    list-style: none;
-    padding: 0;
-}
-#exlg-dash > .exlg-warn {
-    position: absolute;
-    top: -.5em;
-    right: -.5em;
-}
-/* global */
-.exlg-icon::before {
-    display: inline-block;
-    width: 1.3em;
-    height: 1.3em;
-    margin-left: 3px;
-    text-align: center;
-    border-radius: 50%;
-}
-.exlg-icon:hover::after {
-    display: inline-block;
-}
-.exlg-icon::after {
-    display: none;
-    content: attr(name);
-    margin-left: 5px;
-    padding: 0 3px;
-    background-color: white;
-    box-shadow: 0 0 7px deepskyblue;
-    border-radius: 7px;
-}
-.exlg-icon.exlg-info::before {
-    content: "i";
-    color: white;
-    background-color: deepskyblue;
-    font-style: italic;
-}
-.exlg-icon.exlg-warn::before {
-    content: "!";
-    color: white;
-    background-color: rgb(231, 76, 60);
-    font-style: normal;
-}
-`);
+  $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon">
+    <svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg>
+    </a>`).prependTo($("nav.user-nav, div.user-nav > nav"));
+}, "#exlg-nav-icon{color: inherit;text-decoration: none;}");
 mod.reg_main("springboard", "跨域跳板", "@bili/robots.txt", () => {
   const q = new URLSearchParams(location.search);
 
@@ -544,8 +429,6 @@ mod.reg("user-css-load", "加载用户样式", "@/*", () => {
     margin-bottom: 1.3em;
     background-color: white;
 }`);
-mod.reg("user-css-edit", "编辑用户样式(已弃用)", "@/theme/list", () => {//fucked
-});
 mod.reg("benben", "全网犇犇", "@/", () => {
   const color = {
     Gray: "gray",
@@ -807,275 +690,238 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     box-shadow: rgb(187 227 255) 0px 0px 7px;
 }
 `);
-mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
-  const $cli = $(`<div id="exlg-cli"></div>`).appendTo($("body"));
-  const $cli_input = $(`<input id="exlg-cli-input" />`).appendTo($cli);
-  let cli_is_log = false;
-
-  const cli_log = (sp, ...tp) => {
-    cli_is_log = true;
-    const m = sp.map((s, i) => s.split(/\b/).map(w => cli_lang_dict[w]?.[cli_lang - 1] ?? w).join("") + (tp[i] || "")).join("");
-    return $cli_input.val(m);
-  };
-
-  const cli_error = (sp, ...tp) => warn(cli_log(sp, ...tp).addClass("error").val());
-
-  const cli_clean = () => {
-    cli_is_log = false;
-    return $cli_input.val("").removeClass("error");
-  };
-
-  const cli_history = [];
-  let cli_history_index = 0;
-  const cli_langs = ["en", "zh"],
-        cli_lang_dict = {
-    ".": ["。"],
-    ",": ["，"],
-    "!": ["！"],
-    "?": ["？"],
-    "cli": ["命令行"],
-    "current": ["当前"],
-    "language": ["语言"],
-    "available": ["可用"],
-    "command": ["命令"],
-    "commands": ["命令"],
-    "unknown": ["未知"],
-    "forum": ["板块"],
-    "target": ["目标"],
-    "mod": ["模块"],
-    "action": ["操作"],
-    "illegal": ["错误"],
-    "param": ["参数"],
-    "expected": ["期望"],
-    "type": ["类型"],
-    "lost": ["缺失"],
-    "essential": ["必要"],
-    "user": ["用户"]
-  };
-  let cli_lang = GM_getValue("cli-lang") || 0;
-  const cmds = {
-    help: (cmd
-    /*string*/
-    ) => {
-      /* get the help of <cmd>. or list all cmds. */
-
-      /* 获取 <cmd> 的帮助。空则列出所有。 */
-      if (!cmd) cli_log`exlg cli. current language: ${cli_lang}, available commands: ${Object.keys(cmds).join(", ")}`;else {
-        const f = cmds[cmd];
-        if (!f) return cli_error`help: unknown command "${cmd}"`;
-        const arg = f.arg.map(a => {
-          const i = a.name + ": " + a.type;
-          return a.essential ? `<${i}>` : `[${i}]`;
-        }).join(" ");
-        cli_log`${cmd} ${arg} ${f.help[cli_lang]}`;
-      }
-    },
-    cd: (path
-    /*!string*/
-    ) => {
-      /* jump to <path>, relative path is OK. */
-
-      /* 跳转至 <path>，支持相对路径。 */
-      let tar;
-      if (path[0] === "/") tar = path;else {
-        const pn = location.pathname.replace(/^\/+/, "").split("/");
-        const pr = path.split("/");
-        pr.forEach(d => {
-          if (d === ".") return;
-          if (d === "..") pn.pop();else pn.push(d);
-        });
-        tar = pn.join("/");
-      }
-      location.href = location.origin + "/" + tar.replace(/^\/+/, "");
-    },
-    cdd: (forum
-    /*!string*/
-    ) => {
-      /* jump to the forum named <forum> of discussion. use all the names you can think of. */
-
-      /* 跳转至名为 <forum> 的讨论板块，你能想到的名字基本都有用。 */
-      const tar = [["relevantaffairs", "gs", "gsq", "灌水", "灌水区", "r", "ra"], ["academics", "xs", "xsb", "学术", "学术版", "a", "ac"], ["siteaffairs", "zw", "zwb", "站务", "站务版", "s", "sa"], ["problem", "tm", "tmzb", "灌水", "题目总版", "p"], ["service", "fk", "fksqgd", "反馈", "反馈、申请、工单专版", "se"]];
-      forum = tar.find(ns => ns.includes(forum))?.[0];
-      if (!tar) return cli_error`cdd: unknown forum "${forum}"`;
-      cmds.cd(`/discuss/lists?forumname=${forum}`);
-    },
-    cc: (name
-    /*char*/
-    ) => {
-      /* jump to [name], "h|p|c|r|d|i|m|n" stands for home|problem|record|discuss|I myself|message|notification. or jump home. */
-
-      /* 跳转至 [name]，"h|p|c|r|d|i|m|n" 代表：主页|题目|评测记录|讨论|个人中心|私信|通知。空则跳转主页。 */
-      name = name || "h";
-      const tar = {
-        h: "/",
-        p: "/problem/list",
-        c: "/contest/list",
-        r: "/record/list",
-        d: "/discuss/lists",
-        i: "/user/" + uindow._feInjection.currentUser.uid,
-        m: "/chat",
-        n: "/user/notification"
-      }[name];
-      if (tar) cmds.cd(tar);else cli_error`cc: unknown target "${name}"`;
-    },
-    mod: (action
-    /*!string*/
-    , name
-    /*string*/
-    ) => {
-      /* for <action> "enable|disable|toggle", opearte the mod named <name>. for <action> "save", save modification. */
-
-      /* 当 <action> 为 "enable|disable|toggle"，对名为 <name> 的模块执行对应操作：启用|禁用|切换。当 <action> 为 "save"，保存修改。 */
-      const i = mod.find_i(name);
-
-      switch (action) {
-        case "enable":
-        case "disable":
-        case "toggle":
-          if (i < 0) return cli_error`mod: unknown mod "${name}"`;
-          const $mod = $($("#exlg-dash-mods").children()[i]).children();
-          $mod.prop("checked", {
-            enable: () => true,
-            disable: () => false,
-            toggle: now => !now
-          }[action]($mod.prop("checked"))).trigger("change");
-          break;
-
-        case "save":
-          GM_setValue("mod-map", mod.map);
-          break;
-
-        default:
-          return cli_error`mod: unknown action "${action}"`;
-      }
-    },
-    dash: (action
-    /*!string*/
-    ) => {
-      /* for <action> "show|hide|toggle", opearte the exlg dashboard. */
-
-      /* 当 <action> 为 "show|hide|toggle", 显示|隐藏|切换 exlg 管理面板。 */
-      if (!["show", "hide", "toggle"].includes(action)) return cli_error`dash: unknown action "${action}"`;
-      $("#exlg-dash-window")[action]();
-    },
-    lang: (lang
-    /*!string*/
-    ) => {
-      /* for <lang> "en|zh" switch current cli language. */
-
-      /* 当 <lang> 为 "en|zh"，切换当前语言。 */
-      lang = cli_langs.indexOf(lang);
-      if (lang < 0) return cli_error`lang: unknown language ${lang}`;
-      GM_setValue("cli-lang", cli_lang = lang);
-    },
-    uid: (uid
-    /*!integer*/
-    ) => {
-      /* jumps to homepage of user whose uid is <uid>. */
-
-      /* 跳转至 uid 为 <uid> 的用户主页。 */
-      location.href = `/user/${uid}`;
-    },
-    un: (name
-    /*!string*/
-    ) => {
-      /* jumps to homepage of user whose username is like <name>. */
-
-      /* 跳转至用户名与 <name> 类似的用户主页。 */
-      $.get("/api/user/search?keyword=" + name, res => {
-        if (!res.users[0]) cli_error`un: unknown user "${name}".`;else location.href = "/user/" + res.users[0].uid;
-      });
-    }
-  };
-
-  for (const f of Object.values(cmds)) {
-    [, f.arg, f.help] = f.toString().match(/^\((.*?)\) => {((?:\n +\/\*.+?\*\/)+)/);
-    f.arg = f.arg.split(", ").map(a => {
-      const [, name, type] = a.match(/([a-z_]+)\/\*(.+)\*\//);
-      return {
-        name,
-        essential: type[0] === "!",
-        type: type.replace(/^!/, "")
-      };
-    });
-    f.help = f.help.trim().split("\n").map(s => s.match(/\/\* (.+) \*\//)[1]);
-  }
-
-  const parse = cmd => {
-    log(`Parsing command: "${cmd}"`);
-    const tk = cmd.trim().replace(/^\//, "").split(" ");
-    const n = tk.shift();
-    if (!n) return;
-    const f = cmds[n];
-    if (!f) return cli_error`exlg: unknown command "${n}"`;
-    let i = -1,
-        a;
-
-    for ([i, a] of tk.entries()) {
-      const t = f.arg[i].type;
-      if (t === "number" || t === "integer") tk[i] = Number(a);
-      if (t === "char" && a.length === 1 || t === "number" && !isNaN(tk[i]) || t === "integer" && !isNaN(tk[i]) && !(tk[i] % 1) || t === "string") ;else return cli_error`${n}: illegal param "${a}", expected type ${t}.`;
-    }
-
-    if (f.arg[i + 1]?.essential) return cli_error`${n}: lost essential param "${f.arg[i + 1].name}"`;
-    f(...tk);
-  };
-
-  $cli_input.on("keydown", e => {
-    switch (e.key) {
-      case "Enter":
-        if (cli_is_log) return cli_clean();
-        const cmd = $cli_input.val();
-        cli_history.push(cmd);
-        cli_history_index = cli_history.length;
-        parse(cmd);
-        if (!cli_is_log) return cli_clean();
-        break;
-
-      case "/":
-        if (cli_is_log) cli_clean();
-        break;
-
-      case "Escape":
-        $cli.hide();
-        break;
-
-      case "ArrowUp":
-      case "ArrowDown":
-        const i = cli_history_index + {
-          ArrowUp: -1,
-          ArrowDown: +1
-        }[e.key];
-        if (i < 0 || i >= cli_history.length) return;
-        cli_history_index = i;
-        $cli_input.val(cli_history[i]);
-        break;
-    }
-  });
-  $(uindow).on("keydown", e => {
-    const $act = $(document.activeElement);
-
-    if ($act.is("body")) {
-      const rel = {
-        ArrowLeft: "prev",
-        ArrowRight: "next"
-      }[e.key];
-      if (rel) return $(`a[rel=${rel}]`)[0].click();
-
-      if (e.shiftKey) {
-        const y = {
-          ArrowUp: 0,
-          ArrowDown: 1e6
-        }[e.key];
-        if (y !== undefined) uindow.scrollTo(0, y);
-      }
-
-      if (e.key === "/") {
-        $cli.show();
-        cli_clean().trigger("focus");
-      }
-    } else if ($act.is("[name=captcha]") && e.key === "Enter") $("#submitpost, #submit-reply")[0].click();
-  });
+mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {// const $cli = $(`<div id="exlg-cli"></div>`).appendTo($("body"))
+  // const $cli_input = $(`<input id="exlg-cli-input" />`).appendTo($cli)
+  // let cli_is_log = false
+  // const cli_log = (sp, ...tp) => {
+  //     cli_is_log = true
+  //     const m = sp.map((s, i) =>
+  //         s.split(/\b/).map(w => cli_lang_dict[w]?.[ cli_lang - 1 ] ?? w).join("") +
+  //         (tp[i] || "")
+  //     ).join("")
+  //     return $cli_input.val(m)
+  // }
+  // const cli_error = (sp, ...tp) =>
+  //     warn(cli_log(sp, ...tp).addClass("error").val())
+  // const cli_clean = () => {
+  //     cli_is_log = false
+  //     return $cli_input.val("").removeClass("error")
+  // }
+  // const cli_history = []
+  // let cli_history_index = 0
+  // const cli_langs = [ "en", "zh" ], cli_lang_dict = {
+  //     ".": [ "。" ],
+  //     ",": [ "，" ],
+  //     "!": [ "！" ],
+  //     "?": [ "？" ],
+  //     "cli":        [ "命令行" ],
+  //     "current":    [ "当前" ],
+  //     "language":   [ "语言" ],
+  //     "available":  [ "可用" ],
+  //     "command":    [ "命令" ],
+  //     "commands":   [ "命令" ],
+  //     "unknown":    [ "未知" ],
+  //     "forum":      [ "板块" ],
+  //     "target":     [ "目标" ],
+  //     "mod":        [ "模块" ],
+  //     "action":     [ "操作" ],
+  //     "illegal":    [ "错误" ],
+  //     "param":      [ "参数" ],
+  //     "expected":   [ "期望" ],
+  //     "type":       [ "类型" ],
+  //     "lost":       [ "缺失" ],
+  //     "essential":  [ "必要" ],
+  //     "user":       [ "用户" ]
+  // }
+  // let cli_lang = GM_getValue("cli-lang") || 0
+  // const cmds = {
+  //     help: (cmd/*string*/) => {
+  //         /* get the help of <cmd>. or list all cmds. */
+  //         /* 获取 <cmd> 的帮助。空则列出所有。 */
+  //         if (! cmd)
+  //             cli_log(`exlg cli. current language: ${cli_lang}, available commands: ${ Object.keys(cmds).join(", ") }`)
+  //         else {
+  //             const f = cmds[cmd]
+  //             if (! f) return cli_error(`help: unknown command "${cmd}"`)
+  //             const arg = f.arg.map(a => {
+  //                 const i = a.name + ": " + a.type
+  //                 return a.essential ? `<${i}>` : `[${i}]`
+  //             }).join(" ")
+  //             cli_log(`${cmd} ${arg} ${ f.help[cli_lang] }`)
+  //         }
+  //     },
+  //     cd: (path/*!string*/) => {
+  //         /* jump to <path>, relative path is OK. */
+  //         /* 跳转至 <path>，支持相对路径。 */
+  //         let tar
+  //         if (path[0] === "/") tar = path
+  //         else {
+  //             const pn = location.pathname.replace(/^\/+/, "").split("/")
+  //             const pr = path.split("/")
+  //             pr.forEach(d => {
+  //                 if (d === ".") return
+  //                 if (d === "..") pn.pop()
+  //                 else pn.push(d)
+  //             })
+  //             tar = pn.join("/")
+  //         }
+  //         location.href = location.origin + "/" + tar.replace(/^\/+/, "")
+  //     },
+  //     cdd: (forum/*!string*/) => {
+  //         /* jump to the forum named <forum> of discussion. use all the names you can think of. */
+  //         /* 跳转至名为 <forum> 的讨论板块，你能想到的名字基本都有用。 */
+  //         const tar = [
+  //             [ "relevantaffairs",    "gs", "gsq",    "灌水", "灌水区",               "r", "ra" ],
+  //             [ "academics",          "xs", "xsb",    "学术", "学术版",               "a", "ac" ],
+  //             [ "siteaffairs",        "zw", "zwb",    "站务", "站务版",               "s", "sa" ],
+  //             [ "problem",            "tm", "tmzb",   "灌水", "题目总版",             "p"       ],
+  //             [ "service",            "fk", "fksqgd", "反馈", "反馈、申请、工单专版",      "se" ]
+  //         ]
+  //         forum = tar.find(ns => ns.includes(forum))?.[0]
+  //         if (! tar) return cli_error(`cdd: unknown forum "${forum}"`)
+  //         cmds.cd(`/discuss/lists?forumname=${forum}`)
+  //     },
+  //     cc: (name/*char*/) => {
+  //         /* jump to [name], "h|p|c|r|d|i|m|n" stands for home|problem|record|discuss|I myself|message|notification. or jump home. */
+  //         /* 跳转至 [name]，"h|p|c|r|d|i|m|n" 代表：主页|题目|评测记录|讨论|个人中心|私信|通知。空则跳转主页。 */
+  //         name = name || "h"
+  //         const tar = {
+  //             h: "/",
+  //             p: "/problem/list",
+  //             c: "/contest/list",
+  //             r: "/record/list",
+  //             d: "/discuss/lists",
+  //             i: "/user/" + uindow._feInjection.currentUser.uid,
+  //             m: "/chat",
+  //             n: "/user/notification",
+  //         }[name]
+  //         if (tar) cmds.cd(tar)
+  //         else cli_error(`cc: unknown target "${name}"`)
+  //     },
+  //     mod: (action/*!string*/, name/*string*/) => {
+  //         /* for <action> "enable|disable|toggle", opearte the mod named <name>. for <action> "save", save modification. */
+  //         /* 当 <action> 为 "enable|disable|toggle"，对名为 <name> 的模块执行对应操作：启用|禁用|切换。当 <action> 为 "save"，保存修改。 */
+  //         const i = mod.find_i(name)
+  //         switch (action) {
+  //         case "enable":
+  //         case "disable":
+  //         case "toggle":
+  //             if (i < 0) return cli_error(`mod: unknown mod "${name}"`)
+  //             const $mod = $($("#exlg-dash-mods").children()[i]).children()
+  //             $mod.prop("checked", {
+  //                 enable: () => true, disable: () => false, toggle: now => ! now
+  //             }[action]($mod.prop("checked"))).trigger("change")
+  //             break
+  //         case "save":
+  //             GM_setValue("mod-map", mod.map)
+  //             break
+  //         default:
+  //             return cli_error(`mod: unknown action "${action}"`)
+  //         }
+  //     },
+  //     dash: (action/*!string*/) => {
+  //         /* for <action> "show|hide|toggle", opearte the exlg dashboard. */
+  //         /* 当 <action> 为 "show|hide|toggle", 显示|隐藏|切换 exlg 管理面板。 */
+  //         if (! [ "show", "hide", "toggle" ].includes(action))
+  //             return cli_error(`dash: unknown action "${action}"`)
+  //         $("#exlg-dash-window")[action]()
+  //     },
+  //     lang: (lang/*!string*/) => {
+  //         /* for <lang> "en|zh" switch current cli language. */
+  //         /* 当 <lang> 为 "en|zh"，切换当前语言。 */
+  //         lang = cli_langs.indexOf(lang)
+  //         if (lang < 0) return cli_error`lang: unknown language ${lang}`
+  //         GM_setValue("cli-lang", cli_lang = lang)
+  //     },
+  //     uid: (uid/*!integer*/) => {
+  //         /* jumps to homepage of user whose uid is <uid>. */
+  //         /* 跳转至 uid 为 <uid> 的用户主页。 */
+  //         location.href = `/user/${uid}`
+  //     },
+  //     un: (name/*!string*/) => {
+  //         /* jumps to homepage of user whose username is like <name>. */
+  //         /* 跳转至用户名与 <name> 类似的用户主页。 */
+  //         $.get("/api/user/search?keyword=" + name, res => {
+  //             if (! res.users[0])
+  //                 cli_error`un: unknown user "${name}".`
+  //             else
+  //                 location.href = "/user/" + res.users[0].uid
+  //         })
+  //     }
+  // }
+  // for (const f of Object.values(cmds)) {
+  //     [ , f.arg, f.help ] = f.toString().match(/^\((.*?)\) => {((?:\n +\/\*.+?\*\/)+)/)
+  //     f.arg = f.arg.split(", ").map(a => {
+  //         const [ , name, type ] = a.match(/([a-z_]+)\/\*(.+)\*\//)
+  //         return {
+  //             name, essential: type[0] === "!", type: type.replace(/^!/, "")
+  //         }
+  //     })
+  //     f.help = f.help.trim().split("\n").map(s => s.match(/\/\* (.+) \*\//)[1])
+  // }
+  // const parse = cmd => {
+  //     log(`Parsing command: "${cmd}"`)
+  //     const tk = cmd.trim().replace(/^\//, "").split(" ")
+  //     const n = tk.shift()
+  //     if (! n) return
+  //     const f = cmds[n]
+  //     if (! f) return cli_error`exlg: unknown command "${n}"`
+  //     let i = -1, a; for ([ i, a ] of tk.entries()) {
+  //         const t = f.arg[i].type
+  //         if (t === "number" || t === "integer") tk[i] = Number(a)
+  //         if (
+  //             t === "char" && a.length === 1 ||
+  //             t === "number" && ! isNaN(tk[i]) ||
+  //             t === "integer" && ! isNaN(tk[i]) && ! (tk[i] % 1) ||
+  //             t === "string"
+  //         ) ;
+  //         else return cli_error`${n}: illegal param "${a}", expected type ${t}.`
+  //     }
+  //     if (f.arg[i + 1]?.essential) return cli_error`${n}: lost essential param "${ f.arg[i + 1].name }"`
+  //     f(...tk)
+  // }
+  // $cli_input.on("keydown", e => {
+  //     switch (e.key) {
+  //     case "Enter":
+  //         if (cli_is_log) return cli_clean()
+  //         const cmd = $cli_input.val()
+  //         cli_history.push(cmd)
+  //         cli_history_index = cli_history.length
+  //         parse(cmd)
+  //         if (! cli_is_log) return cli_clean()
+  //         break
+  //     case "/":
+  //         if (cli_is_log) cli_clean()
+  //         break
+  //     case "Escape":
+  //         $cli.hide()
+  //         break
+  //     case "ArrowUp":
+  //     case "ArrowDown":
+  //         const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[ e.key ]
+  //         if (i < 0 || i >= cli_history.length) return
+  //         cli_history_index = i
+  //         $cli_input.val(cli_history[i])
+  //         break
+  //     }
+  // })
+  // $(uindow).on("keydown", e => {
+  //     const $act = $(document.activeElement)
+  //     if ($act.is("body")) {
+  //         const rel = { ArrowLeft: "prev", ArrowRight: "next" }[ e.key ]
+  //         if (rel) return $(`a[rel=${rel}]`)[0].click()
+  //         if (e.shiftKey) {
+  //             const y = { ArrowUp: 0, ArrowDown: 1e6 }[ e.key ]
+  //             if (y !== undefined) uindow.scrollTo(0, y)
+  //         }
+  //         if (e.key === "/") {
+  //             $cli.show()
+  //             cli_clean().trigger("focus")
+  //         }
+  //     }
+  //     else if ($act.is("[name=captcha]") && e.key === "Enter")
+  //         $("#submitpost, #submit-reply")[0].click()
+  // })
 }, `
 #exlg-cli {
     position: fixed;
@@ -1646,14 +1492,14 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
       return $btn;
     })())).appendTo($("#ex-settings-update-versions"));
     /*	uindow.addEventListener("message", e => {
-    log("Listening message:", e.data)
-    if (e.data[0] !== "update") return
-    e.data.shift()
-    const
-    latest = e.data[0],
-    version = GM_info.script.version,
-    op = version_cmp(version, latest)
-    $("#settings-newest-version").append($(`<text>${ latest }</text>`))
+        log("Listening message:", e.data)
+        if (e.data[0] !== "update") return
+        e.data.shift()
+          const
+            latest = e.data[0],
+            version = GM_info.script.version,
+            op = version_cmp(version, latest)
+        $("#settings-newest-version").append($(`<text>${ latest }</text>`))
     })	*/
   }
 }, `.am-form-field {
@@ -1916,7 +1762,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
   }
 
   function saveFile(json, name) {
-    saveAs(new Blob([JSON.stringify(json)], {
+    SaveAs(new Blob([JSON.stringify(json)], {
       type: "application/json;charset=utf-8"
     }), `LuoguNotepad-dump-${name}.json`);
   }
@@ -2210,7 +2056,7 @@ async function inject() {
     mod.execute("copy-code-block");
   }
 
-  if ($("#exlg-dash").length || !$("main.lfe-body").html()) return;
+  if ($("#exlg-nav-icon").length || !$("main.lfe-body").html()) return;
   mod.execute();
   console.log("injected");
 }

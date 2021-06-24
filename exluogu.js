@@ -38,7 +38,7 @@ const unclosable_list = ["dash", "luogu-settings-extension", "keyboard-and-cli",
 const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="dot-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-dot-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 56c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m0-48C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 168c-44.183 0-80 35.817-80 80s35.817 80 80 80 80-35.817 80-80-35.817-80-80-80z" class=""></path></svg>`
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" class=""></path></svg>`
 
-const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${ GM_info.script.version } 更新日志`, `
+const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${GM_info.script.version} 更新日志`, `
 1. 增加笔记功能
 2. better hook!
 `)
@@ -46,6 +46,11 @@ const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${ GM_info.s
 const uindow = unsafeWindow
 const $ = jQuery
 const $$ = jQuery
+const markdown = window.markdown
+const ReactDOM = window.ReactDOM
+const MarkdownPalettes = window.MarkdownPalettes
+const WordCloud = window.WordCloud
+const SaveAs = window.saveAs
 const mdp = uindow.markdownPalettes
 const log = (...s) => uindow.console.log("%c[exlg]", "color: #0e90d2;", ...s)
 const warn = (...s) => uindow.console.warn("%c[exlg]", "color: #0e90d2;", ...s)
@@ -79,19 +84,19 @@ Date.prototype.format = function (f, UTC) {
 
 const version_cmp = (v1, v2) => {
     const op = (x1, x2) => x1 === x2 ? "==" : x1 < x2 ? "<<" : ">>"
-    const exs = [ "pre", "alpha", "beta" ]
+    const exs = ["pre", "alpha", "beta"]
 
-    const [ [ n1, e1 ], [ n2, e2 ] ] = [ v1, v2 ].map(v => v.split(" "))
-    if (n1 === n2) return op(...[ e1, e2 ].map(e => e ? exs.findIndex(ex => ex === e) : Infinity))
+    const [[n1, e1], [n2, e2]] = [v1, v2].map(v => v.split(" "))
+    if (n1 === n2) return op(...[e1, e2].map(e => e ? exs.findIndex(ex => ex === e) : Infinity))
 
-    const [ m1, m2 ] = [ n1, n2 ].map(n => n.split("."))
-    for (const [ k2, m ] of m1.entries())
+    const [m1, m2] = [n1, n2].map(n => n.split("."))
+    for (const [k2, m] of m1.entries())
         if (m !== m2[k2]) return op(+ m || 0, + m2[k2] || 0)
 }
 
 const lg_content = (url, cb) => {
     $.get(url + (url.includes("?") ? "&" : "?") + "_contentOnly=1", res => {
-        if (res.code !== 200) error(`Requesting failure code: ${ res.code }.`)
+        if (res.code !== 200) error(`Requesting failure code: ${res.code}.`)
         cb(res)
     })
 }
@@ -104,14 +109,14 @@ const mod = {
     _: [],
 
     reg: (name, info, path, func, styl) => mod._.push({
-        name, info, path: Array.isArray(path) ? path : [ path ], func, styl
+        name, info, path: Array.isArray(path) ? path : [path], func, styl
     }),
     reg_main: (name, info, path, func, styl) =>
         mod.reg("@" + name, info, path, () => (func(), false), styl),
     reg_user_tab: (name, info, tab, vars, func, styl) =>
         // FIXME: this seems not to work when the tab loads slowly.
         mod.reg(
-            name, info, [ "@/user/*" ],
+            name, info, ["@/user/*"],
             () => {
                 const $tabs = $(".items")
                 const work = () => {
@@ -130,8 +135,8 @@ const mod = {
                 m: 1000 * 60,
                 h: 1000 * 60 * 60,
                 D: 1000 * 60 * 60 * 24
-            }[ period.slice(-1) ]
-            if (! isNaN(num) && unit) period = num * unit
+            }[period.slice(-1)]
+            if (!isNaN(num) && unit) period = num * unit
             else error(`Parsing period failed: "${period}"`)
         }
         mod.reg(
@@ -140,7 +145,7 @@ const mod = {
                 const last = rec[name], now = Date.now()
 
                 let nostyl = true
-                if (named || ! last || now - last > period) {
+                if (named || !last || now - last > period) {
                     func()
                     if (nostyl) {
                         GM_addStyle(styl)
@@ -157,7 +162,7 @@ const mod = {
         name, info, "@/",
         () => {
             let $board = $("#exlg-board")
-            if (! $board.length) $board = $(`
+            if (!$board.length) $board = $(`
 <div class="lg-article" id="exlg-board"><h2>exlg</h2></div> <br />
 `).prependTo(".lg-right.am-u-md-4")
             func($(`<div></div><br>`).appendTo($board))
@@ -171,9 +176,9 @@ const mod = {
 
     execute: name => {
         const exe = (m, named) => {
-            if (! m) error(`Executing named mod but not found: "${name}"`)
+            if (!m) error(`Executing named mod but not found: "${name}"`)
             if (m.styl) GM_addStyle(m.styl)
-            log(`Executing ${ named ? "named " : "" }mod: "${m.name}"`)
+            log(`Executing ${named ? "named " : ""}mod: "${m.name}"`)
             return m.func(named)
         }
         if (name) {
@@ -188,7 +193,7 @@ const mod = {
 
         const map_init = mod.map ? false : (mod.map = {})
         for (const m of mod._)
-            m.on = map_init ? (mod.map[ m.name ] = true) : mod.map[ m.name ]
+            m.on = map_init ? (mod.map[m.name] = true) : mod.map[m.name]
         unclosable_list.forEach(__OwO__ => {
             //console.log(__OwO__ + "is now true")
             mod.map[__OwO__] = true
@@ -203,7 +208,7 @@ const mod = {
                 p.startsWith("@tcs2/") && location.host === "service-psscsax9-1305163805.sh.apigw.tencentcs.com"
             ) && (
                 p.endsWith("*") && pn.startsWith(pr.slice(0, -1)) ||
-                pn === pr
+                    pn === pr
             )))
                 if (exe(m) === false) return
         }
@@ -212,132 +217,11 @@ const mod = {
     }
 }
 
-mod.reg("dash", "控制面板", "@/*", () => { // yjp flaged.
-    const $dash = $(`<div id="exlg-dash">exlg</div>`).prependTo($("nav.user-nav, div.user-nav > nav"))
-    ReactDOM.render(
-        <div>
-            <span>exlg</span>
-            <span id="exlg-dash-window">
-                <p>
-                    <b>版本</b> <a id="exlg-dash-version-update">检查更新</a> <br />
-                    <a href="https://github.com/optimize-2/extend-luogu">GitHub</a> |
-                    <a href="https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">Raw</a> |
-                    <a href="https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">FastGit</a>
-                    <br />
-                    <a href="https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js">JsDelivr</a>
-                    <i className="exlg-icon exlg-info" name="一键更新"></i>
-                    <br />
-                    <span id="exlg-dash-verison">{ GM_info.script.version }</span>
-                </p>
-                <p>
-                    <b>模块管理</b> <br />
-                    <a id="exlg-dash-mods-save">保存</a>
-                    <i className="exlg-icon exlg-info" name="刷新后生效"></i>
-                    <ul id="exlg-dash-mods"></ul>
-                </p>
-                <p>
-                    <b>关于</b> <br />
-                    <a href="https://www.luogu.com.cn/team/33255">官方团队 33255</a> <br />
-                    <a href="https://qm.qq.com/cgi-bin/qm/qr?k=ODbPTKWbZfGq3ll3yBfjdDKWDPhJhlX4&jump_from=webapi">QQ群 817265691</a> <br />
-                </p>
-            </span>
-        </div>,
-        document.getElementById("exlg-dash"))
-    const $win = $("#exlg-dash").on("click", e => e.stopPropagation())
-    $(`<i class="exlg-icon exlg-warn"></i>`).hide().appendTo($dash)
-
-    const $mods = $("#exlg-dash-mods")
-    mod._.forEach(m => {
-        if (unclosable_list.includes(m.name)) {
-            mod.map[ m.name ] = true
-        }
-        const $m = $(`
-<li>
-    <input type="checkbox" />
-    ${ m.name } <br/>
-    <i>${ m.info }</i>
-</li>
-        `)
-            .appendTo($mods)
-        $m.children("input")
-            .prop("checked", m.on).prop("disabled", unclosable_list.includes(m.name))
-            .on("change", () => {
-                mod.map[ m.name ] = ! mod.map[ m.name ]
-            })
-    })
-    $("#exlg-dash-mods-save").on("click", () => GM_setValue("mod-map", mod.map))
-    $("#exlg-dash-version-update").on("click", () => mod.execute("^update"))
-
-    $dash.on("click", _ => $win.toggle())
-}, `
-/* dash */
-#exlg-dash {
-    position: relative;
-    display: inline-block;
-    padding: 1px 10px 3px;
-    background-color: cornflowerblue;
-    color: white;
-    border-radius: 6px;
-    box-shadow: 0 0 7px dodgerblue;
-}
-#exlg-dash-window {
-    position: absolute;
-    top: 35px;
-    left: 0px;
-    z-index: 65536;
-    display: none;
-    overflow-y: scroll;
-    width: 250px;
-    height: 600px;
-    padding: 5px;
-    background: white;
-    color: black;
-    border-radius: 7px;
-    box-shadow: rgb(187 227 255) 0px 0px 7px;
-}
-#exlg-dash-mods {
-    list-style: none;
-    padding: 0;
-}
-#exlg-dash > .exlg-warn {
-    position: absolute;
-    top: -.5em;
-    right: -.5em;
-}
-/* global */
-.exlg-icon::before {
-    display: inline-block;
-    width: 1.3em;
-    height: 1.3em;
-    margin-left: 3px;
-    text-align: center;
-    border-radius: 50%;
-}
-.exlg-icon:hover::after {
-    display: inline-block;
-}
-.exlg-icon::after {
-    display: none;
-    content: attr(name);
-    margin-left: 5px;
-    padding: 0 3px;
-    background-color: white;
-    box-shadow: 0 0 7px deepskyblue;
-    border-radius: 7px;
-}
-.exlg-icon.exlg-info::before {
-    content: "i";
-    color: white;
-    background-color: deepskyblue;
-    font-style: italic;
-}
-.exlg-icon.exlg-warn::before {
-    content: "!";
-    color: white;
-    background-color: rgb(231, 76, 60);
-    font-style: normal;
-}
-`)
+mod.reg("dash", "控制面板", "@/*", () => {
+    $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon">
+    <svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg>
+    </a>`).prependTo($("nav.user-nav, div.user-nav > nav"))
+}, "#exlg-nav-icon{color: inherit;text-decoration: none;}")
 
 mod.reg_main("springboard", "跨域跳板", "@bili/robots.txt", () => {
     const q = new URLSearchParams(location.search)
@@ -377,10 +261,10 @@ mod.reg_main("benben-data", "犇犇数据", "@tcs1/release/APIGWHtmlDemo-1615602
 )
 
 mod.reg_main("version-data", "版本数据", "@tcs2/release/exlg-version", () =>
-    uindow.parent.postMessage([ document.body.innerText ], "*")
+    uindow.parent.postMessage([document.body.innerText], "*")
 )
 
-mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], () => {
+mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], () => {
     /*
     const emo = [
         [ "62224", [ "qq" ] ],
@@ -461,7 +345,7 @@ mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], (
 
     $txt.on("input", e => {
         // 添加对 LuoguEmojiSender 的兼容
-        if (document.getElementById("replaceEmoji") == null)  {
+        if (document.getElementById("replaceEmoji") == null) {
             if (e.originalEvent.data === "/")
                 mdp.content = mdp.content.replace(/\/(.{1,5})\//g, (_, emo_txt) => emo_markdown(emo_txt))
         }
@@ -523,18 +407,18 @@ mod.reg_chore("update", "脚本升级", "1D", "@/*", () => {
 mod.reg_user_tab("user-intro-ins", "主页指令", "main", null, () => {
     $(".introduction > *").each((_, e, $e = $(e)) => {
         const t = $e.text()
-        let [ , , ins, arg ] = t.match(/^(exlg.|%)([a-z]+):([^]+)$/) ?? []
-        if (! ins) return
+        let [, , ins, arg] = t.match(/^(exlg.|%)([a-z]+):([^]+)$/) ?? []
+        if (!ins) return
 
         arg = arg.split(/(?<!!)%/g).map(s => s.replace(/!%/g, "%"))
         const $blog = $($(".user-action").children()[0])
         switch (ins) {
         case "html":
-            $e.replaceWith($(`<p>${ xss.process(arg[0]) }</p>`))
+            $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`))
             break
         case "frame":
-            $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${ encodeURI(arg[0]) }"`
-                + `style="width: ${ arg[1] }; height: ${ arg[2] };"></iframe>`
+            $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
+                    + `style="width: ${arg[1]}; height: ${arg[2]};"></iframe>`
             ))
             break
         case "blog":
@@ -566,19 +450,19 @@ mod.reg_user_tab("user-problem", "题目颜色和比较", "practice", () => ({
         "rgb(14, 29, 105)"
     ]
 }), ({ color }) => {
-    setTimeout(function() {
+    setTimeout(function () {
         $(".exlg-counter").remove()
         $(".problems").each((i, ps, $ps = $(ps)) => {
-            const my = uindow._feInjection.currentData[ [ "submittedProblems", "passedProblems" ][i] ]
+            const my = uindow._feInjection.currentData[["submittedProblems", "passedProblems"][i]]
             $ps.find("a").each((d, p, $p = $(p)) =>
-                $p.removeClass("color-default").css("color", color[ my[d].difficulty ])
+                $p.removeClass("color-default").css("color", color[my[d].difficulty])
             )
-            $ps.before($(`<span id="exlg-problem-count-${i}" class="exlg-counter">${ my.length }</span>`))
+            $ps.before($(`<span id="exlg-problem-count-${i}" class="exlg-counter">${my.length}</span>`))
         })
 
         if (uindow._feInjection.currentData.user.uid === uindow._feInjection.currentUser.uid) return
 
-        lg_content(`/user/${ uindow._feInjection.currentUser.uid }`, res => {
+        lg_content(`/user/${uindow._feInjection.currentUser.uid}`, res => {
             const my = res.currentData.passedProblems
             const ta = uindow._feInjection.currentData.passedProblems
 
@@ -586,12 +470,12 @@ mod.reg_user_tab("user-problem", "题目颜色和比较", "practice", () => ({
             const $ps = $($(".problems")[1])
             $ps.find("a").each((d, p, $p = $(p)) => {
                 if (my.some(m => m.pid === ta[d].pid)) {
-                    same ++
+                    same++
                     $p.css("backgroundColor", "rgba(82, 196, 26, 0.3)")
                 }
             })
-            $("#exlg-problem-count-1").html(`<span class="exlg-counter">${ ta.length } <> ${ my.length } : ${same}`
-                                            + `<i class="exlg-icon exlg-info" name="ta 的 &lt;&gt; 我的 : 相同"></i></span>`)
+            $("#exlg-problem-count-1").html(`<span class="exlg-counter">${ta.length} <> ${my.length} : ${same}`
+                + `<i class="exlg-icon exlg-info" name="ta 的 &lt;&gt; 我的 : 相同"></i></span>`)
         })
     }, 300)
 }, `
@@ -626,9 +510,6 @@ mod.reg("user-css-load", "加载用户样式", "@/*", () => {
     margin-bottom: 1.3em;
     background-color: white;
 }`)
-mod.reg("user-css-edit", "编辑用户样式(已弃用)", "@/theme/list", () => {
-    //fucked
-})
 
 mod.reg("benben", "全网犇犇", "@/", () => {
     const color = {
@@ -677,29 +558,29 @@ mod.reg("benben", "全网犇犇", "@/", () => {
             $(`
 <li class="am-comment am-comment-primary feed-li">
     <div class="lg-left">
-        <a href="/user/${ m.user.uid }" class="center">
-            <img src="https://cdn.luogu.com.cn/upload/usericon/${ m.user.uid }.png" class="am-comment-avatar">
+        <a href="/user/${m.user.uid}" class="center">
+            <img src="https://cdn.luogu.com.cn/upload/usericon/${m.user.uid}.png" class="am-comment-avatar">
         </a>
     </div>
     <div class="am-comment-main">
         <header class="am-comment-hd">
             <div class="am-comment-meta">
                 <span class="feed-username">
-                    <a class="lg-fg-${ color[m.user.color] }" href="/user/${ m.user.uid }" target="_blank">
-                        ${ m.user.name }
+                    <a class="lg-fg-${color[m.user.color]}" href="/user/${m.user.uid}" target="_blank">
+                        ${m.user.name}
                     </a>
                     <a class="sb_amazeui" target="_blank" href="/discuss/show/142324">
-                        ${ check(m.user.ccfLevel) }
+                        ${check(m.user.ccfLevel)}
                     </a>
-                    ${ m.user.badge ? `<span class="am-badge am-radius lg-bg-${ color[m.user.color] }">${ m.user.badge }</span>` : "" }
+                    ${m.user.badge ? `<span class="am-badge am-radius lg-bg-${color[m.user.color]}">${m.user.badge}</span>` : ""}
                 </span>
-                ${ new Date(m.time * 1000).format("yyyy-mm-dd HH:MM") }
+                ${new Date(m.time * 1000).format("yyyy-mm-dd HH:MM")}
                 <a name="feed-reply">回复</a>
             </div>
         </header>
         <div class="am-comment-bd">
             <span class="feed-comment">
-                ${ marked(m.content) }
+                ${marked(m.content)}
             </span>
         </div>
     </div>
@@ -707,7 +588,7 @@ mod.reg("benben", "全网犇犇", "@/", () => {
                 .appendTo($("ul#feed"))
                 .find("a[name=feed-reply]").on("click", () =>
                     $("textarea")
-                        .trigger("focus").val(` || @${ m.user.name } : ${ m.content }`)
+                        .trigger("focus").val(` || @${m.user.name} : ${m.content}`)
                         .trigger("input")
                 )
         )
@@ -838,7 +719,7 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     const $func_jump_problem = (str) => {
         log("problem input is:", str)
         if (judge_problem(str)) str = str.toUpperCase()
-        if (str == "" || typeof(str) === "undefined") uindow.show_alert("提示", "请输入题号")
+        if (str == "" || typeof (str) === "undefined") uindow.show_alert("提示", "请输入题号")
         else location.href = "https://www.luogu.com.cn/problemnew/show/" + str
     }
     const $input_problem = $(".am-form-field[name='toproblem']").on("keydown", e => {
@@ -862,7 +743,7 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
             }
         )
     })
-},  `
+}, `
 #exlg-rand-diffs {
 	list-style-type:none
 }
@@ -931,246 +812,246 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
 `)
 
 mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
-    const $cli = $(`<div id="exlg-cli"></div>`).appendTo($("body"))
-    const $cli_input = $(`<input id="exlg-cli-input" />`).appendTo($cli)
+    // const $cli = $(`<div id="exlg-cli"></div>`).appendTo($("body"))
+    // const $cli_input = $(`<input id="exlg-cli-input" />`).appendTo($cli)
 
-    let cli_is_log = false
-    const cli_log = (sp, ...tp) => {
-        cli_is_log = true
-        const m = sp.map((s, i) =>
-            s.split(/\b/).map(w => cli_lang_dict[w]?.[ cli_lang - 1 ] ?? w).join("") +
-            (tp[i] || "")
-        ).join("")
-        return $cli_input.val(m)
-    }
-    const cli_error = (sp, ...tp) =>
-        warn(cli_log(sp, ...tp).addClass("error").val())
-    const cli_clean = () => {
-        cli_is_log = false
-        return $cli_input.val("").removeClass("error")
-    }
-    const cli_history = []
-    let cli_history_index = 0
-    const cli_langs = [ "en", "zh" ], cli_lang_dict = {
-        ".": [ "。" ],
-        ",": [ "，" ],
-        "!": [ "！" ],
-        "?": [ "？" ],
-        "cli":        [ "命令行" ],
-        "current":    [ "当前" ],
-        "language":   [ "语言" ],
-        "available":  [ "可用" ],
-        "command":    [ "命令" ],
-        "commands":   [ "命令" ],
-        "unknown":    [ "未知" ],
-        "forum":      [ "板块" ],
-        "target":     [ "目标" ],
-        "mod":        [ "模块" ],
-        "action":     [ "操作" ],
-        "illegal":    [ "错误" ],
-        "param":      [ "参数" ],
-        "expected":   [ "期望" ],
-        "type":       [ "类型" ],
-        "lost":       [ "缺失" ],
-        "essential":  [ "必要" ],
-        "user":       [ "用户" ]
-    }
-    let cli_lang = GM_getValue("cli-lang") || 0
+    // let cli_is_log = false
+    // const cli_log = (sp, ...tp) => {
+    //     cli_is_log = true
+    //     const m = sp.map((s, i) =>
+    //         s.split(/\b/).map(w => cli_lang_dict[w]?.[ cli_lang - 1 ] ?? w).join("") +
+    //         (tp[i] || "")
+    //     ).join("")
+    //     return $cli_input.val(m)
+    // }
+    // const cli_error = (sp, ...tp) =>
+    //     warn(cli_log(sp, ...tp).addClass("error").val())
+    // const cli_clean = () => {
+    //     cli_is_log = false
+    //     return $cli_input.val("").removeClass("error")
+    // }
+    // const cli_history = []
+    // let cli_history_index = 0
+    // const cli_langs = [ "en", "zh" ], cli_lang_dict = {
+    //     ".": [ "。" ],
+    //     ",": [ "，" ],
+    //     "!": [ "！" ],
+    //     "?": [ "？" ],
+    //     "cli":        [ "命令行" ],
+    //     "current":    [ "当前" ],
+    //     "language":   [ "语言" ],
+    //     "available":  [ "可用" ],
+    //     "command":    [ "命令" ],
+    //     "commands":   [ "命令" ],
+    //     "unknown":    [ "未知" ],
+    //     "forum":      [ "板块" ],
+    //     "target":     [ "目标" ],
+    //     "mod":        [ "模块" ],
+    //     "action":     [ "操作" ],
+    //     "illegal":    [ "错误" ],
+    //     "param":      [ "参数" ],
+    //     "expected":   [ "期望" ],
+    //     "type":       [ "类型" ],
+    //     "lost":       [ "缺失" ],
+    //     "essential":  [ "必要" ],
+    //     "user":       [ "用户" ]
+    // }
+    // let cli_lang = GM_getValue("cli-lang") || 0
 
-    const cmds = {
-        help: (cmd/*string*/) => {
-            /* get the help of <cmd>. or list all cmds. */
-            /* 获取 <cmd> 的帮助。空则列出所有。 */
-            if (! cmd)
-                cli_log`exlg cli. current language: ${cli_lang}, available commands: ${ Object.keys(cmds).join(", ") }`
-            else {
-                const f = cmds[cmd]
-                if (! f) return cli_error`help: unknown command "${cmd}"`
+    // const cmds = {
+    //     help: (cmd/*string*/) => {
+    //         /* get the help of <cmd>. or list all cmds. */
+    //         /* 获取 <cmd> 的帮助。空则列出所有。 */
+    //         if (! cmd)
+    //             cli_log(`exlg cli. current language: ${cli_lang}, available commands: ${ Object.keys(cmds).join(", ") }`)
+    //         else {
+    //             const f = cmds[cmd]
+    //             if (! f) return cli_error(`help: unknown command "${cmd}"`)
 
-                const arg = f.arg.map(a => {
-                    const i = a.name + ": " + a.type
-                    return a.essential ? `<${i}>` : `[${i}]`
-                }).join(" ")
-                cli_log`${cmd} ${arg} ${ f.help[cli_lang] }`
-            }
-        },
-        cd: (path/*!string*/) => {
-            /* jump to <path>, relative path is OK. */
-            /* 跳转至 <path>，支持相对路径。 */
-            let tar
-            if (path[0] === "/") tar = path
-            else {
-                const pn = location.pathname.replace(/^\/+/, "").split("/")
-                const pr = path.split("/")
-                pr.forEach(d => {
-                    if (d === ".") return
-                    if (d === "..") pn.pop()
-                    else pn.push(d)
-                })
-                tar = pn.join("/")
-            }
-            location.href = location.origin + "/" + tar.replace(/^\/+/, "")
-        },
-        cdd: (forum/*!string*/) => {
-            /* jump to the forum named <forum> of discussion. use all the names you can think of. */
-            /* 跳转至名为 <forum> 的讨论板块，你能想到的名字基本都有用。 */
-            const tar = [
-                [ "relevantaffairs",    "gs", "gsq",    "灌水", "灌水区",               "r", "ra" ],
-                [ "academics",          "xs", "xsb",    "学术", "学术版",               "a", "ac" ],
-                [ "siteaffairs",        "zw", "zwb",    "站务", "站务版",               "s", "sa" ],
-                [ "problem",            "tm", "tmzb",   "灌水", "题目总版",             "p"       ],
-                [ "service",            "fk", "fksqgd", "反馈", "反馈、申请、工单专版",      "se" ]
-            ]
-            forum = tar.find(ns => ns.includes(forum))?.[0]
-            if (! tar) return cli_error`cdd: unknown forum "${forum}"`
-            cmds.cd(`/discuss/lists?forumname=${forum}`)
-        },
-        cc: (name/*char*/) => {
-            /* jump to [name], "h|p|c|r|d|i|m|n" stands for home|problem|record|discuss|I myself|message|notification. or jump home. */
-            /* 跳转至 [name]，"h|p|c|r|d|i|m|n" 代表：主页|题目|评测记录|讨论|个人中心|私信|通知。空则跳转主页。 */
-            name = name || "h"
-            const tar = {
-                h: "/",
-                p: "/problem/list",
-                c: "/contest/list",
-                r: "/record/list",
-                d: "/discuss/lists",
-                i: "/user/" + uindow._feInjection.currentUser.uid,
-                m: "/chat",
-                n: "/user/notification",
-            }[name]
-            if (tar) cmds.cd(tar)
-            else cli_error`cc: unknown target "${name}"`
-        },
-        mod: (action/*!string*/, name/*string*/) => {
-            /* for <action> "enable|disable|toggle", opearte the mod named <name>. for <action> "save", save modification. */
-            /* 当 <action> 为 "enable|disable|toggle"，对名为 <name> 的模块执行对应操作：启用|禁用|切换。当 <action> 为 "save"，保存修改。 */
-            const i = mod.find_i(name)
-            switch (action) {
-            case "enable":
-            case "disable":
-            case "toggle":
-                if (i < 0) return cli_error`mod: unknown mod "${name}"`
-                const $mod = $($("#exlg-dash-mods").children()[i]).children()
-                $mod.prop("checked", {
-                    enable: () => true, disable: () => false, toggle: now => ! now
-                }[action]($mod.prop("checked"))).trigger("change")
-                break
-            case "save":
-                GM_setValue("mod-map", mod.map)
-                break
-            default:
-                return cli_error`mod: unknown action "${action}"`
-            }
-        },
-        dash: (action/*!string*/) => {
-            /* for <action> "show|hide|toggle", opearte the exlg dashboard. */
-            /* 当 <action> 为 "show|hide|toggle", 显示|隐藏|切换 exlg 管理面板。 */
-            if (! [ "show", "hide", "toggle" ].includes(action))
-                return cli_error`dash: unknown action "${action}"`
-            $("#exlg-dash-window")[action]()
-        },
-        lang: (lang/*!string*/) => {
-            /* for <lang> "en|zh" switch current cli language. */
-            /* 当 <lang> 为 "en|zh"，切换当前语言。 */
-            lang = cli_langs.indexOf(lang)
-            if (lang < 0) return cli_error`lang: unknown language ${lang}`
-            GM_setValue("cli-lang", cli_lang = lang)
-        },
-        uid: (uid/*!integer*/) => {
-            /* jumps to homepage of user whose uid is <uid>. */
-            /* 跳转至 uid 为 <uid> 的用户主页。 */
-            location.href = `/user/${uid}`
-        },
-        un: (name/*!string*/) => {
-            /* jumps to homepage of user whose username is like <name>. */
-            /* 跳转至用户名与 <name> 类似的用户主页。 */
-            $.get("/api/user/search?keyword=" + name, res => {
-                if (! res.users[0])
-                    cli_error`un: unknown user "${name}".`
-                else
-                    location.href = "/user/" + res.users[0].uid
-            })
-        }
-    }
-    for (const f of Object.values(cmds)) {
-        [ , f.arg, f.help ] = f.toString().match(/^\((.*?)\) => {((?:\n +\/\*.+?\*\/)+)/)
-        f.arg = f.arg.split(", ").map(a => {
-            const [ , name, type ] = a.match(/([a-z_]+)\/\*(.+)\*\//)
-            return {
-                name, essential: type[0] === "!", type: type.replace(/^!/, "")
-            }
-        })
-        f.help = f.help.trim().split("\n").map(s => s.match(/\/\* (.+) \*\//)[1])
-    }
-    const parse = cmd => {
-        log(`Parsing command: "${cmd}"`)
+    //             const arg = f.arg.map(a => {
+    //                 const i = a.name + ": " + a.type
+    //                 return a.essential ? `<${i}>` : `[${i}]`
+    //             }).join(" ")
+    //             cli_log(`${cmd} ${arg} ${ f.help[cli_lang] }`)
+    //         }
+    //     },
+    //     cd: (path/*!string*/) => {
+    //         /* jump to <path>, relative path is OK. */
+    //         /* 跳转至 <path>，支持相对路径。 */
+    //         let tar
+    //         if (path[0] === "/") tar = path
+    //         else {
+    //             const pn = location.pathname.replace(/^\/+/, "").split("/")
+    //             const pr = path.split("/")
+    //             pr.forEach(d => {
+    //                 if (d === ".") return
+    //                 if (d === "..") pn.pop()
+    //                 else pn.push(d)
+    //             })
+    //             tar = pn.join("/")
+    //         }
+    //         location.href = location.origin + "/" + tar.replace(/^\/+/, "")
+    //     },
+    //     cdd: (forum/*!string*/) => {
+    //         /* jump to the forum named <forum> of discussion. use all the names you can think of. */
+    //         /* 跳转至名为 <forum> 的讨论板块，你能想到的名字基本都有用。 */
+    //         const tar = [
+    //             [ "relevantaffairs",    "gs", "gsq",    "灌水", "灌水区",               "r", "ra" ],
+    //             [ "academics",          "xs", "xsb",    "学术", "学术版",               "a", "ac" ],
+    //             [ "siteaffairs",        "zw", "zwb",    "站务", "站务版",               "s", "sa" ],
+    //             [ "problem",            "tm", "tmzb",   "灌水", "题目总版",             "p"       ],
+    //             [ "service",            "fk", "fksqgd", "反馈", "反馈、申请、工单专版",      "se" ]
+    //         ]
+    //         forum = tar.find(ns => ns.includes(forum))?.[0]
+    //         if (! tar) return cli_error(`cdd: unknown forum "${forum}"`)
+    //         cmds.cd(`/discuss/lists?forumname=${forum}`)
+    //     },
+    //     cc: (name/*char*/) => {
+    //         /* jump to [name], "h|p|c|r|d|i|m|n" stands for home|problem|record|discuss|I myself|message|notification. or jump home. */
+    //         /* 跳转至 [name]，"h|p|c|r|d|i|m|n" 代表：主页|题目|评测记录|讨论|个人中心|私信|通知。空则跳转主页。 */
+    //         name = name || "h"
+    //         const tar = {
+    //             h: "/",
+    //             p: "/problem/list",
+    //             c: "/contest/list",
+    //             r: "/record/list",
+    //             d: "/discuss/lists",
+    //             i: "/user/" + uindow._feInjection.currentUser.uid,
+    //             m: "/chat",
+    //             n: "/user/notification",
+    //         }[name]
+    //         if (tar) cmds.cd(tar)
+    //         else cli_error(`cc: unknown target "${name}"`)
+    //     },
+    //     mod: (action/*!string*/, name/*string*/) => {
+    //         /* for <action> "enable|disable|toggle", opearte the mod named <name>. for <action> "save", save modification. */
+    //         /* 当 <action> 为 "enable|disable|toggle"，对名为 <name> 的模块执行对应操作：启用|禁用|切换。当 <action> 为 "save"，保存修改。 */
+    //         const i = mod.find_i(name)
+    //         switch (action) {
+    //         case "enable":
+    //         case "disable":
+    //         case "toggle":
+    //             if (i < 0) return cli_error(`mod: unknown mod "${name}"`)
+    //             const $mod = $($("#exlg-dash-mods").children()[i]).children()
+    //             $mod.prop("checked", {
+    //                 enable: () => true, disable: () => false, toggle: now => ! now
+    //             }[action]($mod.prop("checked"))).trigger("change")
+    //             break
+    //         case "save":
+    //             GM_setValue("mod-map", mod.map)
+    //             break
+    //         default:
+    //             return cli_error(`mod: unknown action "${action}"`)
+    //         }
+    //     },
+    //     dash: (action/*!string*/) => {
+    //         /* for <action> "show|hide|toggle", opearte the exlg dashboard. */
+    //         /* 当 <action> 为 "show|hide|toggle", 显示|隐藏|切换 exlg 管理面板。 */
+    //         if (! [ "show", "hide", "toggle" ].includes(action))
+    //             return cli_error(`dash: unknown action "${action}"`)
+    //         $("#exlg-dash-window")[action]()
+    //     },
+    //     lang: (lang/*!string*/) => {
+    //         /* for <lang> "en|zh" switch current cli language. */
+    //         /* 当 <lang> 为 "en|zh"，切换当前语言。 */
+    //         lang = cli_langs.indexOf(lang)
+    //         if (lang < 0) return cli_error`lang: unknown language ${lang}`
+    //         GM_setValue("cli-lang", cli_lang = lang)
+    //     },
+    //     uid: (uid/*!integer*/) => {
+    //         /* jumps to homepage of user whose uid is <uid>. */
+    //         /* 跳转至 uid 为 <uid> 的用户主页。 */
+    //         location.href = `/user/${uid}`
+    //     },
+    //     un: (name/*!string*/) => {
+    //         /* jumps to homepage of user whose username is like <name>. */
+    //         /* 跳转至用户名与 <name> 类似的用户主页。 */
+    //         $.get("/api/user/search?keyword=" + name, res => {
+    //             if (! res.users[0])
+    //                 cli_error`un: unknown user "${name}".`
+    //             else
+    //                 location.href = "/user/" + res.users[0].uid
+    //         })
+    //     }
+    // }
+    // for (const f of Object.values(cmds)) {
+    //     [ , f.arg, f.help ] = f.toString().match(/^\((.*?)\) => {((?:\n +\/\*.+?\*\/)+)/)
+    //     f.arg = f.arg.split(", ").map(a => {
+    //         const [ , name, type ] = a.match(/([a-z_]+)\/\*(.+)\*\//)
+    //         return {
+    //             name, essential: type[0] === "!", type: type.replace(/^!/, "")
+    //         }
+    //     })
+    //     f.help = f.help.trim().split("\n").map(s => s.match(/\/\* (.+) \*\//)[1])
+    // }
+    // const parse = cmd => {
+    //     log(`Parsing command: "${cmd}"`)
 
-        const tk = cmd.trim().replace(/^\//, "").split(" ")
-        const n = tk.shift()
-        if (! n) return
-        const f = cmds[n]
-        if (! f) return cli_error`exlg: unknown command "${n}"`
-        let i = -1, a; for ([ i, a ] of tk.entries()) {
-            const t = f.arg[i].type
-            if (t === "number" || t === "integer") tk[i] = Number(a)
-            if (
-                t === "char" && a.length === 1 ||
-                t === "number" && ! isNaN(tk[i]) ||
-                t === "integer" && ! isNaN(tk[i]) && ! (tk[i] % 1) ||
-                t === "string"
-            ) ;
-            else return cli_error`${n}: illegal param "${a}", expected type ${t}.`
-        }
-        if (f.arg[i + 1]?.essential) return cli_error`${n}: lost essential param "${ f.arg[i + 1].name }"`
-        f(...tk)
-    }
+    //     const tk = cmd.trim().replace(/^\//, "").split(" ")
+    //     const n = tk.shift()
+    //     if (! n) return
+    //     const f = cmds[n]
+    //     if (! f) return cli_error`exlg: unknown command "${n}"`
+    //     let i = -1, a; for ([ i, a ] of tk.entries()) {
+    //         const t = f.arg[i].type
+    //         if (t === "number" || t === "integer") tk[i] = Number(a)
+    //         if (
+    //             t === "char" && a.length === 1 ||
+    //             t === "number" && ! isNaN(tk[i]) ||
+    //             t === "integer" && ! isNaN(tk[i]) && ! (tk[i] % 1) ||
+    //             t === "string"
+    //         ) ;
+    //         else return cli_error`${n}: illegal param "${a}", expected type ${t}.`
+    //     }
+    //     if (f.arg[i + 1]?.essential) return cli_error`${n}: lost essential param "${ f.arg[i + 1].name }"`
+    //     f(...tk)
+    // }
 
-    $cli_input.on("keydown", e => {
-        switch (e.key) {
-        case "Enter":
-            if (cli_is_log) return cli_clean()
-            const cmd = $cli_input.val()
-            cli_history.push(cmd)
-            cli_history_index = cli_history.length
-            parse(cmd)
-            if (! cli_is_log) return cli_clean()
-            break
-        case "/":
-            if (cli_is_log) cli_clean()
-            break
-        case "Escape":
-            $cli.hide()
-            break
-        case "ArrowUp":
-        case "ArrowDown":
-            const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[ e.key ]
-            if (i < 0 || i >= cli_history.length) return
-            cli_history_index = i
-            $cli_input.val(cli_history[i])
-            break
-        }
-    })
+    // $cli_input.on("keydown", e => {
+    //     switch (e.key) {
+    //     case "Enter":
+    //         if (cli_is_log) return cli_clean()
+    //         const cmd = $cli_input.val()
+    //         cli_history.push(cmd)
+    //         cli_history_index = cli_history.length
+    //         parse(cmd)
+    //         if (! cli_is_log) return cli_clean()
+    //         break
+    //     case "/":
+    //         if (cli_is_log) cli_clean()
+    //         break
+    //     case "Escape":
+    //         $cli.hide()
+    //         break
+    //     case "ArrowUp":
+    //     case "ArrowDown":
+    //         const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[ e.key ]
+    //         if (i < 0 || i >= cli_history.length) return
+    //         cli_history_index = i
+    //         $cli_input.val(cli_history[i])
+    //         break
+    //     }
+    // })
 
-    $(uindow).on("keydown", e => {
-        const $act = $(document.activeElement)
-        if ($act.is("body")) {
-            const rel = { ArrowLeft: "prev", ArrowRight: "next" }[ e.key ]
-            if (rel) return $(`a[rel=${rel}]`)[0].click()
+    // $(uindow).on("keydown", e => {
+    //     const $act = $(document.activeElement)
+    //     if ($act.is("body")) {
+    //         const rel = { ArrowLeft: "prev", ArrowRight: "next" }[ e.key ]
+    //         if (rel) return $(`a[rel=${rel}]`)[0].click()
 
-            if (e.shiftKey) {
-                const y = { ArrowUp: 0, ArrowDown: 1e6 }[ e.key ]
-                if (y !== undefined) uindow.scrollTo(0, y)
-            }
+    //         if (e.shiftKey) {
+    //             const y = { ArrowUp: 0, ArrowDown: 1e6 }[ e.key ]
+    //             if (y !== undefined) uindow.scrollTo(0, y)
+    //         }
 
-            if (e.key === "/") {
-                $cli.show()
-                cli_clean().trigger("focus")
-            }
-        }
-        else if ($act.is("[name=captcha]") && e.key === "Enter")
-            $("#submitpost, #submit-reply")[0].click()
-    })
+    //         if (e.key === "/") {
+    //             $cli.show()
+    //             cli_clean().trigger("focus")
+    //         }
+    //     }
+    //     else if ($act.is("[name=captcha]") && e.key === "Enter")
+    //         $("#submitpost, #submit-reply")[0].click()
+    // })
 }, `
 #exlg-cli {
     position: fixed;
@@ -1251,7 +1132,7 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
     if (window.location.href.indexOf("https://www.luogu.com.cn/record/") == 0) {
         $($(".entry")[1]).on("click", () => {
             setTimeout(() => {
-                if (language_show && (typeof($(".lfe-h3").attr("exlg-language-show")) === "undefined")) {
+                if (language_show && (typeof ($(".lfe-h3").attr("exlg-language-show")) === "undefined")) {
                     const language = $($(".value.lfe-caption")[0]).text().toLowerCase()
                     log("Language:" + language)
                     $(".lfe-h3").text($(".lfe-h3").text() + "-" + ((language.substr(-3) == " o2") ? (language.slice(0, -3)) : (language))).attr("exlg-language-show", "")
@@ -1316,7 +1197,7 @@ mod.reg_board("search-user", "查找用户名", $board => {
     const func = () => {
         $search_user.prop("disabled", true)
         $.get("/api/user/search?keyword=" + $("[name=username]").val(), res => {
-            if (! res.users[0]) {
+            if (!res.users[0]) {
                 $search_user.prop("disabled", false)
                 lg_alert("无法找到指定用户")
             }
@@ -1352,15 +1233,15 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
                 lg_content(window.location.pathname + window.location.search, res => {
                     const problem = res.currentData.problem, contest = res.currentData.contest
                     const exportData = {
-                        name:problem.title,
-                        group:contest ? contest.name : "题目列表",
-                        url:window.location.href,
-                        memoryLimit:Math.max(...problem.limits.memory) / 1024,
-                        timeLimit:Math.max(...problem.limits.time),
-                        tests:problem.samples.map(sample => {
+                        name: problem.title,
+                        group: contest ? contest.name : "题目列表",
+                        url: window.location.href,
+                        memoryLimit: Math.max(...problem.limits.memory) / 1024,
+                        timeLimit: Math.max(...problem.limits.time),
+                        tests: problem.samples.map(sample => {
                             return {
-                                input:sample[0],
-                                output:sample[1]
+                                input: sample[0],
+                                output: sample[1]
                             }
                         })
                     }
@@ -1371,7 +1252,7 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
                             headers: {
                                 "Content-Type": "application/json"
                             },
-                            data:JSON.stringify(exportData)
+                            data: JSON.stringify(exportData)
                         })
                     }
                     alert("导出成功！")
@@ -1403,7 +1284,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
     const $get_button_of_sth = (GMid, GMdesc, default_value/*boolean*/) => {
         default_value = GM_getValue(GMid, default_value)
-        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${ GMdesc } </label>`)
+        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${GMdesc} </label>`)
         const $csd = $("<span>" + ((default_value) ? (html_circleswitch_on) : (html_circleswitch_off)) + "</span>").prependTo($fte)
         $fte.on("click", () => {
             if ($csd.children().attr("data-icon") === "dot-circle") {
@@ -1418,7 +1299,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
         return $fte
     }
     const $get_button_of_mod_map = (sxid, sxdesc) => {
-        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${ sxdesc } </label>`)
+        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${sxdesc} </label>`)
         const $csd = $("<span>" + ((mod.map[sxid]) ? (html_circleswitch_on) : (html_circleswitch_off)) + "</span>").prependTo($fte)
         $fte.on("click", () => {
             if ($csd.children().attr("data-icon") === "dot-circle") {
@@ -1698,7 +1579,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 })()
             )).appendTo($("#ex-settings-data-debug"))
 
-        $(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">当前版本为：${ GM_info.script.version }</p>`)
+        $(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">当前版本为：${GM_info.script.version}</p>`)
             .append($(`<text> </text>`))
             .append(
                 (() => {
@@ -1713,7 +1594,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 })()
             ).appendTo($("#ex-settings-update-versions"))
 
-        $(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">最新版本为：<text id="newest-version-display">${ GM_info.script.version }</text></p>`)
+        $(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">最新版本为：<text id="newest-version-display">${GM_info.script.version}</text></p>`)
             .append($(`<text> </text>`))
             .append(
                 (() => {
@@ -1785,16 +1666,16 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 )
             ).appendTo($("#ex-settings-update-versions"))
         /*	uindow.addEventListener("message", e => {
-			log("Listening message:", e.data)
-			if (e.data[0] !== "update") return
-			e.data.shift()
+            log("Listening message:", e.data)
+            if (e.data[0] !== "update") return
+            e.data.shift()
 
-			const
-				latest = e.data[0],
-				version = GM_info.script.version,
-				op = version_cmp(version, latest)
-			$("#settings-newest-version").append($(`<text>${ latest }</text>`))
-		})	*/
+            const
+                latest = e.data[0],
+                version = GM_info.script.version,
+                op = version_cmp(version, latest)
+            $("#settings-newest-version").append($(`<text>${ latest }</text>`))
+        })	*/
     }
 }, `.am-form-field {
     font-size: 0.875em;
@@ -1809,7 +1690,7 @@ mod.reg("discuss-save", "讨论保存", "@/*", () => {
     const save_func = () => GM_xmlhttpRequest({
         method: "GET",
         url: `https://luogulo.gq/save.php?url=${window.location.href}`,
-        onload: function(res) {
+        onload: function (res) {
             if (res.status === 200) {
                 log("Discuss saved")
             }
@@ -1817,7 +1698,7 @@ mod.reg("discuss-save", "讨论保存", "@/*", () => {
                 log(`Fail: ${res}`)
             }
         },
-        onerror : function(err) {
+        onerror: function (err) {
             log(`Error:${err}`)
         }
     })
@@ -1913,7 +1794,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                         nc = JSON.parse(k.substr(7, k.lentgh))
                         break
                     }
-                    catch (e) {}
+                    catch (e) { }
                 }
                 resolve(nc)
             })
@@ -2048,7 +1929,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
         $("#notepad-tag").keydown(function (event) {
             if (
                 ((event.ctrlKey || event.metaKey) && event.which === 83) ||
-			event.keyCode === 13
+                event.keyCode === 13
             ) {
                 saveNote()
                 $("#notepad-tag").hide()
@@ -2074,7 +1955,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
     }
 
     function saveFile(json, name) {
-        saveAs(
+        SaveAs(
             new Blob([JSON.stringify(json)], {
                 type: "application/json;charset=utf-8",
             }),
@@ -2391,7 +2272,7 @@ async function inject() {
         mod.execute("copy-code-block")
     }
 
-    if ($("#exlg-dash").length || !$("main.lfe-body").html()) return
+    if ($("#exlg-nav-icon").length || !$("main.lfe-body").html()) return
 
     mod.execute()
 

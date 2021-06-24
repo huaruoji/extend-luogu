@@ -5,7 +5,8 @@
 	"main": "exluogu.jsx",
 	"scripts": {
 		"build": "./node_modules/.bin/babel exluogu.js -o extend-luogu.user.js",
-		"lint": "./node_modules/.bin/eslint exluogu.js extend-luogu.user.js --fix"
+		"lint": "./node_modules/.bin/eslint exluogu.js --fix",
+		"watch": "./node_modules/.bin/babel exluogu.js -o extend-luogu.user.js -w"
 	},
 	"repository": {
 		"type": "git",
@@ -18,13 +19,14 @@
 	},
 	"homepage": "https://github.com/optimize-2/extend-luogu#readme",
 	"dependencies": {
+		"@babel/cli": "^7.14.5",
+		"@babel/core": "^7.14.6",
+		"@babel/preset-env": "^7.14.7",
+		"@babel/preset-react": "^7.14.5",
 		"eslint": "^7.29.0",
 		"eslint-config-standard": "^16.0.2",
 		"eslint-plugin-import": "^2.22.1",
 		"eslint-plugin-node": "^11.1.0",
-		"eslint-plugin-promise": "^4.3.1",
-		"@babel/cli": "^7.14.5",
-		"@babel/core": "^7.14.6",
-		"@babel/preset-react": "^7.14.5"
+		"eslint-plugin-promise": "^4.3.1"
 	}
 }
