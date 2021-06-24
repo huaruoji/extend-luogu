@@ -520,7 +520,7 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     ` + difficulty_html[i] + `<br/>
 </li>
 		`).appendTo($diffs);
-    $m.children("input").prop("checked", difficulty_select[i] == 1).on("change", () => {
+    $m.children("input").prop("checked", difficulty_select[i] === 1).on("change", () => {
       difficulty_select[i] = !difficulty_select[i];
     });
   });
@@ -532,7 +532,7 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     ` + source_html[i] + `<br/>
 </li>
 		`).appendTo($diffs);
-    $m.children("input").prop("checked", source_select[i] == 1).on("change", () => {
+    $m.children("input").prop("checked", source_select[i] === 1).on("change", () => {
       source_select[i] = !source_select[i];
     });
   });
@@ -549,23 +549,23 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
   const HREF_NEXT = () => {
     let difs = [];
     iLoveMinecraft.forEach(i => {
-      if (difficulty_select[i] != 0) {
-        if (i == 7) {
+      if (difficulty_select[i] !== 0) {
+        if (i === 7) {
           difs.push(0);
         } else difs.push(i + 1);
       }
     });
 
-    if (difs.length == 0) {
+    if (difs.length === 0) {
       difs = [0, 1, 2, 3, 4, 5, 6, 7];
     }
 
     let srcs = [];
     iLoveTouhou.forEach(i => {
-      if (source_select[i] != 0) srcs.push(i);
+      if (source_select[i] !== 0) srcs.push(i);
     });
 
-    if (srcs.length == 0) {
+    if (srcs.length === 0) {
       srcs = [0];
     }
 
@@ -590,24 +590,24 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
   $(".am-btn.am-btn-danger.am-btn-sm[name='goto']").after($(`<button class="am-btn am-btn-danger am-btn-sm" name="goto">跳转</button>`)).remove();
 
   const judge_problem = text => {
-    if (text.match(/AT[0-9]{1,4}/i) == text) return true;
-    if (text.match(/CF[0-9]{1,4}[A-Z][0-9]{0,1}/i) == text) return true;
-    if (text.match(/SP[0-9]{1,5}/i) == text) return true;
-    if (text.match(/P[0-9]{4}/i) == text) return true;
-    if (text.match(/UVA[0-9]{1,5}/i) == text) return true;
-    if (text.match(/U[0-9]{1,6}/i) == text) return true;
-    if (text.match(/T[0-9]{1,6}/i) == text) return true;
+    if (text.match(/AT[0-9]{1,4}/i) === text) return true;
+    if (text.match(/CF[0-9]{1,4}[A-Z][0-9]{0,1}/i) === text) return true;
+    if (text.match(/SP[0-9]{1,5}/i) === text) return true;
+    if (text.match(/P[0-9]{4}/i) === text) return true;
+    if (text.match(/UVA[0-9]{1,5}/i) === text) return true;
+    if (text.match(/U[0-9]{1,6}/i) === text) return true;
+    if (text.match(/T[0-9]{1,6}/i) === text) return true;
     return false;
   };
 
   const $func_jump_problem = str => {
     log("problem input is:", str);
     if (judge_problem(str)) str = str.toUpperCase();
-    if (str == "" || typeof str === "undefined") uindow.show_alert("提示", "请输入题号");else location.href = "https://www.luogu.com.cn/problemnew/show/" + str;
+    if (str === "" || typeof str === "undefined") uindow.show_alert("提示", "请输入题号");else location.href = "https://www.luogu.com.cn/problemnew/show/" + str;
   };
 
   const $input_problem = $(".am-form-field[name='toproblem']").on("keydown", e => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       $func_jump_problem($input_problem.val());
     }
   });
@@ -962,14 +962,14 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 
         if ($e.find("code").attr("class")) {
           const str = $e.find("code").attr("class").toString();
-          if (str.indexOf("hljs") != -1) language = str.substr(9, str.length - 14);else language = str.substr(9, str.length - 9);
+          if (str.indexOf("hljs") !== -1) language = str.substr(9, str.length - 14);else language = str.substr(9, str.length - 9);
         }
 
-        if (language.indexOf("ult language-") == 0) language = language.substr(13);
-        if (language_list.indexOf(language) == -1) language = "";
+        if (language.indexOf("ult language-") === 0) language = language.substr(13);
+        if (language_list.indexOf(language) === -1) language = "";
         log(language_list.indexOf(language));
-        if (language == "cpp") language = "c++";
-        if (language != "") language = "-" + language;
+        if (language === "cpp") language = "c++";
+        if (language !== "") language = "-" + language;
       }
 
       log("Language:" + language);
@@ -986,7 +986,7 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
       $cb[i].before($(`<span style="font-family: Microsoft YaHei;font-size:18px;font-weight:bold">源代码${language}</span>`).get(0));
       $cb[i].before($(`<p></p>`).get(0));
       if (!$cb.children("code").hasClass("hljs")) $cb.children("code").addClass("hljs").css("background", "white");
-      if (GM_getValue("code-fonts-val", "") != "") $cb.children("code").css("font-family", GM_getValue("code-fonts-val", ""));
+      if (GM_getValue("code-fonts-val", "") !== "") $cb.children("code").css("font-family", GM_getValue("code-fonts-val", ""));
     });
   };
 
@@ -1003,18 +1003,18 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
   } //以防万一
 
 
-  if (window.location.href.indexOf("https://www.luogu.com.cn/record/") == 0) {
+  if (window.location.href.indexOf("https://www.luogu.com.cn/record/") === 0) {
     $($(".entry")[1]).on("click", () => {
       setTimeout(() => {
         if (language_show && typeof $(".lfe-h3").attr("exlg-language-show") === "undefined") {
           const language = $($(".value.lfe-caption")[0]).text().toLowerCase();
           log("Language:" + language);
-          $(".lfe-h3").text($(".lfe-h3").text() + "-" + (language.substr(-3) == " o2" ? language.slice(0, -3) : language)).attr("exlg-language-show", "");
+          $(".lfe-h3").text($(".lfe-h3").text() + "-" + (language.substr(-3) === " o2" ? language.slice(0, -3) : language)).attr("exlg-language-show", "");
         }
 
         const $cb = $("pre:has(> code)");
 
-        if (GM_getValue("code-fonts-val", "") != "") {
+        if (GM_getValue("code-fonts-val", "") !== "") {
           $cb.children("code").css("font-family", GM_getValue("code-fonts-val", ""));
         }
 
@@ -1201,8 +1201,8 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
   const href_list = ["information", "preference", "security", "extension", "extension-admin"];
 
-  if (window.location.href === "https://www.luogu.com.cn/user/setting" || window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") == 0) {
-    if (window.location.href === "https://www.luogu.com.cn/user/setting" || href_list.indexOf(window.location.href.substr(38)) == -1) {//log('23333')
+  if (window.location.href === "https://www.luogu.com.cn/user/setting" || window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") === 0) {
+    if (window.location.href === "https://www.luogu.com.cn/user/setting" || href_list.indexOf(window.location.href.substr(38)) === -1) {//log('23333')
       //window.location.href = "https://www.luogu.com.cn/user/setting#information"
     }
 
@@ -1362,7 +1362,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
       return $btn;
     })())).appendTo($("#ex-settings-module-settings"));
     $(`<div><h4>讨论保存</h4></div>`).append($get_button_of_sth("discuss-auto-save", "讨论自动保存", true)).appendTo($("#ex-settings-module-settings"));
-    $(`<div><h4>自定义css</h4></div>`).append($(`<div class="am-form-group am-form"></div>`).append($(`<textarea rows="3" id="custom-css-input"` + (GM_getValue("code-fonts-val", "") != "" ? `style="font-family: ` + GM_getValue("code-fonts-val", "") + `"` : ``) + `></textarea>`).val(GM_getValue("user-css")))).append($(`<p></p>`).append((() => {
+    $(`<div><h4>自定义css</h4></div>`).append($(`<div class="am-form-group am-form"></div>`).append($(`<textarea rows="3" id="custom-css-input"` + (GM_getValue("code-fonts-val", "") !== "" ? `style="font-family: ` + GM_getValue("code-fonts-val", "") + `"` : ``) + `></textarea>`).val(GM_getValue("user-css")))).append($(`<p></p>`).append((() => {
       const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);">保存</button>`);
       $btn.on("click", () => {
         $btn.prop("disabled", true);
@@ -1546,7 +1546,7 @@ mod.reg("update-log", "更新日志显示", "@/*", () => {
   if (window.location.href === "https://www.luogu.com.cn/" && GM_getValue("exlg-last-used-version") !== GM_info.script.version) {
     show_exlg_updlog();
     GM_setValue("exlg-last-used-version", GM_info.script.version);
-  } else if (GM_getValue("exlg-last-used-version") != GM_info.script.version) {
+  } else if (GM_getValue("exlg-last-used-version") !== GM_info.script.version) {
     log("It's able to show the update log but not at mainpage");
   } else {
     log("The version is the lateset.");
@@ -1554,13 +1554,13 @@ mod.reg("update-log", "更新日志显示", "@/*", () => {
 });
 mod.reg("dbc-jump", "双击题号跳题", "@/*", () => {
   const judge_problem = text => {
-    if (text.match(/AT[0-9]{1,4}/) == text) return true;
-    if (text.match(/CF[0-9]{1,4}[A-Z][0-9]{0,1}/) == text) return true;
-    if (text.match(/SP[0-9]{1,5}/) == text) return true;
-    if (text.match(/P[0-9]{4}/) == text) return true;
-    if (text.match(/UVA[0-9]{1,5}/) == text) return true;
-    if (text.match(/U[0-9]{1,6}/) == text) return true;
-    if (text.match(/T[0-9]{1,6}/) == text) return true;
+    if (text.match(/AT[0-9]{1,4}/) === text) return true;
+    if (text.match(/CF[0-9]{1,4}[A-Z][0-9]{0,1}/) === text) return true;
+    if (text.match(/SP[0-9]{1,5}/) === text) return true;
+    if (text.match(/P[0-9]{4}/) === text) return true;
+    if (text.match(/UVA[0-9]{1,5}/) === text) return true;
+    if (text.match(/U[0-9]{1,6}/) === text) return true;
+    if (text.match(/T[0-9]{1,6}/) === text) return true;
     return false;
   };
 
