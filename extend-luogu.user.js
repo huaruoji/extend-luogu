@@ -16,7 +16,7 @@
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@3a564ba0d30d88848ec486b2c36553cce87f0c7f/mp.js
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@e8d2f7699466341bfd85b0a2182d2747d7cab728/md.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.js
-// @require	       https://cdn.bootcdn.net/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js
+// @require        https://cdn.bootcdn.net/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js
 // @require        https://cdn.staticfile.org/react/16.4.0/umd/react.development.js
 // @require        https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js
 // @updateURL      https://github.com/optimize-2/extend-luogu
