@@ -1495,7 +1495,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
         log("Listening message:", e.data)
         if (e.data[0] !== "update") return
         e.data.shift()
-          const
+         const
             latest = e.data[0],
             version = GM_info.script.version,
             op = version_cmp(version, latest)
