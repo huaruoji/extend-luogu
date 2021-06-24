@@ -103,6 +103,19 @@ const lg_content = (url, cb) => {
 
 const lg_alert = msg => uindow.show_alert("exlg 提醒您", msg)
 
+const storage = new Proxy({}, {
+    get(tar, key) {
+        return GM_getValue(key)
+    },
+    set(tar, key, val) {
+        return GM_setValue(key, val)
+    },
+    deleteProperty: function(tar, key) {
+        GM_deleteValue(key)
+        return true
+    }
+})
+
 // ==Modules==
 
 const mod = {
@@ -141,7 +154,7 @@ const mod = {
         }
         mod.reg(
             "^" + name, info, path, named => {
-                const rec = GM_getValue("mod-chore-rec") ?? {}
+                const rec = storage.mod_chore_rec ?? {}
                 const last = rec[name], now = Date.now()
 
                 let nostyl = true
@@ -152,7 +165,7 @@ const mod = {
                         nostyl = false
                     }
                     rec[name] = Date.now()
-                    GM_setValue("mod-chore-rec", rec)
+                    storage.mod_chore_rec = rec
                 }
                 else log(`Pending chore: "${name}"`)
             }
@@ -186,18 +199,13 @@ const mod = {
             return exe(m, true)
         }
 
-        mod.map = GM_getValue("mod-map")
-
-        //log(mod.map) //yjp flaged
+        mod.map = storage.mod_map
 
 
         const map_init = mod.map ? false : (mod.map = {})
         for (const m of mod._)
             m.on = map_init ? (mod.map[m.name] = true) : mod.map[m.name]
-        unclosable_list.forEach(__OwO__ => {
-            //console.log(__OwO__ + "is now true")
-            mod.map[__OwO__] = true
-        })
+        unclosable_list.forEach(u => { mod.map[u] = true })
         for (const m of mod._) {
             const pn = location.pathname
             if (m.on && m.path.some((p, _, __, pr = p.replace(/^[a-z]*?@.*?(?=\/)/, "")) => (
@@ -213,14 +221,12 @@ const mod = {
                 if (exe(m) === false) return
         }
 
-        if (map_init) GM_setValue("mod-map", mod.map)
+        if (map_init) storage.mod_map = mod.map
     }
 }
 
 mod.reg("dash", "控制面板", "@/*", () => {
-    $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon">
-    <svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg>
-    </a>`).prependTo($("nav.user-nav, div.user-nav > nav"))
+    $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon"><svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg></a>`).prependTo($("nav.user-nav, div.user-nav > nav"))
 }, "#exlg-nav-icon{color: inherit;text-decoration: none;}")
 
 mod.reg_main("springboard", "跨域跳板", "@bili/robots.txt", () => {
@@ -484,10 +490,10 @@ mod.reg_user_tab("user-problem", "题目颜色和比较", "practice", () => ({
 }
 `)//lack of hook
 
-mod.reg("user-css-load", "加载用户样式", "@/*", () => {
+mod.reg("user_css-load", "加载用户样式", "@/*", () => {
     if (window.location.href === "https://www.luogu.com.cn/theme/list" || window.location.href === "https://www.luogu.com.cn/theme/list/") {
         const $ps = $(`
-	<div id="exlg-user-css">
+	<div id="exlg-user_css">
 	<h4>自定义css</h4>
 		<div class="am-form-group am-form"><textarea rows="3" id="custom-css-input"></textarea></div><p>
 		<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="
@@ -496,14 +502,14 @@ mod.reg("user-css-load", "加载用户样式", "@/*", () => {
 	</div>
 	`).appendTo(".full-container")
 
-        $("#custom-css-input").val(GM_getValue("user-css"))
+        $("#custom-css-input").val(storage.user_css)
         $("#save-css-button").on("click", () => {
-            GM_setValue("user-css", $("#custom-css-input").val())
+            storage.user_css = ("#custom-css-input").val()
             location.reload()
         })
     }
-}, (GM_getValue("user-css") ? GM_getValue("user-css") : "") + `
-#exlg-user-css {
+}, (storage.user_css || "") + `
+#exlg-user_css {
     display: block;
     box-sizing: border-box;
     padding: 1.3em;
@@ -605,8 +611,8 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     const iLoveMinecraft = [0, 1, 2, 3, 4, 5, 6, 7]
     const iLoveTouhou = [0, 1, 2, 3, 4]
     const fackYouCCF = ["P", "CF", "SP", "AT", "UVA"]
-    const difficulty_select = GM_getValue("mod-rand-difficulty", [0, 0, 0, 0, 0, 0, 0, 0])
-    const source_select = GM_getValue("mod-rand-source", [0, 0, 0, 0, 0])
+    const difficulty_select = storage.mod_rand_difficulty || [0, 0, 0, 0, 0, 0, 0, 0]
+    const source_select = storage.mod_rand_difficulty || [0, 0, 0, 0, 0]
     const difficulty_html = [
         `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">入门</div>`,
         `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">普及-</div>`,
@@ -656,8 +662,8 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     $(`<br>`).appendTo($diffs)
     const save_rdpb = $(`<button class="am-btn am-btn-primary am-btn-sm exlg-save-rdpb" name="saverandom">保存</button>`)
     $(".exlg-save-rdpb").on("click", _ => {
-        GM_setValue("mod-rand-difficulty", difficulty_select)
-        GM_setValue("mod-rand-source", source_select)
+        storage.mod_rand_difficulty = difficulty_select
+        storage.mod_rand_source = source_select
         $("#exlg-dash-0-window").toggle()
     })
     save_rdpb.appendTo($diffs)
@@ -938,7 +944,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
     //             }[action]($mod.prop("checked"))).trigger("change")
     //             break
     //         case "save":
-    //             GM_setValue("mod-map", mod.map)
+    //             GM_setValue("mod_map", mod.map)
     //             break
     //         default:
     //             return cli_error(`mod: unknown action "${action}"`)
@@ -1078,7 +1084,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
 
 
 mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
-    const language_show = GM_getValue("copy-code-block-language", true)
+    const language_show = storage.copy_code_block_language !== 0
     const func_code = () => {
         const $cb = $("pre:has(> code):not([exlg-copy-code-block=''])")
         if ($cb.length) log(`Scanning code block:`, $cb.length)
@@ -1117,7 +1123,7 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
             $cb[i].before($(`<span style="font-family: Microsoft YaHei;font-size:18px;font-weight:bold">源代码${language}</span>`).get(0))
             $cb[i].before($(`<p></p>`).get(0))
             if (!$cb.children("code").hasClass("hljs")) $cb.children("code").addClass("hljs").css("background", "white")
-            if (GM_getValue("code-fonts-val", "") !== "") $cb.children("code").css("font-family", GM_getValue("code-fonts-val", ""))
+            if (storage.code_fonts_val) $cb.children("code").css("font-family", storage.code_fonts_val)
         })
     }
     func_code()
@@ -1138,8 +1144,8 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
                     $(".lfe-h3").text($(".lfe-h3").text() + "-" + ((language.substr(-3) === " o2") ? (language.slice(0, -3)) : (language))).attr("exlg-language-show", "")
                 }
                 const $cb = $("pre:has(> code)")
-                if (GM_getValue("code-fonts-val", "") !== "") {
-                    $cb.children("code").css("font-family", GM_getValue("code-fonts-val", ""))
+                if (storage.code_fonts_val) {
+                    $cb.children("code").css("font-family", storage.code_fonts_val)
                 }
                 $cb.children("code").addClass("hljs").css("background", "white")
             }, 100)
@@ -1305,12 +1311,12 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
             if ($csd.children().attr("data-icon") === "dot-circle") {
                 $csd.html(html_circleswitch_off)
                 mod.map[sxid] = false
-                GM_setValue("mod-map", mod.map)
+                storage.mod_map = mod.map
             }
             else {
                 $csd.html(html_circleswitch_on)
                 mod.map[sxid] = true
-                GM_setValue("mod-map", mod.map)
+                storage.mod_map = mod.map
             }
         })
         return $fte
@@ -1466,19 +1472,19 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
         //module设置
         mod._.forEach(m => {
-            if (!unclosable_list.includes(m.name) && !["user-css-edit", "update"].includes(m.name)) {
+            if (!unclosable_list.includes(m.name) && !["user_css-edit", "update"].includes(m.name)) {
                 $(`<div></div>`)
                     .append($get_button_of_mod_map(m.name, m.info))
                     .appendTo($("#ex-settings-module-switch"))
             }
         })
 
-        $(`<div><h4>代码块功能优化</h4></div>`).append($get_button_of_sth("copy-code-block-language", "代码块显示语言", true)).appendTo($("#ex-settings-module-settings"))
+        $(`<div><h4>代码块功能优化</h4></div>`).append($get_button_of_sth("copy_code_block_language", "代码块显示语言", true)).appendTo($("#ex-settings-module-settings"))
 
         $(`<div><h4>设置代码块字体</h4></div>`)
             .append(
                 $(`<div data-v-a7f7c968="" data-v-61c90fba="" class="refined-input input-wrap input frame" data-v-22efe7ee=""></div>`).append(
-                    $(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~" id="code-fonts-input">`).val(GM_getValue("code-fonts-val", ""))
+                    $(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~" id="code-fonts-input">`).val(storage.code_fonts_val || "")
                 )
             )
             .append(
@@ -1489,7 +1495,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                             //log($('#code-fonts-input').val())
                             $btn.prop("disabled", true)
                             $btn.text("保存成功")
-                            GM_setValue("code-fonts-val", $("#code-fonts-input").val())
+                            storage.code_fonts_val = $("#code-fonts-input").val()
                             setTimeout(() => {
                                 $btn.removeAttr("disabled")
                                 $btn.text("保存")
@@ -1502,11 +1508,11 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 )
             ).appendTo($("#ex-settings-module-settings"))
 
-        $(`<div><h4>讨论保存</h4></div>`).append($get_button_of_sth("discuss-auto-save", "讨论自动保存", true)).appendTo($("#ex-settings-module-settings"))
+        $(`<div><h4>讨论保存</h4></div>`).append($get_button_of_sth("discuss_auto_save", "讨论自动保存", true)).appendTo($("#ex-settings-module-settings"))
 
         $(`<div><h4>自定义css</h4></div>`).append(
             $(`<div class="am-form-group am-form"></div>`).append(
-                $(`<textarea rows="3" id="custom-css-input"` + ((GM_getValue("code-fonts-val", "") !== "") ? (`style="font-family: ` + GM_getValue("code-fonts-val", "") + `"`) : (``)) + `></textarea>`).val(GM_getValue("user-css"))
+                $(`<textarea rows="3" id="custom-css-input"` + (storage.code_fonts_val ? (`style="font-family: ` + (storage.code_fonts_val || "") + `"`) : (``)) + `></textarea>`).val(storage.user_css)
             )
         )
             .append(
@@ -1516,7 +1522,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                         $btn.on("click", () => {
                             $btn.prop("disabled", true)
                             $btn.text("保存成功")
-                            GM_setValue("user-css", $("#custom-css-input").val())
+                            storage.user_css = $("#custom-css-input").val()
                             setTimeout(() => {
                                 location.reload()
                             }, 1000)
@@ -1568,7 +1574,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 (() => {
                     const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(14, 29, 105); background-color: rgb(14, 29, 105);">清除GM数据</button>`)
                     $btn.on("click", () => {
-                        ["exlg-last-used-version", "user-css", "mod-chore-rec", "mod-map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val"].forEach(_ => {
+                        ["exlg_last_used_version", "user_css", "mod_chore_rec", "mod_map", "mod_rand_difficulty", "mod_rand_source", "cli-lang", "copy_code_block_language", "code_fonts_val"].forEach(_ => {
                             GM_deleteValue(_)
                         })
                         window.location.href = "https://www.luogu.com.cn/"
@@ -1585,7 +1591,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 (() => {
                     const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219); background-color: rgb(52, 152, 219);">更新日志</button>`)
                     $btn.on("click", () => {
-                        GM_deleteValue("exlg-last-used-version")
+                        GM_deleteValue("exlg_last_used_version")
                         window.location.href = "https://www.luogu.com.cn/"
                     })
                         .mouseenter(() => { $btn.css("background-color", "rgba(52, 152, 219, 0.9)") })
@@ -1713,17 +1719,15 @@ mod.reg("discuss-save", "讨论保存", "@/*", () => {
             $btn.text("保存讨论")
         }, 1000)
     }))
-    if (GM_getValue("discuss-auto-save", true)) {
-        save_func()
-    }
+    if (storage.discuss_auto_save !== 0) save_func()
 })
 
 mod.reg("update-log", "更新日志显示", "@/*", () => {
-    if (window.location.href === "https://www.luogu.com.cn/" && GM_getValue("exlg-last-used-version") !== GM_info.script.version) {
+    if (window.location.href === "https://www.luogu.com.cn/" && storage.exlg_last_used_version !== GM_info.script.version) {
         show_exlg_updlog()
-        GM_setValue("exlg-last-used-version", GM_info.script.version)
+        storage.exlg_last_used_version = GM_info.script.version
     }
-    else if (GM_getValue("exlg-last-used-version") !== GM_info.script.version) {
+    else if (storage.exlg_last_used_version !== GM_info.script.version) {
         log("It's able to show the update log but not at mainpage")
     }
     else {
