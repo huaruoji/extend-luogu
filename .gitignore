@@ -1,7 +1,7 @@
 node_modules/
 
-update_version.py
-
 package-lock.json
 
 extend-luogu.user.js
+
+yarn.lock
