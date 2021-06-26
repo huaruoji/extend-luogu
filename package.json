@@ -4,9 +4,9 @@
 	"description": "Make luogu more powerful.",
 	"main": "exluogu.jsx",
 	"scripts": {
-		"build": "./node_modules/.bin/babel exluogu.js -o extend-luogu.user.js",
-		"lint": "./node_modules/.bin/eslint exluogu.js --fix",
-		"watch": "./node_modules/.bin/babel exluogu.js -o extend-luogu.user.js -w"
+		"build": "./node_modules/.bin/babel exluogu.jsx -o extend-luogu.user.js",
+		"lint": "./node_modules/.bin/eslint exluogu.jsx --fix",
+		"watch": "./node_modules/.bin/babel exluogu.jsx -o extend-luogu.user.js -w"
 	},
 	"repository": {
 		"type": "git",

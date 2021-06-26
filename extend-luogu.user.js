@@ -10,7 +10,7 @@
 // @match          https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version
 // @match          https://www.bilibili.com/robots.txt?*
 // @match          http://localhost/*
-// @require 	   https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js
+// @require        https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/js-xss/0.3.3/xss.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/marked/2.0.1/marked.min.js
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@3a564ba0d30d88848ec486b2c36553cce87f0c7f/mp.js
@@ -33,8 +33,36 @@
 // ==/UserScript==
 // ==Utilities==
 const unclosable_list = ["dash", "luogu-settings-extension", "keyboard-and-cli", "update-log", "@springboard", "@benben-data", "@version-data"];
-const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="dot-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-dot-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 56c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m0-48C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 168c-44.183 0-80 35.817-80 80s35.817 80 80 80 80-35.817 80-80-35.817-80-80-80z" class=""></path></svg>`;
-const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" class=""></path></svg>`;
+const html_circleswitch_on = /*#__PURE__*/React.createElement("svg", {
+  "data-v-2dc28d52": "",
+  "aria-hidden": "true",
+  focusable: "false",
+  "data-prefix": "far",
+  "data-icon": "dot-circle",
+  role: "img",
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 512 512",
+  className: "fa-input svg-inline--fa fa-dot-circle fa-w-16"
+}, /*#__PURE__*/React.createElement("path", {
+  "data-v-2dc28d52": "",
+  fill: "currentColor",
+  d: "M256 56c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m0-48C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 168c-44.183 0-80 35.817-80 80s35.817 80 80 80 80-35.817 80-80-35.817-80-80-80z"
+}));
+const html_circleswitch_off = /*#__PURE__*/React.createElement("svg", {
+  "data-v-2dc28d52": "",
+  "aria-hidden": "true",
+  focusable: "false",
+  "data-prefix": "far",
+  "data-icon": "circle",
+  role: "img",
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 512 512",
+  className: "fa-input svg-inline--fa fa-circle fa-w-16"
+}, /*#__PURE__*/React.createElement("path", {
+  "data-v-2dc28d52": "",
+  fill: "currentColor",
+  d: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"
+}));
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${GM_info.script.version} 更新日志`, `
 1. 增加笔记功能
@@ -215,11 +243,16 @@ const mod = {
     }
 
     if (map_init) storage.mod_map = mod.map;
+  },
+
+  get_settings_element() {
+    return [/*#__PURE__*/React.createElement("div", null), /*#__PURE__*/React.createElement("div", null)];
   }
+
 };
 mod.reg("dash", "控制面板", "@/*", () => {
   $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon"><svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg></a>`).prependTo($("nav.user-nav, div.user-nav > nav"));
-}, "#exlg-nav-icon{color: inherit;text-decoration: none;}");
+}, "#exlg-nav-icon{color: inherit; text-decoration: none; margin-right: .3em;}");
 mod.reg_main("springboard", "跨域跳板", "@bili/robots.txt", () => {
   const q = new URLSearchParams(location.search);
 
@@ -1170,6 +1203,568 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
     }
   });
 });
+/*mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*", () => {
+    //"https://www.luogu.com.cn/user/setting#extension"
+
+
+    log("exlg-settings!");
+    const get_on_off_label = (GMid, GMdesc, default_value) => {
+        default_value = GM_getValue(GMid, default_value);
+        return (
+            <div>
+                <label
+                    onClick = {
+                        e => {
+                            const tar = e.target;
+                            const chd = $(tar).children("span");
+                            if (chd.children().attr("data-icon") === "dot-circle") {
+                                chd.html(html_circleswitch_off);
+                                GM_setValue(GMid, false);
+                            }
+                            else {
+                                chd.html(html_circleswitch_on);
+                                GM_setValue(GMid, true);
+                            }
+                        }
+                    }
+                >
+                    <span>
+                        {((default_value) ? (html_circleswitch_on) : (html_circleswitch_off))}
+                    </span>
+                    {GMdesc}
+                </label>
+            </div>
+        );
+    };
+    const get_on_off_label_map = (sxid, sxdesc) => {
+        // default_value = GM_getValue(GMid, default_value);
+        return (
+            <div style={(unclosable_list.includes(sxid)) ? ({ display: "none" }) : ({})}>
+                <label
+                    onClick = {
+                        e => {
+                            const tar = e.target;
+                            const chd = $(tar).children("span");
+                            if (chd.children().attr("data-icon") === "dot-circle") {
+                                chd.html(html_circleswitch_off);
+                                mod.map[sxid] = false;
+                                GM_setValue("mod-map", mod.map);
+                            }
+                            else {
+                                chd.html(html_circleswitch_on);
+                                mod.map[sxid] = true;
+                                GM_setValue("mod-map", mod.map);
+                            }
+                        }
+                    }
+                >
+                    <span>
+                        {((mod.map[sxid]) ? (html_circleswitch_on) : (html_circleswitch_off))}
+                    </span>
+                    {sxdesc}
+                </label>
+            </div>
+        );
+    };
+
+    const href_list = ["information", "preference", "security", "extension", "extension-admin"];
+
+    if (location.href === "https://www.luogu.com.cn/user/setting" || location.href.indexOf("https://www.luogu.com.cn/user/setting#") === 0) {
+        const herf_hash = location.href.substr(38);
+        const $lg_entry = $(".items").children("li");
+        const $lg_form_layout = $(".padding-default");
+        $lg_entry.hide();
+        $(".full-container").append($(`<div id="exlg-s-1"></div><div id="exlg-s-2"></div>`));
+        //set the layout
+
+        ReactDOM.render(
+            <div className="card padding-default" id="exlg-padding">
+                <div className="row exlg-settings-row">
+                    <span className="exlg-span-title">
+                        <span>模块开关</span>
+                    </span>
+                    <div style={{ display: "block", width: "100%" }}>
+                        <div>
+                            <p className="exlg-settings-desc lfe-caption">设置exlg插件各模块的开启与关闭。</p>
+                        </div>
+                    </div>
+                    {
+                        mod._.map((m, idx) => { return idx, get_on_off_label_map(m.name, m.info); })
+                    }
+                </div>
+                <div className="row exlg-settings-row">
+                    <span className="exlg-span-title">
+                        <span>模块设置</span>
+                    </span>
+                    <div style={{ display: "block", width: "100%" }}>
+                        <div>
+                            <p className="exlg-settings-desc lfe-caption">设置exlg插件特定模块的功能。</p>
+                        </div>
+                    </div>
+                    { mod.get_settings_element() }
+                </div>
+                <div className="row exlg-settings-row">
+                    <span className="exlg-span-title">
+                        <span>高级设置</span>
+                    </span>
+                    <div style={{ display: "block", width: "100%" }}>
+                        <div>
+                            <p className="exlg-settings-desc lfe-caption">设置exlg插件特定模块的高级功能。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            , $("#exlg-s-1")[0]
+        );
+
+        ReactDOM.render(
+            <div className="card padding-default" id="exlg-padding">
+                <div className="row exlg-settings-row">
+                    <span className="exlg-span-title">
+                        <span>意见反馈</span>
+                    </span>
+                    <div style={{ display: "block", width: "100%" }}>
+                        <div>
+                            <p className="exlg-settings-desc lfe-caption">请暂时前往exlg的github反馈issues。</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="row exlg-settings-row">
+                    <span className="exlg-span-title">
+                        <span>版本&更新</span>
+                    </span>
+                    <div style={{ display: "block", width: "100%" }}>
+                        <div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-update-versions">
+                            <p className="exlg-settings-desc lfe-caption">
+                        当前版本为：6.0.2
+                                <span> </span>
+                                <button type="button" className="lfe-form-sz-middle exlg-settings-button" style={{ "border-color": "rgb(52, 152, 219)", "background-color":"rgb(52, 152, 219)" }}
+                                    onClick={
+                                        e => {
+                                            GM_deleteValue("exlg-last-used-version");
+                                            //storage.last_used_version = 1145141919810
+                                            location.href = "https://www.luogu.com.cn/";
+                                        }
+                                    }
+                                    onMouseEnter={e => { $(e.target).css("opacity", "0.9"); }}
+                                    onMouseLeave={e => { $(e.target).css("opacity", "1"); }}
+                                >
+                        更新日志
+                                </button>
+                            </p>
+                            <p className="exlg-settings-desc lfe-caption">
+                        最新版本为：
+                                <span id="newest-version-display">6.0.2</span>
+                                <span> </span>
+                                <button type="button" className="lfe-form-sz-middle exlg-settings-button" style={{ "border-color": "rgb(52, 152, 219)", "background-color":"rgb(52, 152, 219)" }}
+                                    onClick={
+                                        e => {
+                                            mod.execute("^update");//可能要重构框架
+                                        }
+                                    }
+                                    onMouseEnter={e => { $(e.target).css("opacity", "0.9"); }}
+                                    onMouseLeave={e => { $(e.target).css("opacity", "1"); }}
+                                >
+                        检查更新
+                                </button>
+                            </p>
+                            <p className="exlg-settings-desc lfe-caption">
+                        更新源
+                                <span> </span>
+                                <button type="button" className="lfe-form-sz-middle exlg-settings-button" style={{ "border-color": "rgb(231, 76, 60)", "background-color": "rgb(231, 76, 60)" }}
+                                    onClick={
+                                        e => {
+                                            location.href = "https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js";
+                                        }
+                                    }
+                                    onMouseEnter={e => { $(e.target).css("opacity", "0.9"); }}
+                                    onMouseLeave={e => { $(e.target).css("opacity", "1"); }}
+                                >
+                        Raw
+                                </button>
+                                <span> </span>
+                                <button type="button" className="lfe-form-sz-middle exlg-settings-button" style={{ "border-color": "rgb(52, 152, 219)", "background-color":"rgb(52, 152, 219)" }}
+                                    onClick={
+                                        e => {
+                                            location.href = "https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js";
+                                        }
+                                    }
+                                    onMouseEnter={e => { $(e.target).css("opacity", "0.9"); }}
+                                    onMouseLeave={e => { $(e.target).css("opacity", "1"); }}
+                                >
+                        Jsdelivr
+                                </button>
+                                <span> </span>
+                                <button type="button" className="lfe-form-sz-middle exlg-settings-button" style={{ "border-color": "rgb(82, 196, 26)", "background-color": "rgb(82, 196, 26)" }}
+                                    onClick={
+                                        e => {
+                                            location.href = "https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js";
+                                        }
+                                    }
+                                    onMouseEnter={e => { $(e.target).css("opacity", "0.9"); }}
+                                    onMouseLeave={e => { $(e.target).css("opacity", "1"); }}
+                                >
+                        FastGit
+                                </button>
+                            </p>
+                            <p className="exlg-settings-desc lfe-caption">
+                        项目有关
+                                <span> </span>
+                                <a href="https://github.com/optimize-2/extend-luogu">
+                                    <button type="button" className="lfe-form-sz-middle exlg-settings-button" style={{ "border-color": "rgb(0, 0, 0)", "background-color": "rgb(0, 0, 0)" }}
+                                        onMouseEnter={e => { $(e.target).css("opacity", "0.8"); }}
+                                        onMouseLeave={e => { $(e.target).css("opacity", "1"); }}>
+                            Github
+                                    </button>
+                                </a>
+                                <span> </span>
+                                <a href="https://www.luogu.com.cn/blog/100250/extend-luogu-si-yong-zhi-na">
+                                    <button type="button" className="lfe-form-sz-middle exlg-settings-button" style={{ "border-color": "rgb(255, 193, 22)", "background-color": "rgb(255, 193, 22)" }}
+                                        onMouseEnter={e => { $(e.target).css("opacity", "0.9"); }}
+                                        onMouseLeave={e => { $(e.target).css("opacity", "1"); }}>
+                            Help
+                                    </button>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div className="row exlg-settings-row">
+                    <span className="exlg-span-title">
+                        <span>数据&调试</span>
+                    </span>
+                    <div style={{ display: "block", width: "100%" }}>
+                        <div>
+                            <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">
+                    警告，非开发者不要乱动这玩意，否则出什么事情我不负责。
+                            </p>
+                            <div>
+                                {get_on_off_label("exlg-debug-mode", "debug_mode", false)}
+                                <span> </span>
+                                <button type="button" className="lfe-form-sz-middle exlg-settings-button" style={{ "border-color": "rgb(191, 191, 191)", "background-color": "rgb(191, 191, 191)" }}
+                                    onClick={
+                                        e => {
+                                            $lg_form_layout.show();
+                                            $("#exlg-s-1").show();
+                                            $("#exlg-s-2").show();
+                                            $(e.target).text("隐藏其他设置版块").on("click", () => {
+                                                location.reload();
+                                            });
+                                        }
+                                    }
+                                    onMouseEnter={e => { $(e.target).css("opacity", "0.9"); }}
+                                    onMouseLeave={e => { $(e.target).css("opacity", "1"); }}
+                                >
+                        显示其他设置版块
+                                </button>
+                            </div>
+                            <div>
+                                <p>
+                                    <button type="button" className="lfe-form-sz-middle exlg-settings-button" style={{ "border-color": "rgb(231, 76, 60)", "background-color": "rgb(231, 76, 60)" }}
+                                        onClick={
+                                            e => {
+                                                //懂的都懂
+                                            }
+                                        }
+                                        onMouseEnter={e => { $(e.target).css("opacity", "0.9"); }}
+                                        onMouseLeave={e => { $(e.target).css("opacity", "1"); }}
+                                    >
+                            清除exlg数据
+                                    </button>
+                                    <span> </span>
+                                    <button type="button" className="lfe-form-sz-middle exlg-settings-button" style={{ "border-color": "rgb(14, 29, 105)", "background-color": "rgb(14, 29, 105)" }}
+                                        onClick={
+                                            e => {
+                                                //懂的都懂
+                                            }
+                                        }
+                                        onMouseEnter={e => { $(e.target).css("opacity", "0.9"); }}
+                                        onMouseLeave={e => { $(e.target).css("opacity", "1"); }}
+                                    >
+                            清除GM数据
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            , $("#exlg-s-2")[0]
+        );
+        //end.
+
+        //set the admin layout.
+
+        //         $(
+        //             `<div data-v-22efe7ee="" className="row">
+        // 	<span data-v-22efe7ee="">
+        // 		<span data-v-9a2394ca="" data-v-22efe7ee="">意见反馈</span>
+        // 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-fuck-you">
+        // 		<p data-v-9a2394ca="" data-v-22efe7ee="" className="lfe-caption">请暂时前往exlg的github反馈issues。</p>
+        // 	</div></div>
+        // </div>`).appendTo($ex_admin_form_layout)
+
+
+        //         $(
+        //             `<div data-v-22efe7ee="" className="row">
+        // 	<span data-v-22efe7ee="">
+        // 		<span data-v-9a2394ca="" data-v-22efe7ee="">版本&更新</span>
+        // 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-update-versions">
+
+        // 	</div></div>
+        // </div>`).appendTo($ex_admin_form_layout)
+        //         $(
+        //             `<div data-v-22efe7ee="" className="row">
+        // 	<span data-v-22efe7ee="">
+        // 		<span data-v-9a2394ca="" data-v-22efe7ee="">实验性玩法</span>
+        // 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-features-laboratory">
+        // 		<p data-v-9a2394ca="" data-v-22efe7ee="" className="lfe-caption">一些脑洞会先在这里测试。</p>
+        // 	</div></div>
+        // </div>`).appendTo($ex_admin_form_layout)
+        //         $(
+        //             `<div data-v-22efe7ee="" className="row">
+        // 	<span data-v-22efe7ee="">
+        // 		<span data-v-9a2394ca="" data-v-22efe7ee="">数据&调试</span>
+        // 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-data-debug">
+        // 		<p data-v-9a2394ca="" data-v-22efe7ee="" className="lfe-caption">警告，非开发者不要乱动这玩意，否则出什么事情我不负责。</p>
+        // 	</div></div>
+        // </div>`).appendTo($ex_admin_form_layout)
+        //end.
+
+
+        //这里是顶层的栏目设置
+        //总共5个~
+        ReactDOM.render(
+            <div className="exlg-entry-list">
+                <li className="exlg-settings-entry-li"
+                    onClick = {
+                        e => {
+                            const tar = e.target;
+                            $lg_entry[0].click();
+                            $(".exlg-settings-entry-span").removeClass("selected");
+                            $(tar).children().addClass("selected");
+                            $lg_form_layout.show();
+                            $("#exlg-s-1").hide();
+                            $("#exlg-s-2").hide();
+                        }
+                    }>
+                    <span className="exlg-settings-entry-span"
+
+                    >
+                个人信息
+                    </span>
+                </li>
+                <li className="exlg-settings-entry-li"
+                    onClick = {
+                        e => {
+                            const tar = e.target;
+                            $lg_entry[1].click();
+                            $(".exlg-settings-entry-span").removeClass("selected");
+                            $(tar).children().addClass("selected");
+                            $lg_form_layout.show();
+                            $("#exlg-s-1").hide();
+                            $("#exlg-s-2").hide();
+                        }
+                    }>
+                    <span className="exlg-settings-entry-span"
+                    >
+                使用偏好
+                    </span>
+                </li>
+                <li className="exlg-settings-entry-li"
+                    onClick = {
+                        e => {
+                            const tar = e.target;
+                            $lg_entry[2].click();
+                            $(".exlg-settings-entry-span").removeClass("selected");
+                            $(tar).children().addClass("selected");
+                            $lg_form_layout.show();
+                            $("#exlg-s-1").hide();
+                            $("#exlg-s-2").hide();
+                        }
+                    }>
+                    <span className="exlg-settings-entry-span"
+                    >
+                安全设置
+                    </span>
+                </li>
+                <li className="exlg-settings-entry-li"
+                    onClick = {
+                        e => {
+                            const tar = e.target;
+                            $(".exlg-settings-entry-span").removeClass("selected");
+                            $(tar).children().addClass("selected");
+                            $lg_form_layout.hide();
+                            $("#exlg-s-1").show();
+                            $("#exlg-s-2").hide();
+                        }
+                    }>
+                    <span className="exlg-settings-entry-span"
+                    >
+                扩展设置
+                    </span>
+                </li>
+                <li className="exlg-settings-entry-li"
+                    onClick = {
+                        e => {
+                            const tar = e.target;
+                            $(".exlg-settings-entry-span").removeClass("selected");
+                            $(tar).children().addClass("selected");
+                            $lg_form_layout.hide();
+                            $("#exlg-s-1").hide();
+                            $("#exlg-s-2").show();
+                        }
+                    }>
+                    <span className="exlg-settings-entry-span"
+                    >
+                高级设置
+                    </span>
+                </li>
+            </div>
+
+            , $(".menu.config-menu")[0]);
+        if (href_list.includes(herf_hash)) {
+            $($(".exlg-settings-entry-span")[href_list.indexOf(herf_hash)]).children().addClass("selected");
+        }
+        else {
+            $($(".exlg-settings-entry-span")[0]).children().addClass("selected");
+        }
+        if (herf_hash === "extension") {
+            log("extension settings~");
+            $lg_form_layout.hide();
+            $("#exlg-s-1").show();
+            $("#exlg-s-2").hide();
+        }
+        if (herf_hash === "extension-admin") {
+            log("hidden extension settings~");
+            $lg_form_layout.hide();
+            $("#exlg-s-1").hide();
+            $("#exlg-s-2").show();
+        }
+    }
+},
+`
+.items>li>.exlg-entry.selected {
+    cursor: default;
+    color: var(--main-color);
+    background-color: transparent;
+}
+.card.padding-default{
+    padding: 1.3em;
+    display: block;
+    margin-bottom: 1.3em;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgb(26 26 26 / 10%);
+    box-sizing: border-box;
+}
+.am-form-field {
+    font-size: 0.875em;
+    padding: 0.313em 1em;
+}
+.exlg-settings-row{
+    display: flex;
+    padding: .5em;
+}
+.exlg-span-title{
+    display: inline-block;
+    width: 10em;
+    padding-right: 1em;
+    box-sizing: border-box;
+    text-align: left;
+    font-weight: 700;
+}
+.exlg-settings-desc{
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    margin-top: 0;
+}
+.exlg-settings-entry-li{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    outline: 0;
+    text-align: -webkit-match-parent;
+}
+.exlg-settings-entry-span{
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    padding: 20px .5em;
+}
+.exlg-entry-list{
+    --main-color: #3498db;
+    margin-bottom: 0;
+    display: flex;
+    align-items: baseline;
+    margin: 0 0.5em;
+}
+exlg-settings-button{
+    font-family: "Microsoft YaHei";
+    display: inline-block;
+    flex: none;
+    outline: 0;
+    cursor: pointer;
+    color: #fff;
+    font-weight: inherit;
+    line-height: 1.5;
+    text-align: center;
+    vertical-align: middle;
+    background: 0 0;
+    border-radius: 3px;
+    border: 1px solid;
+    font-size: 0.875em;
+    padding: 0.313em 1em;
+    -webkit-appearance: button;
+    text-transform: none;
+    overflow: visible;
+    margin: 0;
+
+    -webkit-writing-mode: horizontal-tb !important;
+    text-rendering: auto;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-indent: 0px;
+    text-shadow: none;
+    align-items: flex-start;
+    box-sizing: border-box;
+    font: 400 13.3333px Arial;
+}
+.exlg-button{
+    display: inline-block;
+    flex: none;
+    outline: 0;
+    cursor: pointer;
+    color: #fff;
+    font-weight: inherit;
+    line-height: 1.5;
+    text-align: center;
+    vertical-align: middle;
+    background: 0 0;
+    border-radius: 3px;
+    border: 1px solid;
+    font-size: 0.875em;
+    padding: 0.313em 1em;
+    -webkit-appearance: button;
+    text-transform: none;
+    overflow: visible;
+    margin: 0;
+
+    -webkit-writing-mode: horizontal-tb !important;
+    text-rendering: auto;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-indent: 0px;
+    text-shadow: none;
+    align-items: flex-start;
+    box-sizing: border-box;
+    font: 400 13.3333px Arial;
+}
+`);*/
+
 mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*", () => {
   //"https://www.luogu.com.cn/user/setting#extension"
   log("exlg-settings!");
@@ -1199,11 +1794,11 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
       if ($csd.children().attr("data-icon") === "dot-circle") {
         $csd.html(html_circleswitch_off);
         mod.map[sxid] = false;
-        storage.mod_map = mod.map;
+        GM_setValue("mod-map", mod.map);
       } else {
         $csd.html(html_circleswitch_on);
         mod.map[sxid] = true;
-        storage.mod_map = mod.map;
+        GM_setValue("mod-map", mod.map);
       }
     });
     return $fte;
@@ -1211,7 +1806,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
   const href_list = ["information", "preference", "security", "extension", "extension-admin"];
 
-  if (window.location.href === "https://www.luogu.com.cn/user/setting" || window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") === 0) {
+  if (window.location.href === "https://www.luogu.com.cn/user/setting" || window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") == 0) {
     if (window.location.href === "https://www.luogu.com.cn/user/setting" || href_list.indexOf(window.location.href.substr(38)) === -1) {//log('23333')
       //window.location.href = "https://www.luogu.com.cn/user/setting#information"
     }
@@ -1223,55 +1818,54 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     const $ex_admin_form_layout = $(`<div data-v-796309f8="" data-v-7765a18d="" class="card padding-default" id="exlg-padding" data-v-6febb0e8=""><div data-v-22efe7ee="" data-v-61c90fba="" data-v-7765a18d="" class="exlg-admin-form-layout" data-v-796309f8=""></div></div>`).hide().appendTo($(".full-container")); //set the layout
 
     $(`<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">模块开关</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-module-switch">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">设置exlg插件各模块的开启与关闭。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">模块开关</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-module-switch">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">设置exlg插件各模块的开启与关闭。</p>
+    </div></div>
 </div>`).appendTo($ex_form_layout);
     $(`<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">模块设置</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-module-settings">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">设置exlg插件特定模块的功能。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">模块设置</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-module-settings">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">设置exlg插件特定模块的功能。</p>
+    </div></div>
 </div>`).appendTo($ex_form_layout);
     $(`<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">高级设置</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-advanced-settings">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">一些奇怪的东西。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">高级设置</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-advanced-settings">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">一些奇怪的东西。</p>
+    </div></div>
 </div>`).appendTo($ex_form_layout); //end.
     //set the admin layout.
 
     $(`<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">意见反馈</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-fuck-you">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">请暂时前往exlg的github反馈issues。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">意见反馈</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-fuck-you">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">请暂时前往exlg的github反馈issues。</p>
+    </div></div>
 </div>`).appendTo($ex_admin_form_layout);
     $(`<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">版本&更新</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-update-versions">
-
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">版本&更新</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-update-versions">
+    </div></div>
 </div>`).appendTo($ex_admin_form_layout);
     $(`<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">实验性玩法</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-features-laboratory">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">一些脑洞会先在这里测试。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">实验性玩法</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-features-laboratory">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">一些脑洞会先在这里测试。</p>
+    </div></div>
 </div>`).appendTo($ex_admin_form_layout);
     $(`<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">数据&调试</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-data-debug">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">警告，非开发者不要乱动这玩意，否则出什么事情我不负责。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">数据&调试</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-data-debug">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">警告，非开发者不要乱动这玩意，否则出什么事情我不负责。</p>
+    </div></div>
 </div>`).appendTo($ex_admin_form_layout); //end.
     //这里是顶层的栏目设置
     //总共5个~
@@ -1347,19 +1941,19 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     }); //module设置
 
     mod._.forEach(m => {
-      if (!unclosable_list.includes(m.name) && !["user_css-edit", "update"].includes(m.name)) {
+      if (!unclosable_list.includes(m.name) && !["user-css-edit", "update"].includes(m.name)) {
         $(`<div></div>`).append($get_button_of_mod_map(m.name, m.info)).appendTo($("#ex-settings-module-switch"));
       }
     });
 
-    $(`<div><h4>代码块功能优化</h4></div>`).append($get_button_of_sth("copy_code_block_language", "代码块显示语言", true)).appendTo($("#ex-settings-module-settings"));
-    $(`<div><h4>设置代码块字体</h4></div>`).append($(`<div data-v-a7f7c968="" data-v-61c90fba="" class="refined-input input-wrap input frame" data-v-22efe7ee=""></div>`).append($(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~" id="code-fonts-input">`).val(storage.code_fonts_val || ""))).append($(`<p></p>`).append((() => {
+    $(`<div><h4>代码块功能优化</h4></div>`).append($get_button_of_sth("copy-code-block-language", "代码块显示语言", true)).appendTo($("#ex-settings-module-settings"));
+    $(`<div><h4>设置代码块字体</h4></div>`).append($(`<div data-v-a7f7c968="" data-v-61c90fba="" class="refined-input input-wrap input frame" data-v-22efe7ee=""></div>`).append($(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~" id="code-fonts-input">`).val(GM_getValue("code-fonts-val", "")))).append($(`<p></p>`).append((() => {
       const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);">保存</button>`);
       $btn.on("click", () => {
         //log($('#code-fonts-input').val())
         $btn.prop("disabled", true);
         $btn.text("保存成功");
-        storage.code_fonts_val = $("#code-fonts-input").val();
+        GM_setValue("code-fonts-val", $("#code-fonts-input").val());
         setTimeout(() => {
           $btn.removeAttr("disabled");
           $btn.text("保存");
@@ -1371,13 +1965,13 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
       });
       return $btn;
     })())).appendTo($("#ex-settings-module-settings"));
-    $(`<div><h4>讨论保存</h4></div>`).append($get_button_of_sth("discuss_auto_save", "讨论自动保存", true)).appendTo($("#ex-settings-module-settings"));
-    $(`<div><h4>自定义css</h4></div>`).append($(`<div class="am-form-group am-form"></div>`).append($(`<textarea rows="3" id="custom-css-input"` + (storage.code_fonts_val ? `style="font-family: ` + (storage.code_fonts_val || "") + `"` : ``) + `></textarea>`).val(storage.user_css))).append($(`<p></p>`).append((() => {
+    $(`<div><h4>讨论保存</h4></div>`).append($get_button_of_sth("discuss-auto-save", "讨论自动保存", true)).appendTo($("#ex-settings-module-settings"));
+    $(`<div><h4>自定义css</h4></div>`).append($(`<div class="am-form-group am-form"></div>`).append($(`<textarea rows="3" id="custom-css-input"` + (GM_getValue("code-fonts-val", "") !== "" ? `style="font-family: ` + GM_getValue("code-fonts-val", "") + `"` : ``) + `></textarea>`).val(GM_getValue("user-css")))).append($(`<p></p>`).append((() => {
       const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);">保存</button>`);
       $btn.on("click", () => {
         $btn.prop("disabled", true);
         $btn.text("保存成功");
-        storage.user_css = $("#custom-css-input").val();
+        GM_setValue("user-css", $("#custom-css-input").val());
         setTimeout(() => {
           location.reload();
         }, 1000);
@@ -1421,7 +2015,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     })()).append($(`<text> </text>`)).append((() => {
       const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(14, 29, 105); background-color: rgb(14, 29, 105);">清除GM数据</button>`);
       $btn.on("click", () => {
-        ["exlg_last_used_version", "user_css", "mod_chore_rec", "mod_map", "mod_rand_difficulty", "mod_rand_source", "cli-lang", "copy_code_block_language", "code_fonts_val"].forEach(_ => {
+        ["exlg-last-used-version", "user-css", "mod-chore-rec", "mod-map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val"].forEach(_ => {
           GM_deleteValue(_);
         });
         window.location.href = "https://www.luogu.com.cn/";
@@ -1435,7 +2029,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     $(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">当前版本为：${GM_info.script.version}</p>`).append($(`<text> </text>`)).append((() => {
       const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219); background-color: rgb(52, 152, 219);">更新日志</button>`);
       $btn.on("click", () => {
-        GM_deleteValue("exlg_last_used_version");
+        GM_deleteValue("exlg-last-used-version");
         window.location.href = "https://www.luogu.com.cn/";
       }).mouseenter(() => {
         $btn.css("background-color", "rgba(52, 152, 219, 0.9)");
@@ -1501,16 +2095,16 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
       });
       return $btn;
     })())).appendTo($("#ex-settings-update-versions"));
-    /*	uindow.addEventListener("message", e => {
+    /*    uindow.addEventListener("message", e => {
         log("Listening message:", e.data)
         if (e.data[0] !== "update") return
         e.data.shift()
-         const
+        const
             latest = e.data[0],
             version = GM_info.script.version,
             op = version_cmp(version, latest)
         $("#settings-newest-version").append($(`<text>${ latest }</text>`))
-    })	*/
+    })    */
   }
 }, `.am-form-field {
     font-size: 0.875em;
@@ -1691,13 +2285,15 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
 				<br />
 				<div style="display:flex;justify-content:space-between;">
 					<div>
+						<label>重点&nbsp;</label>
+                        <input type="checkbox" id="notepad-important" />
 						<label id="notepad-tag-label">标签</label>
 						<input data-v-a7f7c968="" type="text" class="lfe-form-sz-middle" style="width: 60%; display: none;" id="notepad-tag">
 						<label id="notepad-tag-content"></label>
 					</div>
 					<div>
 						<a id="notepad-opencode" href="javascript: void(0)"><svg data-v-29a65e17="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-29a65e17="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></a>
-						<text id="notepad-code">代码</text>
+						<span id="notepad-code">代码</span>
 					</div>
 				</div>
 			</details>
@@ -1712,6 +2308,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
     req.onsuccess = event => {
       if (req.result) {
         editor.content = req.result.content;
+        $("#notepad-important").prop("checked", req.result.important);
         const p = $("#notepad-summary").html();
         $("#notepad-summary").html(`${p}<font color="red">*</font>`);
         if (req.result.tag) $("#notepad-tag").val(req.result.tag.join(", "));
@@ -1733,7 +2330,8 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
         content: editor.content,
         tag: $("#notepad-tag").val().trim().split(",").map(u => u.trim()).filter(u => u),
         title: uindow._feInjection.currentData.problem.title,
-        code
+        code,
+        important: $("#notepad-important").prop("checked")
       });else q = obj_store.delete(pid);
 
       q.onsuccess = event => {
@@ -1834,7 +2432,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
       if (u.code) pcode = `<a href="/record/${u.code}">代码</a>`;
       return `
 			<div style="display:flex;justify-content:flex-start;flex-direction:row;">
-				<p><a href="/problem/${u.pid}">${u.pid} - ${u.title}</a></p>&nbsp;&nbsp;&nbsp;
+				<p><a href="/problem/${u.pid}">${u.pid} - ${u.title}<font color="red">${u.important ? "*" : ""}</font></a></p>&nbsp;&nbsp;&nbsp;
 				<details id="notepad-detail-${u.pid}"><summary>笔记</summary>
 					${render(u.content)}<hr />
 					<div style="display:flex;justify-content:space-between;">
@@ -1859,6 +2457,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
 
     if (url.searchParams.has("edit")) {
       const tag = url.searchParams.get("tag").trim();
+      $("head > title").text(`编辑"${tag}"内容 | 洛谷笔记`);
       $("#notepad-content").html(`<div style="height:700px;width:100%" id="notepad-container"><div id="notepad-editor"></div></div><style>.mp-editor-zone-full{width:100%!important;}</style>`);
       const editor = new MarkdownPalettes("#notepad-editor");
       const pres = await queryPNote(tag);
@@ -1887,6 +2486,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
     } else if (url.searchParams.has("tag")) {
       const tag = url.searchParams.get("tag").trim();
       const res = await queryTag(tag);
+      $("head > title").text(`标签"${tag}" | 洛谷笔记`);
 
       if (tag === "无") {// res = await query
         // todo
@@ -1895,18 +2495,22 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
       let p = `${tag}&nbsp;&nbsp;<a href="/?notepad&tag=${tag}&edit" target="_blank"><svg data-v-29a65e17="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-29a65e17="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></a><hr/>`;
       const pres = await queryPNote(tag);
       if (pres) p += `<div>${render(pres.content)}</div><hr/>`;
+      res.sort((u, v) => {
+        if (u.important && v.important || !u.important && !v.important) return u.pid < v.pid ? -1 : 1;
+        return u.important ? -1 : 1;
+      });
 
       for (const u of res) p += renderProblem(u);
 
       $("#notepad-content").html(p);
     } else {
+      $("head > title").text("主页 | 洛谷笔记");
       const res = await queryAll();
       let p = "";
       const cnt = {};
       const list = [];
 
       for (const u of res) {
-        // p += renderProblem(u);
         if (!u.tag) return;
         if (u.tag.length === 0) u.tag.push("无");
 
@@ -1922,7 +2526,13 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
 
       for (const u of pnotes) p += renderPnote(u);
 
-      p += `<div><canvas id="notepad-wordcloud" width="2300px" height="1200px" style="width:100%;height:600px;"></canvas></div>`;
+      p += `<hr /><div><canvas id="notepad-wordcloud" width="2300px" height="1200px" style="width:100%;height:600px;"></canvas></div><hr />`;
+
+      for (const u of res) {
+        if (u.important) p += renderProblem(u);
+      }
+
+      p += "<br /><hr /><br />";
       p += `<div style="display:flex;"><a href="#" id="notepad-dump">导出</a><input type="file" id="notepad-import"/><a href="#" id="notepad-import-submit">导入</a></div>`;
       p += `<div style="display:flex;"><a href="#" id="notepad-dump-cloud">保存到云剪贴板</a><a href="#" id="notepad-import-cloud">从云剪贴板读取</a></div>`;
       $("#notepad-content").html(p);
