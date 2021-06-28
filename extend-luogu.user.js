@@ -47,6 +47,7 @@ const markdown = window.markdown;
 const MarkdownPalettes = window.MarkdownPalettes;
 const WordCloud = window.WordCloud;
 const mdp = uindow.markdownPalettes;
+const Swal = uindow._feInstance.$swal;
 const log = (...s) => uindow.console.log("%c[exlg]", "color: #0e90d2;", ...s);
 const warn = (...s) => uindow.console.warn("%c[exlg]", "color: #0e90d2;", ...s);
 const error = (...s) => {
@@ -120,9 +121,9 @@ const mod = {
     reg: (name, info, path, func, styl) => mod._.push({
         name, info, path: Array.isArray(path) ? path : [path], func, styl
     }),
-    reg_main: (name, info, path, func, styl) =>
+    regMain: (name, info, path, func, styl) =>
         mod.reg("@" + name, info, path, () => (func(), false), styl),
-    reg_user_tab: (name, info, tab, vars, func, styl) =>
+    regUserTab: (name, info, tab, vars, func, styl) =>
         // FIXME: this seems not to work when the tab loads slowly.
         mod.reg(
             name, info, ["@/user/*"],
@@ -137,7 +138,7 @@ const mod = {
                 work();
             }, styl
         ),
-    reg_chore: (name, info, period, path, func, styl) => {
+    regChore: (name, info, period, path, func, styl) => {
         if (typeof period === "string") {
             const num = + period.slice(0, -1), unit = {
                 s: 1000,
@@ -167,7 +168,7 @@ const mod = {
             }
         );
     },
-    reg_board: (name, info, func, styl) => mod.reg(
+    regBoard: (name, info, func, styl) => mod.reg(
         name, info, "@/",
         () => {
             let $board = $("#exlg-board");
@@ -231,7 +232,7 @@ mod.reg("dash", "控制面板", "@/*", () => {
     $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon"><svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg></a>`).prependTo($("nav.user-nav, div.user-nav > nav"));
 }, "#exlg-nav-icon{color: inherit; text-decoration: none; margin-right: .3em;}");
 
-mod.reg_main("springboard", "跨域跳板", "@bili/robots.txt", () => {
+mod.regMain("springboard", "跨域跳板", "@bili/robots.txt", () => {
     const q = new URLSearchParams(location.search);
     console.log("started");
     if (q.has("benben")) {
@@ -265,11 +266,11 @@ iframe::-webkit-scrollbar {
 }
 `);
 
-mod.reg_main("benben-data", "犇犇数据", "@tcs1/release/APIGWHtmlDemo-1615602121", () =>
+mod.regMain("benben-data", "犇犇数据", "@tcs1/release/APIGWHtmlDemo-1615602121", () =>
     uindow.parent.postMessage(JSON.parse(document.body.innerText), "*")
 );
 
-mod.reg_main("version-data", "版本数据", "@tcs2/release/exlg-version", () =>
+mod.regMain("version-data", "版本数据", "@tcs2/release/exlg-version", () =>
     uindow.parent.postMessage([document.body.innerText], "*")
 );
 
@@ -371,7 +372,7 @@ mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], () 
 }
 `);
 
-mod.reg_chore("update", "脚本升级", "1D", "@/*", () => {
+mod.regChore("update", "脚本升级", "1D", "@/*", () => {
     let loaded = false;
     if (loaded) $("#exlg-benben").attr("src", $("#exlg-benben").attr("src"));
     else {
@@ -412,7 +413,7 @@ mod.reg_chore("update", "脚本升级", "1D", "@/*", () => {
     });
 });
 
-mod.reg_user_tab("user-intro-ins", "主页指令", "main", null, () => {
+mod.regUserTab("user-intro-ins", "主页指令", "main", null, () => {
     $(".introduction > *").each((_, e, $e = $(e)) => {
         const t = $e.text();
         let [, , ins, arg] = t.match(/^(exlg.|%)([a-z]+):([^]+)$/) ?? [];
@@ -446,7 +447,7 @@ iframe::-webkit-scrollbar {
 }
 `);
 
-mod.reg_user_tab("user-problem", "题目颜色和比较", "practice", () => ({
+mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
     color: [
         "rgb(191, 191, 191)",
         "rgb(254, 76, 97)",
@@ -603,7 +604,7 @@ mod.reg("benben", "全网犇犇", "@/", () => {
     });
 });
 
-mod.reg_board("rand-problem-ex", "随机跳题ex", ($board) => {
+mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
     $("[name='gotorandom']").text("随机");
     const $start_rand = $(`<button class="am-btn am-btn-success am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`).appendTo($("[name='gotorandom']").parent());
     //$(".lg-index-stat>h2").after($(`<div><h2>问题跳转</h2><div id="exlg-dash-0" class="exlg-rand-settings">...</div></div>`)).remove()
@@ -1185,7 +1186,7 @@ div.exlg-copied {
 }
 `);
 
-mod.reg_board("search-user", "查找用户名", ($board) => {
+mod.regBoard("search-user", "查找用户名", ($board) => {
     $board.html(`
 <h3>查找用户</h3>
 <div class="am-input-group am-input-group-primary am-input-group-sm">
@@ -2143,7 +2144,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
 
             p += `<div style="display:flex;"><a href="#" id="notepad-dump">导出</a><input type="file" id="notepad-import"/><a href="#" id="notepad-import-submit">导入</a></div>`;
             p += `<div style="display:flex;"><a href="#" id="notepad-dump-cloud">保存到云剪贴板</a><a href="#" id="notepad-import-cloud">从云剪贴板读取</a></div>`;
-
+            p += `<div><a href="https://www.luogu.com.cn/paste/xdrs7184">文档在此</a></div>`;
 
             $("#notepad-content").html(p);
 
