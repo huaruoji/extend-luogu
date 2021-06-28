@@ -232,6 +232,7 @@ mod.reg("dash", "控制面板", "@/*", () => {
 
 mod.reg_main("springboard", "跨域跳板", "@bili/robots.txt", () => {
     const q = new URLSearchParams(location.search);
+    console.log("started");
     if (q.has("benben")) {
         document.write(`<iframe src="https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121"></iframe>`);
         uindow.addEventListener("message", e => {
@@ -1082,7 +1083,6 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
 }
 `);
 
-
 mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
     const language_show = storage.copy_code_block_language !== 0;
     const func_code = () => {
@@ -1311,12 +1311,12 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
             if ($csd.children().attr("data-icon") === "dot-circle") {
                 $csd.html(html_circleswitch_off);
                 mod.map[sxid] = false;
-                GM_setValue("mod-map", mod.map);
+                storage.mod_map = mod.map;
             }
             else {
                 $csd.html(html_circleswitch_on);
                 mod.map[sxid] = true;
-                GM_setValue("mod-map", mod.map);
+                storage.mod_map = mod.map;
             }
         });
         return $fte;
@@ -1573,7 +1573,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 (() => {
                     const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(14, 29, 105); background-color: rgb(14, 29, 105);">清除GM数据</button>`);
                     $btn.on("click", () => {
-                        ["exlg-last-used-version", "user-css", "mod-chore-rec", "mod-map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val"].forEach(_ => {
+                        ["exlg-last-used-version", "user-css", "mod-chore-rec", "mod_map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val"].forEach(_ => {
                             GM_deleteValue(_);
                         });
                         window.location.href = "https://www.luogu.com.cn/";
@@ -2285,7 +2285,8 @@ function sleep(t) {
     });
 }
 
-async function inject() {
+async function injectLuogu() {
+    if (!/luogu.[com|org]/.test(window.location.href)) return;
     await sleep(200);
 
     if ($("pre:has(> code):not([exlg-copy-code-block=''])").length) {
@@ -2296,12 +2297,19 @@ async function inject() {
     if ($("#exlg-nav-icon").length || !$("main.lfe-body").html()) return;
 
     mod.execute();
-
-    console.log("injected");
+    log("injected");
 }
+function injectSpringboard() {
+    if (window.location.host !== "www.bilibili.com" &&
+    window.location.host !== "service-psscsax9-1305163805.sh.apigw.tencentcs.com" &&
+    window.location.host !== "service-ig5px5gh-1305163805.sh.apigw.tencentcs.com") return;
 
-window.addEventListener("lfeloaded", inject);
-setTimeout(inject, 400);
+    mod.execute();
+    log("injected");
+}
+window.addEventListener("lfeloaded", injectLuogu);
+setTimeout(injectLuogu, 400);
+injectSpringboard();
 
 log("Lauching");
 log(GM_listValues());
