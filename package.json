@@ -2,11 +2,9 @@
 	"name": "extend-luogu",
 	"version": "2.3.0",
 	"description": "Make luogu more powerful.",
-	"main": "exluogu.jsx",
+	"main": "extend-luogu.user.js",
 	"scripts": {
-		"build": "./node_modules/.bin/babel exluogu.jsx -o extend-luogu.user.js ",
-		"lint": "./node_modules/.bin/eslint exluogu.jsx --fix",
-		"watch": "./node_modules/.bin/babel exluogu.jsx -o extend-luogu.user.js -w"
+		"lint": "./node_modules/.bin/eslint extend-luogu.user.js --fix"
 	},
 	"repository": {
 		"type": "git",

@@ -19,11 +19,9 @@ jobs:
         with:
           node-version: "12"
 
-      # 安装和构建
-      - name: Install and Build
+      - name: Run ESLint
         run: |
           yarn
-          yarn run build
           yarn run eslint
 
       - name: Update dist folder to repository
@@ -41,6 +39,6 @@ jobs:
 
           rm -rf node_modules package-lock.json yarn.lock
 
-          git init && git add . -f
+          git init && git add .
           git commit -m "GitHub Actions Auto Builder at $(date +'%Y-%m-%d %H:%M:%S')"
           git push --force --quiet "https://$GITHUB_TOKEN@github.com/$REPO_USERNAME/$DIST_REPO.git" main:main
