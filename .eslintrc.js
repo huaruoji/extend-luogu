@@ -41,7 +41,8 @@ module.exports = {
     "space-before-blocks": 2,
     "no-irregular-whitespace": 2,
     "no-trailing-spaces": 2,
-    "semi":[2,"always"]
+    "semi":[2,"always"],
+    "arrow-parens": ["error", "always"]
   },
   globals: {
     marked: true,
