@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        6.1.0
+// @version        6.1.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite
 // @match          https://*.luogu.com.cn/*
@@ -47,7 +47,6 @@ const markdown = window.markdown;
 const MarkdownPalettes = window.MarkdownPalettes;
 const WordCloud = window.WordCloud;
 const mdp = uindow.markdownPalettes;
-const Swal = uindow._feInstance.$swal || undefined;
 const log = (...s) => uindow.console.log("%c[exlg]", "color: #0e90d2;", ...s);
 const warn = (...s) => uindow.console.warn("%c[exlg]", "color: #0e90d2;", ...s);
 const error = (...s) => {
@@ -493,10 +492,10 @@ mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
 }
 `);//lack of hook
 
-mod.reg("user_css-load", "加载用户样式", "@/*", () => {
+mod.reg("user-css-load", "加载用户样式", "@/*", () => {
     if (window.location.href === "https://www.luogu.com.cn/theme/list" || window.location.href === "https://www.luogu.com.cn/theme/list/") {
         const $ps = $(`
-	<div id="exlg-user_css">
+	<div id="exlg-user-css">
 	<h4>自定义css</h4>
 		<div class="am-form-group am-form"><textarea rows="3" id="custom-css-input"></textarea></div><p>
 		<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="
@@ -504,15 +503,14 @@ mod.reg("user_css-load", "加载用户样式", "@/*", () => {
 	</p>
 	</div>
 	`).appendTo(".full-container");
-
         $("#custom-css-input").val(storage.user_css);
         $("#save-css-button").on("click", () => {
-            storage.user_css = ("#custom-css-input").val();
+            storage.user_css = $("#custom-css-input").val();
             location.reload();
         });
     }
 }, (storage.user_css || "") + `
-#exlg-user_css {
+#exlg-user-css {
     display: block;
     box-sizing: border-box;
     padding: 1.3em;
@@ -859,7 +857,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
         "essential":  [ "必要" ],
         "user":       [ "用户" ]
     };
-    let cli_lang = GM_getValue("cli-lang") || 0;
+    let cli_lang = storage.cli_lang || 0;
 
     const cmds = {
         help: (cmd/*string*/) => {
@@ -941,7 +939,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
                 }[action]($mod.prop("checked"))).trigger("change");
                 break;
             case "save":
-                GM_setValue("mod-map", mod.map);
+                storage.mod_map = mod.map;
                 break;
             default:
                 return cli_error`mod: unknown action "${action}"`;
@@ -959,7 +957,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
             /* 当 <lang> 为 "en|zh"，切换当前语言。 */
             lang = cli_langs.indexOf(lang);
             if (lang < 0) return cli_error`lang: unknown language ${lang}`;
-            GM_setValue("cli-lang", cli_lang = lang);
+            storage.cli_lang = cli_lang = lang;
         },
         uid: (uid/*!integer*/) => {
             /* jumps to homepage of user whose uid is <uid>. */
@@ -1465,7 +1463,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
         //module设置
         mod._.forEach((m) => {
-            if (!unclosable_list.includes(m.name) && !["user-css-edit", "update"].includes(m.name)) {
+            if (!unclosable_list.includes(m.name) && !["user_css-edit", "update"].includes(m.name)) {
                 $(`<div></div>`)
                     .append($get_button_of_mod_map(m.name, m.info))
                     .appendTo($("#ex-settings-module-switch"));
@@ -1477,7 +1475,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
         $(`<div><h4>设置代码块字体</h4></div>`)
             .append(
                 $(`<div data-v-a7f7c968="" data-v-61c90fba="" class="refined-input input-wrap input frame" data-v-22efe7ee=""></div>`).append(
-                    $(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~" id="code-fonts-input">`).val(GM_getValue("code-fonts-val", ""))
+                    $(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~" id="code-fonts-input">`).val(storage.code_fonts_val || "")
                 )
             )
             .append(
@@ -1488,7 +1486,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                             //log($('#code-fonts-input').val())
                             $btn.prop("disabled", true);
                             $btn.text("保存成功");
-                            GM_setValue("code-fonts-val", $("#code-fonts-input").val());
+                            storage.code_fonts_val = $("#code-fonts-input").val();
                             setTimeout(() => {
                                 $btn.removeAttr("disabled");
                                 $btn.text("保存");
@@ -1505,7 +1503,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
         $(`<div><h4>自定义css</h4></div>`).append(
             $(`<div class="am-form-group am-form"></div>`).append(
-                $(`<textarea rows="3" id="custom-css-input"` + ((GM_getValue("code-fonts-val", "") !== "") ? (`style="font-family: ` + GM_getValue("code-fonts-val", "") + `"`) : (``)) + `></textarea>`).val(GM_getValue("user-css"))
+                $(`<textarea rows="3" id="custom-css-input"` + (((storage.code_fonts_val || "") !== "") ? (`style="font-family: ` + storage.code_fonts_val + `"`) : (``)) + `></textarea>`).val(storage.user_css)
             )
         )
             .append(
@@ -1515,7 +1513,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                         $btn.on("click", () => {
                             $btn.prop("disabled", true);
                             $btn.text("保存成功");
-                            GM_setValue("user-css", $("#custom-css-input").val());
+                            storage.user_css = $("#custom-css-input").val();
                             setTimeout(() => {
                                 location.reload();
                             }, 1000);
@@ -1567,7 +1565,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 (() => {
                     const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(14, 29, 105); background-color: rgb(14, 29, 105);">清除GM数据</button>`);
                     $btn.on("click", () => {
-                        ["exlg-last-used-version", "user-css", "mod-chore-rec", "mod_map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val"].forEach((_) => {
+                        ["exlg-last-used-version", "user_css", "mod-chore-rec", "mod_map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code_fonts_val"].forEach((_) => {
                             GM_deleteValue(_);
                         });
                         window.location.href = "https://www.luogu.com.cn/";
