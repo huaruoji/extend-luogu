@@ -47,7 +47,7 @@ const markdown = window.markdown;
 const MarkdownPalettes = window.MarkdownPalettes;
 const WordCloud = window.WordCloud;
 const mdp = uindow.markdownPalettes;
-const Swal = uindow._feInstance.$swal;
+const Swal = uindow._feInstance.$swal || undefined;
 const log = (...s) => uindow.console.log("%c[exlg]", "color: #0e90d2;", ...s);
 const warn = (...s) => uindow.console.warn("%c[exlg]", "color: #0e90d2;", ...s);
 const error = (...s) => {
@@ -866,16 +866,16 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
             /* get the help of <cmd>. or list all cmds. */
             /* 获取 <cmd> 的帮助。空则列出所有。 */
             if (! cmd)
-                cli_log(`exlg cli. current language: ${cli_lang}, available commands: ${ Object.keys(cmds).join(", ") }`);
+                cli_log`exlg cli. current language: ${cli_lang}, available commands: ${ Object.keys(cmds).join(", ") }`;
             else {
                 const f = cmds[cmd];
-                if (! f) return cli_error(`help: unknown command "${cmd}"`);
+                if (! f) return cli_error`help: unknown command "${cmd}"`;
 
                 const arg = f.arg.map((a) => {
                     const i = a.name + ": " + a.type;
                     return a.essential ? `<${i}>` : `[${i}]`;
                 }).join(" ");
-                cli_log(`${cmd} ${arg} ${ f.help[cli_lang] }`);
+                cli_log`${cmd} ${arg} ${ f.help[cli_lang] }`;
             }
         },
         cd: (path/*!string*/) => {
@@ -906,7 +906,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
                 [ "service",            "fk", "fksqgd", "反馈", "反馈、申请、工单专版",      "se" ]
             ];
             forum = tar.find((ns) => ns.includes(forum))?.[0];
-            if (! tar) return cli_error(`cdd: unknown forum "${forum}"`);
+            if (! tar) return cli_error`cdd: unknown forum "${forum}"`;
             cmds.cd(`/discuss/lists?forumname=${forum}`);
         },
         cc: (name/*char*/) => {
@@ -924,7 +924,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
                 n: "/user/notification",
             }[name];
             if (tar) cmds.cd(tar);
-            else cli_error(`cc: unknown target "${name}"`);
+            else cli_error`cc: unknown target "${name}"`;
         },
         mod: (action/*!string*/, name/*string*/) => {
             /* for <action> "enable|disable|toggle", opearte the mod named <name>. for <action> "save", save modification. */
@@ -934,24 +934,24 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
             case "enable":
             case "disable":
             case "toggle":
-                if (i < 0) return cli_error(`mod: unknown mod "${name}"`);
+                if (i < 0) return cli_error`mod: unknown mod "${name}"`;
                 const $mod = $($("#exlg-dash-mods").children()[i]).children();
                 $mod.prop("checked", {
                     enable: () => true, disable: () => false, toggle: (now) => ! now
                 }[action]($mod.prop("checked"))).trigger("change");
                 break;
             case "save":
-                GM_setValue("mod_map", mod.map);
+                GM_setValue("mod-map", mod.map);
                 break;
             default:
-                return cli_error(`mod: unknown action "${action}"`);
+                return cli_error`mod: unknown action "${action}"`;
             }
         },
         dash: (action/*!string*/) => {
             /* for <action> "show|hide|toggle", opearte the exlg dashboard. */
             /* 当 <action> 为 "show|hide|toggle", 显示|隐藏|切换 exlg 管理面板。 */
             if (! [ "show", "hide", "toggle" ].includes(action))
-                return cli_error(`dash: unknown action "${action}"`);
+                return cli_error`dash: unknown action "${action}"`;
             $("#exlg-dash-window")[action]();
         },
         lang: (lang/*!string*/) => {
