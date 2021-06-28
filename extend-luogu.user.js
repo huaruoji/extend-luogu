@@ -59,6 +59,12 @@ const xss = new filterXSS.FilterXSS({
     }
 });
 
+function sleep(t) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(), t);
+    });
+}
+
 Date.prototype.format = function (f, UTC) {
     UTC = UTC ? "UTC" : "";
     const re = {
@@ -116,6 +122,8 @@ const storage = new Proxy({}, {
 
 const mod = {
     _: [],
+
+    first_injection: 0,
 
     reg: (name, info, path, func, styl) => mod._.push({
         name, info, path: Array.isArray(path) ? path : [path], func, styl
@@ -186,7 +194,7 @@ const mod = {
     execute: (name) => {
         const exe = (m, named) => {
             if (!m) error(`Executing named mod but not found: "${name}"`);
-            if (m.styl) GM_addStyle(m.styl);
+            if (m.styl && !mod.first_injection) GM_addStyle(m.styl);
             log(`Executing ${named ? "named " : ""}mod: "${m.name}"`);
             return m.func(named);
         };
@@ -218,6 +226,7 @@ const mod = {
         }
 
         if (map_init) storage.mod_map = mod.map;
+        mod.first_injection = 1;
     },
 
     get_settings_element() {
@@ -1463,7 +1472,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
         //module设置
         mod._.forEach((m) => {
-            if (!unclosable_list.includes(m.name) && !["user_css-edit", "update"].includes(m.name)) {
+            if (!unclosable_list.includes(m.name) && !["user-css-edit", "update"].includes(m.name)) {
                 $(`<div></div>`)
                     .append($get_button_of_mod_map(m.name, m.info))
                     .appendTo($("#ex-settings-module-switch"));
@@ -1503,7 +1512,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
         $(`<div><h4>自定义css</h4></div>`).append(
             $(`<div class="am-form-group am-form"></div>`).append(
-                $(`<textarea rows="3" id="custom-css-input"` + (((storage.code_fonts_val || "") !== "") ? (`style="font-family: ` + storage.code_fonts_val + `"`) : (``)) + `></textarea>`).val(storage.user_css)
+                $(`<textarea rows="3" id="custom-css-input"` + (((storage.code_fonts_val || "") !== "") ? (`style="font-family: ` + (storage.code_fonts_val || "") + `"`) : (``)) + `></textarea>`).val(storage.user_css)
             )
         )
             .append(
@@ -1565,7 +1574,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 (() => {
                     const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(14, 29, 105); background-color: rgb(14, 29, 105);">清除GM数据</button>`);
                     $btn.on("click", () => {
-                        ["exlg-last-used-version", "user_css", "mod-chore-rec", "mod_map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code_fonts_val"].forEach((_) => {
+                        ["exlg-last-used-version", "user-css", "mod-chore-rec", "mod_map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code_fonts_val"].forEach((_) => {
                             GM_deleteValue(_);
                         });
                         window.location.href = "https://www.luogu.com.cn/";
@@ -1677,7 +1686,6 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     font-size: 0.875em;
     padding: 0.313em 1em;
 }`);
-
 
 mod.reg("discuss-save", "讨论保存", "@/*", () => {
     if (!/\/discuss\/show\/[1-9]\d*$/.test(location.pathname)) {
@@ -2273,6 +2281,25 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
     })();
 });
 
+mod.reg("submission-color", "记录难度可视化", "@/*", async () => {
+    const url = new URL(window.location.href);
+    if (url.pathname !== "/record/list") return;
+
+    await sleep(300);
+
+    const dif = unsafeWindow._feInjection.currentData.records.result.map((u) => u.problem.difficulty);
+    $("div.problem>div>a>span.pid").each((u, v) => { $(v).addClass(`exlg-difficulty-color-${dif[u]}`); });
+}, `
+.exlg-difficulty-color-0{ color: rgb(191, 191, 191)!important; }
+.exlg-difficulty-color-1{ color: rgb(254, 76, 97)!important; }
+.exlg-difficulty-color-2{ color: rgb(243, 156, 17)!important; }
+.exlg-difficulty-color-3{ color: rgb(255, 193, 22)!important; }
+.exlg-difficulty-color-4{ color: rgb(82, 196, 26)!important; }
+.exlg-difficulty-color-5{ color: rgb(52, 152, 219)!important; }
+.exlg-difficulty-color-6{ color: rgb(157, 61, 207)!important; }
+.exlg-difficulty-color-7{ color: rgb(14, 29, 105)!important; }
+`);
+
 uindow.console.info = (function () {
     const orig = console.info;
     return function () {
@@ -2282,12 +2309,6 @@ uindow.console.info = (function () {
         return newEvent;
     };
 })();
-
-function sleep(t) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(), t);
-    });
-}
 
 async function injectLuogu() {
     if (!/luogu.[com|org]/.test(window.location.href)) return;
