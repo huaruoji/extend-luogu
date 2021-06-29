@@ -2285,9 +2285,9 @@ mod.reg("submission-color", "记录难度可视化", "@/*", async () => {
     const url = new URL(window.location.href);
     if (url.pathname !== "/record/list") return;
 
-    await sleep(300);
+    const u = await getContent(window.location.href);
 
-    const dif = unsafeWindow._feInjection.currentData.records.result.map((u) => u.problem.difficulty);
+    const dif = u.currentData.records.result.map((u) => u.problem.difficulty);
     $("div.problem>div>a>span.pid").each((u, v) => { $(v).addClass(`exlg-difficulty-color-${dif[u]}`); });
 }, `
 .exlg-difficulty-color-0{ color: rgb(191, 191, 191)!important; }
