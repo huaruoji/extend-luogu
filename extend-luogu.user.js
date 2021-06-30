@@ -31,9 +31,11 @@
 
 // ==Utilities==
 
+function html([x]) { return x; } // a function to help highlight in vscode
+
 const unclosable_list = ["dash", "luogu-settings-extension", "keyboard-and-cli", "update-log", "@springboard", "@benben-data", "@version-data"];
-const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="dot-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-dot-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 56c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m0-48C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 168c-44.183 0-80 35.817-80 80s35.817 80 80 80 80-35.817 80-80-35.817-80-80-80z"></path></svg>`;
-const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"></path></svg>`;
+const html_circleswitch_on = html`<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="dot-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-dot-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 56c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m0-48C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 168c-44.183 0-80 35.817-80 80s35.817 80 80 80 80-35.817 80-80-35.817-80-80-80z"></path></svg>`;
+const html_circleswitch_off = html`<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"></path></svg>`;
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${GM_info.script.version} 更新日志`, `
 1.修了回滚版本后的一大堆bug
@@ -200,7 +202,7 @@ const mod = {
         name, info, "@/",
         () => {
             let $board = $("#exlg-board");
-            if (!$board.length) $board = $(`
+            if (!$board.length) $board = $(html`
 <div class="lg-article" id="exlg-board"></div> <br />
 `).prependTo(".lg-right.am-u-md-4");
             func($(`<div></div><br>`).appendTo($board));
@@ -258,7 +260,7 @@ const mod = {
 };
 
 mod.reg("dash", "控制面板", "@/*", () => {
-    $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon"><svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg></a>`).prependTo($("nav.user-nav, div.user-nav > nav"));
+    $(html`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon"><svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg></a>`).prependTo($("nav.user-nav, div.user-nav > nav"));
 }, `
 #exlg-nav-icon {
 	color: inherit;
@@ -286,14 +288,14 @@ mod.regMain("springboard", "跨域跳板", "@bili/robots.txt", () => {
     const q = new URLSearchParams(location.search);
     console.log("started");
     if (q.has("benben")) {
-        document.write(`<iframe src="https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121"></iframe>`);
+        document.write(html`<iframe src="https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121"></iframe>`);
         uindow.addEventListener("message", (e) => {
             e.data.unshift("benben");
             uindow.parent.postMessage(e.data, "*");
         });
     }
     else if (q.has("update")) {
-        document.write(`<iframe src="https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version"></iframe>`);
+        document.write(html`<iframe src="https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version"></iframe>`);
         uindow.addEventListener("message", (e) => {
             e.data.unshift("update");
             uindow.parent.postMessage(e.data, "*");
@@ -379,12 +381,12 @@ mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], () 
     const emo_url = (name) => `https://xn--9zr.tk/${name}`;
     const $menu = $(".mp-editor-menu"),
         $txt = $(".CodeMirror-wrap textarea"),
-        $nl = $("<br />").appendTo($menu),
+        $nl = $(html`<br />`).appendTo($menu),
         $grd = $(".mp-editor-ground").addClass("exlg-ext");
 
     emo.forEach((m) => {
         const url = emo_url(m);
-        $(`<li class="exlg-emo"><img src="${url}" /></li>`)
+        $(html`<li class="exlg-emo"><img src="${url}" /></li>`)
             .on("click", () => $txt
                 .trigger("focus")
                 .val(emo_markdown(m))
@@ -394,7 +396,7 @@ mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], () 
     });
     const $emo = $(".exlg-emo");
 
-    const $fold = $(`<li>表情 <i class="fa fa-chevron-left"></li>`)
+    const $fold = $(html`<li>表情 <i class="fa fa-chevron-left"></li>`)
         .on("click", () => {
             $nl.toggle();
             $emo.toggle();
@@ -426,7 +428,7 @@ mod.regChore("update", "脚本升级", "1D", "@/*", () => {
     let loaded = false;
     if (loaded) $("#exlg-benben").attr("src", $("#exlg-benben").attr("src"));
     else {
-        const $sb = $(`<iframe id="exlg-update" src="https://www.bilibili.com/robots.txt?update"></iframe>`)
+        const $sb = $(html`<iframe id="exlg-update" src="https://www.bilibili.com/robots.txt?update"></iframe>`)
             .appendTo($("body")).hide();
         log("Building springboard:", $sb[0]);
         loaded = true;
@@ -446,9 +448,9 @@ mod.regChore("update", "脚本升级", "1D", "@/*", () => {
 
         if (op === "<<") $("#exlg-dash > .exlg-warn").show();
         $("#exlg-dash-verison").html(l.split(": ")[1]
-            .replace(">>", `<span style="color: #5eb95e;">&gt;&gt;</span>`)
-            .replace("==", `<span style="color: #5eb95e;">==</span>`)
-            .replace("<<", `<span style="color: #e74c3c;">&lt;&lt;</span>`)
+            .replace(">>", html`<span style="color: #5eb95e;">&gt;&gt;</span>`)
+            .replace("==", html`<span style="color: #5eb95e;">==</span>`)
+            .replace("<<", html`<span style="color: #e74c3c;">&lt;&lt;</span>`)
         );
         $(`#newest-version-display`).html(latest);
         if (op === "<<") {
@@ -476,7 +478,7 @@ mod.regUserTab("user-intro-ins", "主页指令", "main", null, () => {
             $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`));
             break;
         case "frame":
-            $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
+            $e.replaceWith($(html`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
                     + `style="width: ${arg[1]}; height: ${arg[2]};"></iframe>`
             ));
             break;
@@ -516,7 +518,7 @@ mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
             $ps.find("a").each((d, p, $p = $(p)) =>
                 $p.removeClass("color-default").css("color", color[my[d].difficulty])
             );
-            $ps.before($(`<span id="exlg-problem-count-${i}" class="exlg-counter">${my.length}</span>`));
+            $ps.before($(html`<span id="exlg-problem-count-${i}" class="exlg-counter">${my.length}</span>`));
         });
 
         if (uindow._feInjection.currentData.user.uid === uindow._feInjection.currentUser.uid) return;
@@ -534,8 +536,7 @@ mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
                 $p.css("backgroundColor", "rgba(82, 196, 26, 0.3)");
             }
         });
-        $("#exlg-problem-count-1").html(`<span class="exlg-counter">${ta.length} <> ${my.length} : ${same}`
-                + `<i class="exlg-icon exlg-info" name="ta 的 &lt;&gt; 我的 : 相同"></i></span>`);
+        $("#exlg-problem-count-1").html(html`<span class="exlg-counter">${ta.length} <> ${my.length} : ${same}<i class="exlg-icon exlg-info" name="ta 的 &lt;&gt; 我的 : 相同"></i></span>`);
     }, 300);
 }, `
 .main > .card > h3 {
@@ -545,7 +546,7 @@ mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
 
 mod.reg("user-css-load", "加载用户样式", "@/*", () => {
     if (window.location.href === "https://www.luogu.com.cn/theme/list" || window.location.href === "https://www.luogu.com.cn/theme/list/") {
-        const $ps = $(`
+        const $ps = $(html`
     <div id="exlg-user-css">
     <h4>自定义css</h4>
         <div class="am-form-group am-form"><textarea rows="3" id="custom-css-input"></textarea></div><p>
@@ -578,7 +579,7 @@ mod.reg("benben", "全网犇犇", "@/", () => {
         Red: "red lg-bold",
         Purple: "purple lg-bold",
     };
-    const check_svg = `
+    const check_svg = html`
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="%" style="margin-bottom: -3px;">
     <path d="M16 8C16 6.84375 15.25 5.84375 14.1875 5.4375C14.6562 4.4375 14.4688 3.1875 13.6562 2.34375C12.8125 1.53125 11.5625 1.34375 10.5625 1.8125C10.1562 0.75 9.15625 0 8 0C6.8125 0 5.8125 0.75 5.40625 1.8125C4.40625 1.34375 3.15625 1.53125 2.34375 2.34375C1.5 3.1875 1.3125 4.4375 1.78125 5.4375C0.71875 5.84375 0 6.84375 0 8C0 9.1875 0.71875 10.1875 1.78125 10.5938C1.3125 11.5938 1.5 12.8438 2.34375 13.6562C3.15625 14.5 4.40625 14.6875 5.40625 14.2188C5.8125 15.2812 6.8125 16 8 16C9.15625 16 10.1562 15.2812 10.5625 14.2188C11.5938 14.6875 12.8125 14.5 13.6562 13.6562C14.4688 12.8438 14.6562 11.5938 14.1875 10.5938C15.25 10.1875 16 9.1875 16 8ZM11.4688 6.625L7.375 10.6875C7.21875 10.8438 7 10.8125 6.875 10.6875L4.5 8.3125C4.375 8.1875 4.375 7.96875 4.5 7.8125L5.3125 7C5.46875 6.875 5.6875 6.875 5.8125 7.03125L7.125 8.34375L10.1562 5.34375C10.3125 5.1875 10.5312 5.1875 10.6562 5.34375L11.4688 6.15625C11.5938 6.28125 11.5938 6.5 11.4688 6.625Z"></path>
 </svg>`;
@@ -587,7 +588,7 @@ mod.reg("benben", "全网犇犇", "@/", () => {
     let loaded = false;
 
     const $sel = $(".feed-selector");
-    $(`<li class="feed-selector" id="exlg-benben-selector" data-mode="all"><a style="cursor: pointer">全网动态</a></li>`)
+    $(html`<li class="feed-selector" id="exlg-benben-selector" data-mode="all"><a style="cursor: pointer">全网动态</a></li>`)
         .appendTo($sel.parent())
         .on("click", (e) => {
             const $this = $(e.currentTarget);
@@ -599,7 +600,7 @@ mod.reg("benben", "全网犇犇", "@/", () => {
 
             if (loaded) $("#exlg-benben").attr("src", $("#exlg-benben").attr("src"));
             else {
-                const $sb = $(`<iframe id="exlg-benben" src="https://www.bilibili.com/robots.txt?benben"></iframe>`)
+                const $sb = $(html`<iframe id="exlg-benben" src="https://www.bilibili.com/robots.txt?benben"></iframe>`)
                     .appendTo($("body")).hide();
                 log("Building springboard:", $sb[0]);
                 loaded = true;
@@ -613,7 +614,7 @@ mod.reg("benben", "全网犇犇", "@/", () => {
         e.data.shift();
         if (!$("#exlg-benben-selector").hasClass("am-active")) return; //若不是全网犇犇就不添加
         e.data.forEach((m) =>
-            $(`
+            $(html`
 <li class="am-comment am-comment-primary feed-li">
     <div class="lg-left">
         <a href="/user/${m.user.uid}" class="center">
@@ -655,10 +656,10 @@ mod.reg("benben", "全网犇犇", "@/", () => {
 
 mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
     $("[name='gotorandom']").text("随机");
-    const $start_rand = $(`<button class="am-btn am-btn-success am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`).appendTo($("[name='gotorandom']").parent());
+    const $start_rand = $(html`<button class="am-btn am-btn-success am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`).appendTo($("[name='gotorandom']").parent());
     //$(".lg-index-stat>h2").after($(`<div><h2>问题跳转</h2><div id="exlg-dash-0" class="exlg-rand-settings">...</div></div>`)).remove()
     $(".lg-index-stat>h2").after($(`<h2>问题跳转 <div id="exlg-dash-0" class="exlg-rand-settings">ex设置</div></h2>`)).remove();
-    $(`<span id="exlg-dash-0-window" class="exlg-window"><p><ul id="exlg-rand-diffs"><h2>随机跳题ex <div class="exlg-rand-settings exlg-save-rdpb">保存并关闭</div></h2></h2></ul></p></span>`).appendTo($("[name='gotorandom']").parent());
+    $(html`<span id="exlg-dash-0-window" class="exlg-window"><p><ul id="exlg-rand-diffs"><h2>随机跳题ex <div class="exlg-rand-settings exlg-save-rdpb">保存并关闭</div></h2></h2></ul></p></span>`).appendTo($("[name='gotorandom']").parent());
     //$("[name='gotorandom']").parent().parent().children('h2').html($(`<h2>问题跳转</h2><div id="exlg-dash-0" class = "exlg-rand-settings">...</div><span id="exlg-dash-0-window" class="exlg-window"><p><ul id="exlg-rand-diffs"><h2>随机跳题ex</h2></ul></p></span>`))
     const iLoveMinecraft = [0, 1, 2, 3, 4, 5, 6, 7];
     const iLoveTouhou = [0, 1, 2, 3, 4];
@@ -666,26 +667,26 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
     const difficulty_select = storage.mod_rand_difficulty || [false, false, false, false, false, false, false, false];
     const source_select = storage.mod_rand_source || [false, false, false, false, false];
     const difficulty_html = [
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">入门</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">普及-</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-yellow">普及/提高-</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">普及+/提高</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">提高+/省选-</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-purple">省选/NOI-</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-black">NOI/NOI+/CTSC</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-grey">暂无评定</div>`
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">入门</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">普及-</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-yellow">普及/提高-</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">普及+/提高</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">提高+/省选-</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-purple">省选/NOI-</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-black">NOI/NOI+/CTSC</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-grey">暂无评定</div>`
     ];
     const source_html = [
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">洛谷题库</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">Codeforces</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-yellow">SPOJ</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">ATcoder</div>`,
-        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">UVA</div>`
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">洛谷题库</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">Codeforces</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-yellow">SPOJ</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">ATcoder</div>`,
+        html`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">UVA</div>`
     ];
     const $diffs = $("#exlg-rand-diffs");
-    $(`<h3>设置题目难度</h3>`).appendTo($diffs);
+    $(html`<h3>设置题目难度</h3>`).appendTo($diffs);
     iLoveMinecraft.forEach((i) => {
-        const $m = $(`
+        const $m = $(html`
 <li>
     <input type="checkbox" />
     ` + difficulty_html[i] + `<br/>
@@ -697,9 +698,9 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
                 difficulty_select[i] = !difficulty_select[i];
             });
     });
-    $(`<h3>设置题目来源</h3>`).appendTo($diffs);
+    $(html`<h3>设置题目来源</h3>`).appendTo($diffs);
     iLoveTouhou.forEach((i) => {
-        const $m = $(`
+        const $m = $(html`
 <li>
     <input type="checkbox" />
     ` + source_html[i] + `<br/>
@@ -711,8 +712,8 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
                 source_select[i] = !source_select[i];
             });
     });
-    $(`<br>`).appendTo($diffs);
-    const save_rdpb = $(`<button class="am-btn am-btn-primary am-btn-sm exlg-save-rdpb" name="saverandom">保存</button>`);
+    $(html`<br>`).appendTo($diffs);
+    const save_rdpb = $(html`<button class="am-btn am-btn-primary am-btn-sm exlg-save-rdpb" name="saverandom">保存</button>`);
     $(".exlg-save-rdpb").on("click", (_) => {
         storage.mod_rand_difficulty = difficulty_select;
         storage.mod_rand_source = source_select;
@@ -759,8 +760,8 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
         location.href = `/problem/${pid}`;
     };
     $("#gtrdex").on("click", HREF_NEXT);
-    $(".am-form-field[name='toproblem']").after($(`<input type="text" class="am-form-field" placeholder="例：P1001，可跳至A+B" name="toproblem">`)).remove();
-    $(".am-btn.am-btn-danger.am-btn-sm[name='goto']").after($(`<button class="am-btn am-btn-danger am-btn-sm" name="goto">跳转</button>`)).remove();
+    $(".am-form-field[name='toproblem']").after($(html`<input type="text" class="am-form-field" placeholder="例：P1001，可跳至A+B" name="toproblem">`)).remove();
+    $(".am-btn.am-btn-danger.am-btn-sm[name='goto']").after($(html`<button class="am-btn am-btn-danger am-btn-sm" name="goto">跳转</button>`)).remove();
     const judge_problem = (text) => {
         if (text.match(/AT[0-9]{1,4}/i) === text) return true;
         if (text.match(/CF[0-9]{1,4}[A-Z][0-9]{0,1}/i) === text) return true;
@@ -864,8 +865,8 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
 `);
 
 mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
-    const $cli = $(`<div id="exlg-cli"></div>`).appendTo($("body"));
-    const $cli_input = $(`<input id="exlg-cli-input" />`).appendTo($cli);
+    const $cli = $(html`<div id="exlg-cli"></div>`).appendTo($("body"));
+    const $cli_input = $(html`<input id="exlg-cli-input" />`).appendTo($cli);
 
     let cli_is_log = false;
     const cli_log = (sp, ...tp) => {
@@ -1621,7 +1622,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                     .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                 return $btn;
             })()
-        ).appendTo($("#ex-settings-data-debug"));
+        )).appendTo($("#ex-settings-data-debug"));
 
         $(`<p class="lfe-caption exlg-caption">当前版本为：${ GM_info.script.version }</p>`)
             .append($(`<span>&nbsp;</span>`))
@@ -2246,10 +2247,10 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
 
             p += `<hr /><div><canvas id="notepad-wordcloud" width="2300px" height="1200px" style="width:100%;height:600px;"></canvas></div><hr />`;
 
-            for (const u of res) {
-                if (u.important)
-                    p += renderProblem(u);
-            }
+            // for (const u of res) {
+            //     if (u.important)
+            //         p += renderProblem(u);
+            // }
 
             p += "<br /><hr /><br />";
 
