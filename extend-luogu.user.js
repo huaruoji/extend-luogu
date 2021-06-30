@@ -32,15 +32,15 @@
 // ==Utilities==
 
 const unclosable_list = ["dash", "luogu-settings-extension", "keyboard-and-cli", "update-log", "@springboard", "@benben-data", "@version-data"];
-const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="dot-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-dot-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 56c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m0-48C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 168c-44.183 0-80 35.817-80 80s35.817 80 80 80 80-35.817 80-80-35.817-80-80-80z"></path></svg>`
-const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"></path></svg>`
+const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="dot-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-dot-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 56c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m0-48C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 168c-44.183 0-80 35.817-80 80s35.817 80 80 80 80-35.817 80-80-35.817-80-80-80z"></path></svg>`;
+const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"></path></svg>`;
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${GM_info.script.version} 更新日志`, `
 1.修了回滚版本后的一大堆bug 　　　　　　　　　　　　
 2.去除一大堆的data-v的attr标签  　　　　　　　　　　
 3.优化了亿些UI
 4.代码重构
-`)
+`);
 
 const uindow = unsafeWindow;
 const $ = jQuery;
@@ -49,32 +49,32 @@ const markdown = window.markdown;
 const MarkdownPalettes = window.MarkdownPalettes;
 const WordCloud = window.WordCloud;
 const mdp = uindow.markdownPalettes;
-const log = (...s) => uindow.console.log("%c[exlg]", "color: #0e90d2;", ...s)
-const warn = (...s) => uindow.console.warn("%c[exlg]", "color: #0e90d2;", ...s)
+const log = (...s) => uindow.console.log("%c[exlg]", "color: #0e90d2;", ...s);
+const warn = (...s) => uindow.console.warn("%c[exlg]", "color: #0e90d2;", ...s);
 const error = (...s) => {
-    uindow.console.error("%c[exlg]", "color: #0e90d2;", ...s)
-    throw Error(s.join(" "))
+    uindow.console.error("%c[exlg]", "color: #0e90d2;", ...s);
+    throw Error(s.join(" "));
 };
 const xss = new filterXSS.FilterXSS({
     onTagAttr: (_, k, v, __) => {
-        if (k === "style") return `${k}="${v}"`
+        if (k === "style") return `${k}="${v}"`;
     }
-})
+});
 
 function sleep(t) {
     return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(), t)
-    })
+        setTimeout(() => resolve(), t);
+    });
 }
 
 function addScript(s) {
-    const t = document.createElement("script")
+    const t = document.createElement("script");
     t.innerHTML = s;
-    document.body.append(t)
+    document.body.append(t);
 }
 
 Date.prototype.format = function (f, UTC) {
-    UTC = UTC ? "UTC" : ""
+    UTC = UTC ? "UTC" : "";
     const re = {
         "y+": this[`get${UTC}FullYear`](),
         "m+": this[`get${UTC}Month`]() + 1,
@@ -87,71 +87,71 @@ Date.prototype.format = function (f, UTC) {
     for (const r in re) if (RegExp(`(${r})`).test(f))
         f = f.replace(RegExp.$1,
             ("000" + re[r]).substr(re[r].toString().length + 3 - RegExp.$1.length)
-        )
+        );
     return f;
 };
 
 const version_cmp = (v1, v2) => {
-    const op = (x1, x2) => x1 === x2 ? "==" : x1 < x2 ? "<<" : ">>"
+    const op = (x1, x2) => x1 === x2 ? "==" : x1 < x2 ? "<<" : ">>";
     const exs = ["pre", "alpha", "beta"];
 
-    const [[n1, e1], [n2, e2]] = [v1, v2].map((v) => v.split(" "))
-    if (n1 === n2) return op(...[e1, e2].map((e) => e ? exs.findIndex((ex) => ex === e) : Infinity))
+    const [[n1, e1], [n2, e2]] = [v1, v2].map((v) => v.split(" "));
+    if (n1 === n2) return op(...[e1, e2].map((e) => e ? exs.findIndex((ex) => ex === e) : Infinity));
 
-    const [m1, m2] = [n1, n2].map((n) => n.split("."))
+    const [m1, m2] = [n1, n2].map((n) => n.split("."));
     for (const [k2, m] of m1.entries())
-        if (m !== m2[k2]) return op(+ m || 0, + m2[k2] || 0)
+        if (m !== m2[k2]) return op(+ m || 0, + m2[k2] || 0);
 };
 
 function getContent(url, contentOnly = 1) {
     if (contentOnly)
-        url = url + (url.includes("?") ? "&" : "?") + "_contentOnly"
+        url = url + (url.includes("?") ? "&" : "?") + "_contentOnly";
     return new Promise((resolve, reject) => {
-        $.get(url, (u) =>  resolve(u))
-    })
+        $.get(url, (u) =>  resolve(u));
+    });
 }
 
-const lg_alert = (msg) => uindow.show_alert("exlg 提醒您", msg)
+const lg_alert = (msg) => uindow.show_alert("exlg 提醒您", msg);
 
 const storage = new Proxy({}, {
     get(tar, key) {
-        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key
-		log("visit", key, "as", GM_getValue(key))
-        return GM_getValue(key)
+        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key;
+        log("visit", key, "as", GM_getValue(key));
+        return GM_getValue(key);
     },
     set(tar, key, val) {
-        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key
-		log("set", key, "to", val)
-        GM_setValue(key, val)
-		log("now", key, "is", val)
+        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key;
+        log("set", key, "to", val);
+        GM_setValue(key, val);
+        log("now", key, "is", val);
     },
     deleteProperty: (tar, key) => {
-        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key
-        GM_deleteValue(key)
-        return true
+        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key;
+        GM_deleteValue(key);
+        return true;
     },
     getValue: (tar, key) => {
-        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key
-        return GM_getValue(key)
+        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key;
+        return GM_getValue(key);
     },
     setValue: (tar, key, val) => {
-        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key
-        return GM_setValue(key, val)
+        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key;
+        return GM_setValue(key, val);
     },
     getRealValue: (tar, key) => {
-        return GM_getValue(key)
+        return GM_getValue(key);
     },
     setRealValue: (tar, key, val) => {
-        return GM_setValue(key, val)
+        return GM_setValue(key, val);
     },
     clear: (tar) => {
-        GM_listValues().forEach(_ => {
-            if (typeof(_) !== "string") return
-            if (!/exlg_(.*)/.test(_)) return
-            GM_deleteValue(_)
-        })
+        GM_listValues().forEach((_) => {
+            if (typeof(_) !== "string") return;
+            if (!/exlg_(.*)/.test(_)) return;
+            GM_deleteValue(_);
+        });
     }
-})
+});
 
 // ==Modules==
 
@@ -170,14 +170,14 @@ const mod = {
         mod.reg(
             name, info, ["@/user/*"],
             () => {
-                const $tabs = $(".items")
+                const $tabs = $(".items");
                 const work = () => {
                     if ((location.hash || "#main") !== "#" + tab) return;
-                    log(`Working user tab#${tab} mod: "${name}"`)
-                    func(typeof vars === "function" ? vars() : vars)
+                    log(`Working user tab#${tab} mod: "${name}"`);
+                    func(typeof vars === "function" ? vars() : vars);
                 };
-                $tabs.on("click", work)
-                work()
+                $tabs.on("click", work);
+                work();
             }, styl
         ),
     regChore: (name, info, period, path, func, styl) => {
@@ -189,35 +189,35 @@ const mod = {
                 D: 1000 * 60 * 60 * 24
             }[period.slice(-1)];
             if (!isNaN(num) && unit) period = num * unit;
-            else error(`Parsing period failed: "${period}"`)
+            else error(`Parsing period failed: "${period}"`);
         }
         mod.reg(
             "^" + name, info, path, (named) => {
                 const rec = storage.mod_chore_rec ?? {};
-                const last = rec[name], now = Date.now()
+                const last = rec[name], now = Date.now();
 
                 let nostyl = true;
                 if (named || !last || now - last > period) {
-                    func()
+                    func();
                     if (nostyl) {
-                        GM_addStyle(styl)
+                        GM_addStyle(styl);
                         nostyl = false;
                     }
-                    rec[name] = Date.now()
+                    rec[name] = Date.now();
                     storage.mod_chore_rec = rec;
                 }
-                else log(`Pending chore: "${name}"`)
+                else log(`Pending chore: "${name}"`);
             }
-        )
+        );
     },
     regBoard: (name, info, func, styl) => mod.reg(
         name, info, "@/",
         () => {
-            let $board = $("#exlg-board")
+            let $board = $("#exlg-board");
             if (!$board.length) $board = $(`
 <div class="lg-article" id="exlg-board"></div> <br />
-`).prependTo(".lg-right.am-u-md-4")
-            func($(`<div></div><br>`).appendTo($board))
+`).prependTo(".lg-right.am-u-md-4");
+            func($(`<div></div><br>`).appendTo($board));
         }, styl
     ),
     find: (name) => mod._.find((m) => m.name === name),
@@ -228,23 +228,23 @@ const mod = {
 
     execute: (name) => {
         const exe = (m, named) => {
-            if (!m) error(`Executing named mod but not found: "${name}"`)
-            if (m.styl && !mod.first_injection) GM_addStyle(m.styl)
-            log(`Executing ${named ? "named " : ""}mod: "${m.name}"`)
-            return m.func(named)
+            if (!m) error(`Executing named mod but not found: "${name}"`);
+            if (m.styl && !mod.first_injection) GM_addStyle(m.styl);
+            log(`Executing ${named ? "named " : ""}mod: "${m.name}"`);
+            return m.func(named);
         };
         if (name) {
-            const m = mod.find(name)
-            return exe(m, true)
+            const m = mod.find(name);
+            return exe(m, true);
         }
 
         mod.map = storage.mod_map;
 
 
-        const map_init = mod.map ? false : (mod.map = {})
+        const map_init = mod.map ? false : (mod.map = {});
         for (const m of mod._)
             m.on = map_init ? (mod.map[m.name] = true) : mod.map[m.name];
-        unclosable_list.forEach((u) => { mod.map[u] = true; })
+        unclosable_list.forEach((u) => { mod.map[u] = true; });
         for (const m of mod._) {
             const pn = location.pathname;
             if (m.on && m.path.some((p, _, __, pr = p.replace(/^[a-z]*?@.*?(?=\/)/, "")) => (
@@ -272,7 +272,7 @@ const mod = {
 };
 
 mod.reg("dash", "控制面板", "@/*", () => {
-    $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon"><svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg></a>`).prependTo($("nav.user-nav, div.user-nav > nav"))
+    $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon"><svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg></a>`).prependTo($("nav.user-nav, div.user-nav > nav"));
 }, `
 #exlg-nav-icon {
 	color: inherit; 
@@ -294,29 +294,29 @@ button.exlg-btn {
     border-radius: 3px;
     border: 1px solid;
 }
-`)
+`);
 
 mod.regMain("springboard", "跨域跳板", "@bili/robots.txt", () => {
-    const q = new URLSearchParams(location.search)
-    console.log("started")
+    const q = new URLSearchParams(location.search);
+    console.log("started");
     if (q.has("benben")) {
-        document.write(`<iframe src="https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121"></iframe>`)
+        document.write(`<iframe src="https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121"></iframe>`);
         uindow.addEventListener("message", (e) => {
-            e.data.unshift("benben")
-            uindow.parent.postMessage(e.data, "*")
-        })
+            e.data.unshift("benben");
+            uindow.parent.postMessage(e.data, "*");
+        });
     }
     else if (q.has("update")) {
-        document.write(`<iframe src="https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version"></iframe>`)
+        document.write(`<iframe src="https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version"></iframe>`);
         uindow.addEventListener("message", (e) => {
-            e.data.unshift("update")
-            uindow.parent.postMessage(e.data, "*")
-        })
+            e.data.unshift("update");
+            uindow.parent.postMessage(e.data, "*");
+        });
     }
     else if (q.has("url")) {
-        const url = q.get("url")
+        const url = q.get("url");
         if (confirm(`是否加载来自 ${url} 的页面？`))
-            document.body.innerHTML = `<iframe src="${url}"></iframe>`
+            document.body.innerHTML = `<iframe src="${url}"></iframe>`;
     }
 }, `
 iframe {
@@ -328,15 +328,15 @@ iframe {
 iframe::-webkit-scrollbar {
     display: none;
 }
-`)
+`);
 
 mod.regMain("benben-data", "犇犇数据", "@tcs1/release/APIGWHtmlDemo-1615602121", () =>
     uindow.parent.postMessage(JSON.parse(document.body.innerText), "*")
-)
+);
 
 mod.regMain("version-data", "版本数据", "@tcs2/release/exlg-version", () =>
     uindow.parent.postMessage([document.body.innerText], "*")
-)
+);
 
 mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], () => {
     /*
@@ -387,43 +387,43 @@ mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], () 
         "tyt",
     ];
     const emo_markdown = (name) => {
-        if (emo.includes(name)) return `![${name}](https://xn--9zr.tk/${name})`
+        if (emo.includes(name)) return `![${name}](https://xn--9zr.tk/${name})`;
         else return name;
     };
-    const emo_url = (name) => `https://xn--9zr.tk/${name}`
+    const emo_url = (name) => `https://xn--9zr.tk/${name}`;
     const $menu = $(".mp-editor-menu"),
         $txt = $(".CodeMirror-wrap textarea"),
         $nl = $("<br />").appendTo($menu),
-        $grd = $(".mp-editor-ground").addClass("exlg-ext")
+        $grd = $(".mp-editor-ground").addClass("exlg-ext");
 
     emo.forEach((m) => {
-        const url = emo_url(m)
+        const url = emo_url(m);
         $(`<li class="exlg-emo"><img src="${url}" /></li>`)
             .on("click", () => $txt
                 .trigger("focus")
                 .val(emo_markdown(m))
                 .trigger("input")
             )
-            .appendTo($menu)
-    })
-    const $emo = $(".exlg-emo")
+            .appendTo($menu);
+    });
+    const $emo = $(".exlg-emo");
 
     const $fold = $(`<li>表情 <i class="fa fa-chevron-left"></li>`)
         .on("click", () => {
-            $nl.toggle()
-            $emo.toggle()
-            $fold.children().toggleClass("fa-chevron-left fa-chevron-right")
-            $grd.toggleClass("exlg-ext")
-        })
-    $nl.after($fold)
+            $nl.toggle();
+            $emo.toggle();
+            $fold.children().toggleClass("fa-chevron-left fa-chevron-right");
+            $grd.toggleClass("exlg-ext");
+        });
+    $nl.after($fold);
 
     $txt.on("input", (e) => {
         // 添加对 LuoguEmojiSender 的兼容
         if (document.getElementById("replaceEmoji") == null) {
             if (e.originalEvent.data === "/")
-                mdp.content = mdp.content.replace(/\/(.{1,5})\//g, (_, emo_txt) => emo_markdown(emo_txt))
+                mdp.content = mdp.content.replace(/\/(.{1,5})\//g, (_, emo_txt) => emo_markdown(emo_txt));
         }
-    })
+    });
 }, `
 .mp-editor-ground.exlg-ext {
     top: 80px !important;
@@ -434,73 +434,73 @@ mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], () 
     margin: 0;
     padding: 5px 1px;
 }
-`)
+`);
 
 mod.regChore("update", "脚本升级", "1D", "@/*", () => {
     let loaded = false;
-    if (loaded) $("#exlg-benben").attr("src", $("#exlg-benben").attr("src"))
+    if (loaded) $("#exlg-benben").attr("src", $("#exlg-benben").attr("src"));
     else {
         const $sb = $(`<iframe id="exlg-update" src="https://www.bilibili.com/robots.txt?update"></iframe>`)
-            .appendTo($("body")).hide()
-        log("Building springboard:", $sb[0])
+            .appendTo($("body")).hide();
+        log("Building springboard:", $sb[0]);
         loaded = true;
     }
     uindow.addEventListener("message", (e) => {
-        log("Listening message(in update):", e.data)
+        log("Listening message(in update):", e.data);
         if (e.data[0] !== "update") return;
-        e.data.shift()
+        e.data.shift();
 
         const
             latest = e.data[0],
             version = GM_info.script.version,
-            op = version_cmp(version, latest)
+            op = version_cmp(version, latest);
 
-        const l = `Comparing version: ${version} ${op} ${latest}`
-        log(l)
+        const l = `Comparing version: ${version} ${op} ${latest}`;
+        log(l);
 
-        if (op === "<<") $("#exlg-dash > .exlg-warn").show()
+        if (op === "<<") $("#exlg-dash > .exlg-warn").show();
         $("#exlg-dash-verison").html(l.split(": ")[1]
             .replace(">>", `<span style="color: #5eb95e;">&gt;&gt;</span>`)
             .replace("==", `<span style="color: #5eb95e;">==</span>`)
             .replace("<<", `<span style="color: #e74c3c;">&lt;&lt;</span>`)
-        )
-        $(`#newest-version-display`).html(latest)
+        );
+        $(`#newest-version-display`).html(latest);
         if (op === "<<") {
-            $(`#newest-version-display`).css("color", "#e74c3c")
+            $(`#newest-version-display`).css("color", "#e74c3c");
         }
         if (op === "==") {
-            $(`#newest-version-display`).css("color", "#e74c3c")
+            $(`#newest-version-display`).css("color", "#e74c3c");
         }
         if (op === ">>") {
-            $(`#newest-version-display`).css("color", "#66ccff")
+            $(`#newest-version-display`).css("color", "#66ccff");
         }
-    })
-})
+    });
+});
 
 mod.regUserTab("user-intro-ins", "主页指令", "main", null, () => {
     $(".introduction > *").each((_, e, $e = $(e)) => {
-        const t = $e.text()
+        const t = $e.text();
         let [, , ins, arg] = t.match(/^(exlg.|%)([a-z]+):([^]+)$/) ?? [];
         if (!ins) return;
 
-        arg = arg.split(/(?<!!)%/g).map((s) => s.replace(/!%/g, "%"))
-        const $blog = $($(".user-action").children()[0])
+        arg = arg.split(/(?<!!)%/g).map((s) => s.replace(/!%/g, "%"));
+        const $blog = $($(".user-action").children()[0]);
         switch (ins) {
         case "html":
-            $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`))
+            $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`));
             break;
         case "frame":
             $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
                     + `style="width: ${arg[1]}; height: ${arg[2]};"></iframe>`
-            ))
+            ));
             break;
         case "blog":
             if ($blog.text().trim() !== "个人博客") return;
-            $blog.attr("href", arg)
-            $e.remove()
+            $blog.attr("href", arg);
+            $e.remove();
             break;
         }
-    })
+    });
 }, `
 iframe {
     border: none;
@@ -509,7 +509,7 @@ iframe {
 iframe::-webkit-scrollbar {
     display: none;
 }
-`)
+`);
 
 mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
     color: [
@@ -524,38 +524,38 @@ mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
     ]
 }), ({ color }) => {
     setTimeout(async function () {
-        $(".exlg-counter").remove()
+        $(".exlg-counter").remove();
         $(".problems").each((i, ps, $ps = $(ps)) => {
             const my = uindow._feInjection.currentData[["submittedProblems", "passedProblems"][i]];
             $ps.find("a").each((d, p, $p = $(p)) =>
                 $p.removeClass("color-default").css("color", color[my[d].difficulty])
-            )
-            $ps.before($(`<span id="exlg-problem-count-${i}" class="exlg-counter">${my.length}</span>`))
-        })
+            );
+            $ps.before($(`<span id="exlg-problem-count-${i}" class="exlg-counter">${my.length}</span>`));
+        });
 
         if (uindow._feInjection.currentData.user.uid === uindow._feInjection.currentUser.uid) return;
 
-        const res = await getContent(`/user/${uindow._feInjection.currentUser.uid}`)
+        const res = await getContent(`/user/${uindow._feInjection.currentUser.uid}`);
 
         const my = res.currentData.passedProblems;
         const ta = uindow._feInjection.currentData.passedProblems;
 
         let same = 0;
-        const $ps = $($(".problems")[1])
+        const $ps = $($(".problems")[1]);
         $ps.find("a").each((d, p, $p = $(p)) => {
             if (my.some((m) => m.pid === ta[d].pid)) {
                 same++;
-                $p.css("backgroundColor", "rgba(82, 196, 26, 0.3)")
+                $p.css("backgroundColor", "rgba(82, 196, 26, 0.3)");
             }
-        })
+        });
         $("#exlg-problem-count-1").html(`<span class="exlg-counter">${ta.length} <> ${my.length} : ${same}`
-                + `<i class="exlg-icon exlg-info" name="ta 的 &lt;&gt; 我的 : 相同"></i></span>`)
-    }, 300)
+                + `<i class="exlg-icon exlg-info" name="ta 的 &lt;&gt; 我的 : 相同"></i></span>`);
+    }, 300);
 }, `
 .main > .card > h3 {
     display: inline-block;
 }
-`)//lack of hook
+`);//lack of hook
 
 mod.reg("user-css-load", "加载用户样式", "@/*", () => {
     if (window.location.href === "https://www.luogu.com.cn/theme/list" || window.location.href === "https://www.luogu.com.cn/theme/list/") {
@@ -567,12 +567,12 @@ mod.reg("user-css-load", "加载用户样式", "@/*", () => {
         color: white;border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)" id="save-css-button">保存</button>
     </p>
     </div>
-    `).appendTo(".full-container")
-        $("#custom-css-input").val(storage.user_css)
+    `).appendTo(".full-container");
+        $("#custom-css-input").val(storage.user_css);
         $("#save-css-button").on("click", () => {
-            storage.user_css = $("#custom-css-input").val()
-            location.reload()
-        })
+            storage.user_css = $("#custom-css-input").val();
+            location.reload();
+        });
     }
 }, (storage.user_css || "") + `
 #exlg-user-css {
@@ -581,7 +581,7 @@ mod.reg("user-css-load", "加载用户样式", "@/*", () => {
     padding: 1.3em;
     margin-bottom: 1.3em;
     background-color: white;
-}`)
+}`);
 
 mod.reg("benben", "全网犇犇", "@/", () => {
     const color = {
@@ -595,36 +595,36 @@ mod.reg("benben", "全网犇犇", "@/", () => {
     const check_svg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="%" style="margin-bottom: -3px;">
     <path d="M16 8C16 6.84375 15.25 5.84375 14.1875 5.4375C14.6562 4.4375 14.4688 3.1875 13.6562 2.34375C12.8125 1.53125 11.5625 1.34375 10.5625 1.8125C10.1562 0.75 9.15625 0 8 0C6.8125 0 5.8125 0.75 5.40625 1.8125C4.40625 1.34375 3.15625 1.53125 2.34375 2.34375C1.5 3.1875 1.3125 4.4375 1.78125 5.4375C0.71875 5.84375 0 6.84375 0 8C0 9.1875 0.71875 10.1875 1.78125 10.5938C1.3125 11.5938 1.5 12.8438 2.34375 13.6562C3.15625 14.5 4.40625 14.6875 5.40625 14.2188C5.8125 15.2812 6.8125 16 8 16C9.15625 16 10.1562 15.2812 10.5625 14.2188C11.5938 14.6875 12.8125 14.5 13.6562 13.6562C14.4688 12.8438 14.6562 11.5938 14.1875 10.5938C15.25 10.1875 16 9.1875 16 8ZM11.4688 6.625L7.375 10.6875C7.21875 10.8438 7 10.8125 6.875 10.6875L4.5 8.3125C4.375 8.1875 4.375 7.96875 4.5 7.8125L5.3125 7C5.46875 6.875 5.6875 6.875 5.8125 7.03125L7.125 8.34375L10.1562 5.34375C10.3125 5.1875 10.5312 5.1875 10.6562 5.34375L11.4688 6.15625C11.5938 6.28125 11.5938 6.5 11.4688 6.625Z"></path>
-</svg>`
-    const check = (lv) => lv <= 3 ? "" : check_svg.replace("%", lv <= 5 ? "#5eb95e" : lv <= 8 ? "#3498db" : "#f1c40f")
+</svg>`;
+    const check = (lv) => lv <= 3 ? "" : check_svg.replace("%", lv <= 5 ? "#5eb95e" : lv <= 8 ? "#3498db" : "#f1c40f");
 
     let loaded = false;
 
-    const $sel = $(".feed-selector")
+    const $sel = $(".feed-selector");
     $(`<li class="feed-selector" id="exlg-benben-selector" data-mode="all"><a style="cursor: pointer">全网动态</a></li>`)
         .appendTo($sel.parent())
         .on("click", (e) => {
-            const $this = $(e.currentTarget)
-            $sel.removeClass("am-active")
-            $this.addClass("am-active")
+            const $this = $(e.currentTarget);
+            $sel.removeClass("am-active");
+            $this.addClass("am-active");
 
-            $("#feed-more").hide()
-            $("li.am-comment").remove()
+            $("#feed-more").hide();
+            $("li.am-comment").remove();
 
-            if (loaded) $("#exlg-benben").attr("src", $("#exlg-benben").attr("src"))
+            if (loaded) $("#exlg-benben").attr("src", $("#exlg-benben").attr("src"));
             else {
                 const $sb = $(`<iframe id="exlg-benben" src="https://www.bilibili.com/robots.txt?benben"></iframe>`)
-                    .appendTo($("body")).hide()
-                log("Building springboard:", $sb[0])
+                    .appendTo($("body")).hide();
+                log("Building springboard:", $sb[0]);
                 loaded = true;
             }
-        })
+        });
 
     uindow.addEventListener("message", (e) => {
-        log("Listening message:", e.data)
+        log("Listening message:", e.data);
 
         if (e.data[0] !== "benben") return;
-        e.data.shift()
+        e.data.shift();
         if (!$("#exlg-benben-selector").hasClass("am-active")) return; //若不是全网犇犇就不添加
         e.data.forEach((m) =>
             $(`
@@ -663,24 +663,24 @@ mod.reg("benben", "全网犇犇", "@/", () => {
                         .trigger("focus").val(` || @${m.user.name} : ${m.content}`)
                         .trigger("input")
                 )
-        )
-    })
-})
+        );
+    });
+});
 
 mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
-    $("[name='gotorandom']").text("随机")
-    const $start_rand = $(`<button class="am-btn am-btn-success am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`).appendTo($("[name='gotorandom']").parent())
+    $("[name='gotorandom']").text("随机");
+    const $start_rand = $(`<button class="am-btn am-btn-success am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`).appendTo($("[name='gotorandom']").parent());
     //$(".lg-index-stat>h2").after($(`<div><h2>问题跳转</h2><div id="exlg-dash-0" class="exlg-rand-settings">...</div></div>`)).remove()
-    $(".lg-index-stat>h2").after($(`<h2>问题跳转 <div id="exlg-dash-0" class="exlg-rand-settings">ex设置</div></h2>`)).remove()
-    $(`<span id="exlg-dash-0-window" class="exlg-window"><p><ul id="exlg-rand-diffs"><h2>随机跳题ex <div class="exlg-rand-settings exlg-save-rdpb">保存并关闭</div></h2></h2></ul></p></span>`).appendTo($("[name='gotorandom']").parent())
+    $(".lg-index-stat>h2").after($(`<h2>问题跳转 <div id="exlg-dash-0" class="exlg-rand-settings">ex设置</div></h2>`)).remove();
+    $(`<span id="exlg-dash-0-window" class="exlg-window"><p><ul id="exlg-rand-diffs"><h2>随机跳题ex <div class="exlg-rand-settings exlg-save-rdpb">保存并关闭</div></h2></h2></ul></p></span>`).appendTo($("[name='gotorandom']").parent());
     //$("[name='gotorandom']").parent().parent().children('h2').html($(`<h2>问题跳转</h2><div id="exlg-dash-0" class = "exlg-rand-settings">...</div><span id="exlg-dash-0-window" class="exlg-window"><p><ul id="exlg-rand-diffs"><h2>随机跳题ex</h2></ul></p></span>`))
     const iLoveMinecraft = [0, 1, 2, 3, 4, 5, 6, 7];
     const iLoveTouhou = [0, 1, 2, 3, 4];
     const fackYouCCF = ["P", "CF", "SP", "AT", "UVA"];
     const difficulty_select = storage.mod_rand_difficulty || [false, false, false, false, false, false, false, false];
     const source_select = storage.mod_rand_source || [false, false, false, false, false];
-    console.log(storage.mod_rand_difficulty, storage.mod_rand_source)
-    console.log(difficulty_select, source_select)
+    console.log(storage.mod_rand_difficulty, storage.mod_rand_source);
+    console.log(difficulty_select, source_select);
     const difficulty_html = [
         `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">入门</div>`,
         `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">普及-</div>`,
@@ -698,61 +698,61 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
         `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">ATcoder</div>`,
         `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">UVA</div>`
     ];
-    const $diffs = $("#exlg-rand-diffs")
-    $(`<h3>设置题目难度</h3>`).appendTo($diffs)
+    const $diffs = $("#exlg-rand-diffs");
+    $(`<h3>设置题目难度</h3>`).appendTo($diffs);
     iLoveMinecraft.forEach((i) => {
         const $m = $(`
 <li>
     <input type="checkbox" />
     ` + difficulty_html[i] + `<br/>
 </li>
-        `).appendTo($diffs)
+        `).appendTo($diffs);
         $m.children("input")
             .prop("checked", difficulty_select[i])
             .on("change", () => {
                 difficulty_select[i] = !difficulty_select[i];
-            })
-    })
-    $(`<h3>设置题目来源</h3>`).appendTo($diffs)
+            });
+    });
+    $(`<h3>设置题目来源</h3>`).appendTo($diffs);
     iLoveTouhou.forEach((i) => {
         const $m = $(`
 <li>
     <input type="checkbox" />
     ` + source_html[i] + `<br/>
 </li>
-        `).appendTo($diffs)
+        `).appendTo($diffs);
         $m.children("input")
             .prop("checked", source_select[i])
             .on("change", () => {
                 source_select[i] = !source_select[i];
-            })
-    })
-    $(`<br>`).appendTo($diffs)
-    const save_rdpb = $(`<button class="am-btn am-btn-primary am-btn-sm exlg-save-rdpb" name="saverandom">保存</button>`)
+            });
+    });
+    $(`<br>`).appendTo($diffs);
+    const save_rdpb = $(`<button class="am-btn am-btn-primary am-btn-sm exlg-save-rdpb" name="saverandom">保存</button>`);
     $(".exlg-save-rdpb").on("click", (_) => {
         storage.mod_rand_difficulty = difficulty_select;
         storage.mod_rand_source = source_select;
-        $("#exlg-dash-0-window").toggle()
-    })
-    save_rdpb.appendTo($diffs)
-    $("#exlg-dash-0").on("click", (_) => $("#exlg-dash-0-window").toggle())
+        $("#exlg-dash-0-window").toggle();
+    });
+    save_rdpb.appendTo($diffs);
+    $("#exlg-dash-0").on("click", (_) => $("#exlg-dash-0-window").toggle());
     const HREF_NEXT = async () => {
         let difs = [];
         iLoveMinecraft.forEach((i) => {
             if (difficulty_select[i] !== 0) {
                 if (i === 7) {
-                    difs.push(0)
+                    difs.push(0);
                 }
-                else difs.push(i + 1)
+                else difs.push(i + 1);
             }
-        })
+        });
         if (difs.length === 0) {
             difs = [0, 1, 2, 3, 4, 5, 6, 7];
         }
         let srcs = [];
         iLoveTouhou.forEach((i) => {
-            if (source_select[i] !== 0) srcs.push(i)
-        })
+            if (source_select[i] !== 0) srcs.push(i);
+        });
         if (srcs.length === 0) {
             srcs = [0];
         }
@@ -760,23 +760,23 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
         //["P","CF","SP","AT","UVA"]
         const source = fackYouCCF[srcs[Math.floor(Math.random() * srcs.length)]];
 
-        let res = await getContent(`/problem/list?difficulty=${difficulty}&type=${source}&page=1`)
+        let res = await getContent(`/problem/list?difficulty=${difficulty}&type=${source}&page=1`);
 
         const
             problem_count = res.currentData.problems.count,
             page_count = Math.ceil(problem_count / 50),
             rand_page = Math.floor(Math.random() * page_count) + 1;
 
-        res = await getContent(`/problem/list?difficulty=${difficulty}&type=${source}&page=${rand_page}`)
+        res = await getContent(`/problem/list?difficulty=${difficulty}&type=${source}&page=${rand_page}`);
         const
             list = res.currentData.problems.result,
             rand_idx = Math.floor(Math.random() * list.length),
             pid = list[rand_idx].pid;
-        location.href = `/problem/${pid}`
+        location.href = `/problem/${pid}`;
     };
-    $("#gtrdex").on("click", HREF_NEXT)
-    $(".am-form-field[name='toproblem']").after($(`<input type="text" class="am-form-field" placeholder="例：P1001，可跳至A+B" name="toproblem">`)).remove()
-    $(".am-btn.am-btn-danger.am-btn-sm[name='goto']").after($(`<button class="am-btn am-btn-danger am-btn-sm" name="goto">跳转</button>`)).remove()
+    $("#gtrdex").on("click", HREF_NEXT);
+    $(".am-form-field[name='toproblem']").after($(`<input type="text" class="am-form-field" placeholder="例：P1001，可跳至A+B" name="toproblem">`)).remove();
+    $(".am-btn.am-btn-danger.am-btn-sm[name='goto']").after($(`<button class="am-btn am-btn-danger am-btn-sm" name="goto">跳转</button>`)).remove();
     const judge_problem = (text) => {
         if (text.match(/AT[0-9]{1,4}/i) === text) return true;
         if (text.match(/CF[0-9]{1,4}[A-Z][0-9]{0,1}/i) === text) return true;
@@ -788,30 +788,30 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
         return false;
     };
     const $func_jump_problem = (str) => {
-        log("problem input is:", str)
-        if (judge_problem(str)) str = str.toUpperCase()
-        if (str === "" || typeof (str) === "undefined") uindow.show_alert("提示", "请输入题号")
+        log("problem input is:", str);
+        if (judge_problem(str)) str = str.toUpperCase();
+        if (str === "" || typeof (str) === "undefined") uindow.show_alert("提示", "请输入题号");
         else location.href = "https://www.luogu.com.cn/problemnew/show/" + str;
     };
     const $input_problem = $(".am-form-field[name='toproblem']").on("keydown", (e) => {
         if (e.keyCode === 13) {
-            if (/^[0-9]+.?[0-9]*$/.test($input_problem.val())) $input_problem.val("P" + $input_problem.val())
-            $func_jump_problem($input_problem.val())
+            if (/^[0-9]+.?[0-9]*$/.test($input_problem.val())) $input_problem.val("P" + $input_problem.val());
+            $func_jump_problem($input_problem.val());
         }
-    })
+    });
     $(".am-btn.am-btn-danger.am-btn-sm[name='goto']").on("click", () => {
-        $func_jump_problem($input_problem.val())
-    })
+        $func_jump_problem($input_problem.val());
+    });
 
     $("#rand-problem-2").on("click", async () => {
-        const id = $("[name=rand-problem-2]").val()
-        const res = await getContent(`/training/${id}`)
+        const id = $("[name=rand-problem-2]").val();
+        const res = await getContent(`/training/${id}`);
         const
             list = res.currentData.training.problems,
             rand_idx = Math.floor(Math.random() * list.length),
             pid = list[rand_idx].problem.pid;
-        location.href = `/problem/${pid}`
-    })
+        location.href = `/problem/${pid}`;
+    });
 }, `
 #exlg-rand-diffs {
     list-style-type:none
@@ -878,11 +878,11 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
     border-radius: 7px;
     box-shadow: rgb(187 227 255) 0px 0px 7px;
 }
-`)
+`);
 
 mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
-    const $cli = $(`<div id="exlg-cli"></div>`).appendTo($("body"))
-    const $cli_input = $(`<input id="exlg-cli-input" />`).appendTo($cli)
+    const $cli = $(`<div id="exlg-cli"></div>`).appendTo($("body"));
+    const $cli_input = $(`<input id="exlg-cli-input" />`).appendTo($cli);
 
     let cli_is_log = false;
     const cli_log = (sp, ...tp) => {
@@ -890,14 +890,14 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
         const m = sp.map((s, i) =>
             s.split(/\b/).map((w) => cli_lang_dict[w]?.[ cli_lang - 1 ] ?? w).join("") +
             (tp[i] || "")
-        ).join("")
-        return $cli_input.val(m)
+        ).join("");
+        return $cli_input.val(m);
     };
     const cli_error = (sp, ...tp) =>
-        warn(cli_log(sp, ...tp).addClass("error").val())
+        warn(cli_log(sp, ...tp).addClass("error").val());
     const cli_clean = () => {
         cli_is_log = false;
-        return $cli_input.val("").removeClass("error")
+        return $cli_input.val("").removeClass("error");
     };
     const cli_history = [];
     let cli_history_index = 0;
@@ -932,16 +932,16 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
             /* get the help of <cmd>. or list all cmds. */
             /* 获取 <cmd> 的帮助。空则列出所有。 */
             if (! cmd)
-                cli_log`exlg cli. current language: ${cli_lang}, available commands: ${ Object.keys(cmds).join(", ") }`
+                cli_log`exlg cli. current language: ${cli_lang}, available commands: ${ Object.keys(cmds).join(", ") }`;
             else {
                 const f = cmds[cmd];
-                if (! f) return cli_error`help: unknown command "${cmd}"`
+                if (! f) return cli_error`help: unknown command "${cmd}"`;
 
                 const arg = f.arg.map((a) => {
                     const i = a.name + ": " + a.type;
-                    return a.essential ? `<${i}>` : `[${i}]`
-                }).join(" ")
-                cli_log`${cmd} ${arg} ${ f.help[cli_lang] }`
+                    return a.essential ? `<${i}>` : `[${i}]`;
+                }).join(" ");
+                cli_log`${cmd} ${arg} ${ f.help[cli_lang] }`;
             }
         },
         cd: (path/*!string*/) => {
@@ -950,16 +950,16 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
             let tar;
             if (path[0] === "/") tar = path;
             else {
-                const pn = location.pathname.replace(/^\/+/, "").split("/")
-                const pr = path.split("/")
+                const pn = location.pathname.replace(/^\/+/, "").split("/");
+                const pr = path.split("/");
                 pr.forEach((d) => {
                     if (d === ".") return;
-                    if (d === "..") pn.pop()
-                    else pn.push(d)
-                })
-                tar = pn.join("/")
+                    if (d === "..") pn.pop();
+                    else pn.push(d);
+                });
+                tar = pn.join("/");
             }
-            location.href = location.origin + "/" + tar.replace(/^\/+/, "")
+            location.href = location.origin + "/" + tar.replace(/^\/+/, "");
         },
         cdd: (forum/*!string*/) => {
             /* jump to the forum named <forum> of discussion. use all the names you can think of. */
@@ -972,13 +972,13 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
                 [ "service",            "fk", "fksqgd", "反馈", "反馈、申请、工单专版",      "se" ]
             ];
             forum = tar.find((ns) => ns.includes(forum))?.[0];
-            if (! tar) return cli_error`cdd: unknown forum "${forum}"`
-            cmds.cd(`/discuss/lists?forumname=${forum}`)
+            if (! tar) return cli_error`cdd: unknown forum "${forum}"`;
+            cmds.cd(`/discuss/lists?forumname=${forum}`);
         },
         cc: (name/*char*/) => {
             /* jump to [name], "h|p|c|r|d|i|m|n" stands for home|problem|record|discuss|I myself|message|notification. or jump home. */
             /* 跳转至 [name]，"h|p|c|r|d|i|m|n" 代表：主页|题目|评测记录|讨论|个人中心|私信|通知。空则跳转主页。 */
-            name = name || "h"
+            name = name || "h";
             const tar = {
                 h: "/",
                 p: "/problem/list",
@@ -989,138 +989,138 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
                 m: "/chat",
                 n: "/user/notification",
             }[name];
-            if (tar) cmds.cd(tar)
-            else cli_error`cc: unknown target "${name}"`
+            if (tar) cmds.cd(tar);
+            else cli_error`cc: unknown target "${name}"`;
         },
         mod: (action/*!string*/, name/*string*/) => {
             /* for <action> "enable|disable|toggle", opearte the mod named <name>. for <action> "save", save modification. */
             /* 当 <action> 为 "enable|disable|toggle"，对名为 <name> 的模块执行对应操作：启用|禁用|切换。当 <action> 为 "save"，保存修改。 */
-            const i = mod.find_i(name)
+            const i = mod.find_i(name);
             switch (action) {
             case "enable":
             case "disable":
             case "toggle":
-                if (i < 0) return cli_error`mod: unknown mod "${name}"`
-                const $mod = $($("#exlg-dash-mods").children()[i]).children()
+                if (i < 0) return cli_error`mod: unknown mod "${name}"`;
+                const $mod = $($("#exlg-dash-mods").children()[i]).children();
                 $mod.prop("checked", {
                     enable: () => true, disable: () => false, toggle: (now) => ! now
-                }[action]($mod.prop("checked"))).trigger("change")
+                }[action]($mod.prop("checked"))).trigger("change");
                 break;
             case "save":
                 storage.mod_map = mod.map;
                 break;
             default:
-                return cli_error`mod: unknown action "${action}"`
+                return cli_error`mod: unknown action "${action}"`;
             }
         },
         dash: (action/*!string*/) => {
             /* for <action> "show|hide|toggle", opearte the exlg dashboard. */
             /* 当 <action> 为 "show|hide|toggle", 显示|隐藏|切换 exlg 管理面板。 */
             if (! [ "show", "hide", "toggle" ].includes(action))
-                return cli_error`dash: unknown action "${action}"`
-            $("#exlg-dash-window")[action]()
+                return cli_error`dash: unknown action "${action}"`;
+            $("#exlg-dash-window")[action]();
         },
         lang: (lang/*!string*/) => {
             /* for <lang> "en|zh" switch current cli language. */
             /* 当 <lang> 为 "en|zh"，切换当前语言。 */
-            lang = cli_langs.indexOf(lang)
-            if (lang < 0) return cli_error`lang: unknown language ${lang}`
+            lang = cli_langs.indexOf(lang);
+            if (lang < 0) return cli_error`lang: unknown language ${lang}`;
             storage.cli_lang = cli_lang = lang;
         },
         uid: (uid/*!integer*/) => {
             /* jumps to homepage of user whose uid is <uid>. */
             /* 跳转至 uid 为 <uid> 的用户主页。 */
-            location.href = `/user/${uid}`
+            location.href = `/user/${uid}`;
         },
         un: (name/*!string*/) => {
             /* jumps to homepage of user whose username is like <name>. */
             /* 跳转至用户名与 <name> 类似的用户主页。 */
             $.get("/api/user/search?keyword=" + name, (res) => {
                 if (! res.users[0])
-                    cli_error`un: unknown user "${name}".`
+                    cli_error`un: unknown user "${name}".`;
                 else
                     location.href = "/user/" + res.users[0].uid;
-            })
+            });
         }
     };
     for (const f of Object.values(cmds)) {
-        [ , f.arg, f.help ] = f.toString().match(/^\((.*?)\) => {((?:\n +\/\*.+?\*\/)+)/)
+        [ , f.arg, f.help ] = f.toString().match(/^\((.*?)\) => {((?:\n +\/\*.+?\*\/)+)/);
         f.arg = f.arg.split(", ").map((a) => {
-            const [ , name, type ] = a.match(/([a-z_]+)\/\*(.+)\*\//)
+            const [ , name, type ] = a.match(/([a-z_]+)\/\*(.+)\*\//);
             return {
                 name, essential: type[0] === "!", type: type.replace(/^!/, "")
             };
-        })
-        f.help = f.help.trim().split("\n").map((s) => s.match(/\/\* (.+) \*\//)[1])
+        });
+        f.help = f.help.trim().split("\n").map((s) => s.match(/\/\* (.+) \*\//)[1]);
     }
     const parse = (cmd) => {
-        log(`Parsing command: "${cmd}"`)
+        log(`Parsing command: "${cmd}"`);
 
-        const tk = cmd.trim().replace(/^\//, "").split(" ")
-        const n = tk.shift()
+        const tk = cmd.trim().replace(/^\//, "").split(" ");
+        const n = tk.shift();
         if (! n) return;
         const f = cmds[n];
-        if (! f) return cli_error`exlg: unknown command "${n}"`
+        if (! f) return cli_error`exlg: unknown command "${n}"`;
         let i = -1, a; for ([ i, a ] of tk.entries()) {
             const t = f.arg[i].type;
-            if (t === "number" || t === "integer") tk[i] = Number(a)
+            if (t === "number" || t === "integer") tk[i] = Number(a);
             if (
                 t === "char" && a.length === 1 ||
                 t === "number" && ! isNaN(tk[i]) ||
                 t === "integer" && ! isNaN(tk[i]) && ! (tk[i] % 1) ||
                 t === "string"
             ) ;
-            else return cli_error`${n}: illegal param "${a}", expected type ${t}.`
+            else return cli_error`${n}: illegal param "${a}", expected type ${t}.`;
         }
-        if (f.arg[i + 1]?.essential) return cli_error`${n}: lost essential param "${ f.arg[i + 1].name }"`
-        f(...tk)
+        if (f.arg[i + 1]?.essential) return cli_error`${n}: lost essential param "${ f.arg[i + 1].name }"`;
+        f(...tk);
     };
 
     $cli_input.on("keydown", (e) => {
         switch (e.key) {
         case "Enter":
-            if (cli_is_log) return cli_clean()
-            const cmd = $cli_input.val()
-            cli_history.push(cmd)
+            if (cli_is_log) return cli_clean();
+            const cmd = $cli_input.val();
+            cli_history.push(cmd);
             cli_history_index = cli_history.length;
-            parse(cmd)
-            if (! cli_is_log) return cli_clean()
+            parse(cmd);
+            if (! cli_is_log) return cli_clean();
             break;
         case "/":
-            if (cli_is_log) cli_clean()
+            if (cli_is_log) cli_clean();
             break;
         case "Escape":
-            $cli.hide()
+            $cli.hide();
             break;
         case "ArrowUp":
         case "ArrowDown":
             const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[ e.key ];
             if (i < 0 || i >= cli_history.length) return;
             cli_history_index = i;
-            $cli_input.val(cli_history[i])
+            $cli_input.val(cli_history[i]);
             break;
         }
-    })
+    });
 
     $(uindow).on("keydown", (e) => {
-        const $act = $(document.activeElement)
+        const $act = $(document.activeElement);
         if ($act.is("body")) {
             const rel = { ArrowLeft: "prev", ArrowRight: "next" }[ e.key ];
-            if (rel) return $(`a[rel=${rel}]`)[0].click()
+            if (rel) return $(`a[rel=${rel}]`)[0].click();
 
             if (e.shiftKey) {
                 const y = { ArrowUp: 0, ArrowDown: 1e6 }[ e.key ];
-                if (y !== undefined) uindow.scrollTo(0, y)
+                if (y !== undefined) uindow.scrollTo(0, y);
             }
 
             if (e.key === "/") {
-                $cli.show()
-                cli_clean().trigger("focus")
+                $cli.show();
+                cli_clean().trigger("focus");
             }
         }
         else if ($act.is("[name=captcha]") && e.key === "Enter")
-            $("#submitpost, #submit-reply")[0].click()
-    })
+            $("#submitpost, #submit-reply")[0].click();
+    });
 }, `
 #exlg-cli {
     position: fixed;
@@ -1143,77 +1143,77 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
 #exlg-cli-input.error {
     background-color: indianred;
 }
-`)
+`);
 
 mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
-    const language_show = storage.copy_code_block_language !== 0
+    const language_show = storage.copy_code_block_language !== 0;
     const func_code = () => {
-        const $cb = $("pre:has(> code):not([exlg-copy-code-block=''])")
-        if ($cb.length) log(`Scanning code block:`, $cb.length)
+        const $cb = $("pre:has(> code):not([exlg-copy-code-block=''])");
+        if ($cb.length) log(`Scanning code block:`, $cb.length);
         $cb.each((i, e, $e = $(e)) => {
-            $e.attr("exlg-copy-code-block", "")
-            const btn = $(`<div class="exlg-copy">复制</div>`).attr("style", ((storage.copy_code_button_rightfloat) ? ("float: right;") : ("")))
-            const language_list = ["c", "cpp", "pascal", "python", "java", "javascript", "php", "latex"]
-            let language = ""
+            $e.attr("exlg-copy-code-block", "");
+            const btn = $(`<div class="exlg-copy">复制</div>`).attr("style", ((storage.copy_code_button_rightfloat) ? ("float: right;") : ("")));
+            const language_list = ["c", "cpp", "pascal", "python", "java", "javascript", "php", "latex"];
+            let language = "";
             if (language_show) {
-                if ($e.find("code").attr("data-rendered-lang")) language = $e.find("code").attr("data-rendered-lang").toString()
+                if ($e.find("code").attr("data-rendered-lang")) language = $e.find("code").attr("data-rendered-lang").toString();
                 if ($e.find("code").attr("class")) {
-                    const str = $e.find("code").attr("class").toString()
-                    if (str.indexOf("hljs") !== -1) language = str.substr(9, str.length - 14)
-                    else language = str.substr(9, str.length - 9)
+                    const str = $e.find("code").attr("class").toString();
+                    if (str.indexOf("hljs") !== -1) language = str.substr(9, str.length - 14);
+                    else language = str.substr(9, str.length - 9);
                 }
-                if (language.indexOf("ult language-") === 0) language = language.substr(13)
-                if (language_list.indexOf(language) === -1) language = ""
-                log(language_list.indexOf(language))
-                if (language === "cpp") language = "c++"
-                if (language !== "") language = " - " + language
+                if (language.indexOf("ult language-") === 0) language = language.substr(13);
+                if (language_list.indexOf(language) === -1) language = "";
+                log(language_list.indexOf(language));
+                if (language === "cpp") language = "c++";
+                if (language !== "") language = " - " + language;
             }
-            log("Language:" + language)
-            log($cb[i], e, $e)
-            const $$cb = $($cb[i]).parent()
-            $e.before($(`<p></p>`))
-            $e.before($(`<h3 class="exlg-code-title">源代码${language}</h3>`))
-            $e.before($(`<text> </text>`))
+            log("Language:" + language);
+            log($cb[i], e, $e);
+            const $$cb = $($cb[i]).parent();
+            $e.before($(`<p></p>`));
+            $e.before($(`<h3 class="exlg-code-title">源代码${language}</h3>`));
+            $e.before($(`<text> </text>`));
             $e.before(btn.on("click", () => {
                 const $textarea = $("<textarea></textarea>")
                     .appendTo($("body"))
                     .text($e.text())
-                    .select()
-                btn.text("复制成功").toggleClass("exlg-copied")
-                setTimeout(() => btn.text("复制").toggleClass("exlg-copied"), 1000)
-                document.execCommand("copy")
-                $textarea.remove()
-            }))
-            $e.before($(`<p></p>`))
-            if (!$cb.children("code").hasClass("hljs")) $cb.children("code").addClass("hljs").css("background", "white")
-			const code_fonts_val = storage.code_fonts_val
-            if (code_fonts_val && code_fonts_val != "") $cb.children("code").css("font-family", code_fonts_val)
-        })
-    }
-    if (window.location.href.indexOf("https://www.luogu.com.cn/record/") !== 0) func_code()
+                    .select();
+                btn.text("复制成功").toggleClass("exlg-copied");
+                setTimeout(() => btn.text("复制").toggleClass("exlg-copied"), 1000);
+                document.execCommand("copy");
+                $textarea.remove();
+            }));
+            $e.before($(`<p></p>`));
+            if (!$cb.children("code").hasClass("hljs")) $cb.children("code").addClass("hljs").css("background", "white");
+            const code_fonts_val = storage.code_fonts_val;
+            if (code_fonts_val && code_fonts_val != "") $cb.children("code").css("font-family", code_fonts_val);
+        });
+    };
+    if (window.location.href.indexOf("https://www.luogu.com.cn/record/") !== 0) func_code();
     if (window.location.href === "https://www.luogu.com.cn/" || window.location.href === "https://www.luogu.com.cn") {
         $(".feed-selector").on("click", () => {
-            setTimeout(func_code, 300)
-        }) // lack of hook
+            setTimeout(func_code, 300);
+        }); // lack of hook
         $("#feed-more").on("click", () => {
-            setTimeout(func_code, 300)
-        }) // lack of hook
+            setTimeout(func_code, 300);
+        }); // lack of hook
     }//以防万一
     if (window.location.href.indexOf("https://www.luogu.com.cn/record/") === 0) {
         $($(".entry")[1]).on("click", () => {
             setTimeout(() => {
                 if (language_show && (typeof ($(".lfe-h3").attr("exlg-language-show")) === "undefined")) {
-                    const language = $($(".value.lfe-caption")[0]).text().toLowerCase()
-                    log("Language:" + language)
-                    $(".lfe-h3").text($(".lfe-h3").text() + " - " + ((language.substr(-3) === " o2") ? (language.slice(0, -3)) : (language))).attr("exlg-language-show", "")
+                    const language = $($(".value.lfe-caption")[0]).text().toLowerCase();
+                    log("Language:" + language);
+                    $(".lfe-h3").text($(".lfe-h3").text() + " - " + ((language.substr(-3) === " o2") ? (language.slice(0, -3)) : (language))).attr("exlg-language-show", "");
                 }
-                const $cb = $("pre:has(> code)")
-				const code_fonts_val = storage.code_fonts_val
-				if (code_fonts_val && code_fonts_val != "") $cb.children("code").css("font-family", code_fonts_val)
-                $cb.children("code").addClass("hljs").css("background", "white")
-                $cb.children(".copy-btn").attr("style", ((storage.copy_code_button_rightfloat) ? ("float: right;") : ("")))
-            }, 100)
-        })
+                const $cb = $("pre:has(> code)");
+                const code_fonts_val = storage.code_fonts_val;
+                if (code_fonts_val && code_fonts_val != "") $cb.children("code").css("font-family", code_fonts_val);
+                $cb.children("code").addClass("hljs").css("background", "white");
+                $cb.children(".copy-btn").attr("style", ((storage.copy_code_button_rightfloat) ? ("float: right;") : ("")));
+            }, 100);
+        });
     }
 }, `
 .exlg-copy {
@@ -1260,7 +1260,7 @@ div.exlg-copied {
     font-size: 1.125em;
     display: inline-block;
 }
-`)
+`);
 
 mod.regBoard("search-user", "查找用户名", ($board) => {
     $board.html(`
@@ -1271,19 +1271,19 @@ mod.regBoard("search-user", "查找用户名", ($board) => {
 <p>
     <button class="am-btn am-btn-danger am-btn-sm" id="search-user">跳转</button>
 </p>
-`)
+`);
     const func = async () => {
-        $search_user.prop("disabled", true)
-        const res = await getContent(`/api/user/search?keyword=${$("[name=username]").val()}`, 0)
+        $search_user.prop("disabled", true);
+        const res = await getContent(`/api/user/search?keyword=${$("[name=username]").val()}`, 0);
         if (!res.users[0]) {
-            $search_user.prop("disabled", false)
-            lg_alert("无法找到指定用户")
+            $search_user.prop("disabled", false);
+            lg_alert("无法找到指定用户");
         }
         else location.href = "/user/" + res.users[0].uid;
     };
-    const $search_user = $("#search-user").on("click", func)
-    $("#search-user-input").keydown((e) => { if (e.keyCode === 13) func() })
-})
+    const $search_user = $("#search-user").on("click", func);
+    $("#search-user-input").keydown((e) => { if (e.keyCode === 13) func(); });
+});
 
 mod.reg("problem-export", "题目导出", "@/*", () => {
     if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)\d+[A-Z]*$/.test(location.pathname)) {
@@ -1294,7 +1294,7 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
     style="border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">
     导出题目
     </button>
-    `), submit_button = $("div").val("提交答案")
+    `), submit_button = $("div").val("提交答案");
     const setbtn = () => {
         btn.on("click", async () => {
             const defaultPorts = [
@@ -1307,7 +1307,7 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
                 27121, // Competitive Programming Helper
             ];
             try {
-                const res = await getContent(window.location.pathname + window.location.search)
+                const res = await getContent(window.location.pathname + window.location.search);
                 const problem = res.currentData.problem, contest = res.currentData.contest;
                 const exportData = {
                     name: problem.title,
@@ -1330,67 +1330,67 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
                             "Content-Type": "application/json"
                         },
                         data: JSON.stringify(exportData)
-                    })
+                    });
                 }
-                alert("导出成功！")
+                alert("导出成功！");
             }
             catch (e) {
-                alert(`导出失败：${e}`)
+                alert(`导出失败：${e}`);
             }
-        })
+        });
     };
-    btn.appendTo($("div.operation"))
-    setbtn()
+    btn.appendTo($("div.operation"));
+    setbtn();
     let tap_number = 0;
     submit_button.on("click", () => {
         tap_number += 1;
         if (tap_number % 6 === 0) {
-            btn.remove()
-            btn.appendTo($("div.operation"))
-            setbtn()
+            btn.remove();
+            btn.appendTo($("div.operation"));
+            setbtn();
         }
-    })
-})
+    });
+});
 
 mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*", () => {
     //"https://www.luogu.com.cn/user/setting#extension"
 
 
-    log("exlg-settings!")
+    log("exlg-settings!");
 
     const $get_button_of_sth = (GMid, GMdesc, default_value/*boolean*/) => {
-        default_value = storage[GMid] || default_value
-        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${ GMdesc } </label>`)
-        const $csd = $("<span>" + ((default_value) ? (html_circleswitch_on) : (html_circleswitch_off)) + "</span>").prependTo($fte)
+        default_value = storage[GMid] || default_value;
+        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${ GMdesc } </label>`);
+        const $csd = $("<span>" + ((default_value) ? (html_circleswitch_on) : (html_circleswitch_off)) + "</span>").prependTo($fte);
         $fte.on("click", () => {
             if ($csd.children().attr("data-icon") === "dot-circle") {
-                $csd.html(html_circleswitch_off)
-                storage[GMid] = false
+                $csd.html(html_circleswitch_off);
+                storage[GMid] = false;
             }
             else {
-                $csd.html(html_circleswitch_on)
-                storage[GMid] = true
+                $csd.html(html_circleswitch_on);
+                storage[GMid] = true;
             }
-        })
-        return $fte
-    }
+        });
+        return $fte;
+    };
     const $get_button_of_mod_map = (sxid, sxdesc) => {
-        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${ sxdesc } </label>`)
-        const $csd = $("<span>" + ((mod.map[sxid]) ? (html_circleswitch_on) : (html_circleswitch_off)) + "</span>").prependTo($fte)
+        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${ sxdesc } </label>`);
+        const $csd = $("<span>" + ((mod.map[sxid]) ? (html_circleswitch_on) : (html_circleswitch_off)) + "</span>").prependTo($fte);
         $fte.on("click", () => {
             if ($csd.children().attr("data-icon") === "dot-circle") {
-                $csd.html(html_circleswitch_off)
-                mod.map[sxid] = false
-                storage.mod_map = mod.map
+                $csd.html(html_circleswitch_off);
+                mod.map[sxid] = false;
+                storage.mod_map = mod.map;
             }
             else {
-                $csd.html(html_circleswitch_on)
-                mod.map[sxid] = true
-                storage.mod_map = mod.map
+                $csd.html(html_circleswitch_on);
+                mod.map[sxid] = true;
+                storage.mod_map = mod.map;
             }
-        })
-        return $fte
-    }
+        });
+        return $fte;
+    };
 
     const href_list = ["information", "preference", "security", "extension", "extension-admin"];
     if (window.location.href === "https://www.luogu.com.cn/user/setting" || window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") === 0) {
@@ -1399,12 +1399,12 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
             //window.location.href = "https://www.luogu.com.cn/user/setting#information"
         }
 
-        const $lg_entry = $(".items").children("li")
-        const $lg_form_layout = $(".padding-default")
-        $lg_entry.hide()
-        $(".card.padding-default").removeAttr("data-v-796309f8 data-v-7765a18d data-v-6febb0e8").attr("id", "exlg-padding")
-        const $ex_form_layout = $(`<div class="card padding-default" id="exlg-padding"><div class="exlg-form-layout"></div></div>`).hide().appendTo($(".full-container"))
-        const $ex_admin_form_layout = $(`<div class="card padding-default" id="exlg-padding"><div class="exlg-admin-form-layout"></div></div>`).hide().appendTo($(".full-container"))
+        const $lg_entry = $(".items").children("li");
+        const $lg_form_layout = $(".padding-default");
+        $lg_entry.hide();
+        $(".card.padding-default").removeAttr("data-v-796309f8 data-v-7765a18d data-v-6febb0e8").attr("id", "exlg-padding");
+        const $ex_form_layout = $(`<div class="card padding-default" id="exlg-padding"><div class="exlg-form-layout"></div></div>`).hide().appendTo($(".full-container"));
+        const $ex_admin_form_layout = $(`<div class="card padding-default" id="exlg-padding"><div class="exlg-admin-form-layout"></div></div>`).hide().appendTo($(".full-container"));
         //set the layout
         $(
             `<div data-v-22efe7ee="" class="row">
@@ -1413,7 +1413,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     </span><div style="display: block;width: 100%;"><div id="ex-settings-module-switch">
         <p class="lfe-caption exlg-caption">设置exlg插件各模块的开启与关闭。</p>
     </div></div>
-</div>`).appendTo($ex_form_layout)
+</div>`).appendTo($ex_form_layout);
         $(
             `<div data-v-22efe7ee="" class="row">
     <span class="exlgset-span">
@@ -1421,7 +1421,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     </span><div style="display: block;width: 100%;"><div id="ex-settings-module-settings">
         <p class="lfe-caption exlg-caption">设置exlg插件特定模块的功能。</p>
     </div></div>
-</div>`).appendTo($ex_form_layout)
+</div>`).appendTo($ex_form_layout);
         $(
             `<div data-v-22efe7ee="" class="row">
     <span class="exlgset-span">
@@ -1429,7 +1429,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     </span><div style="display: block;width: 100%;"><div id="ex-settings-advanced-settings">
         <p class="lfe-caption exlg-caption">一些奇怪的东西。</p>
     </div></div>
-</div>`).appendTo($ex_form_layout)
+</div>`).appendTo($ex_form_layout);
 
 
         //end.
@@ -1443,7 +1443,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     </span><div style="display: block;width: 100%;"><div id="ex-settings-fuck-you">
         <p class="lfe-caption exlg-caption">请暂时前往exlg的github反馈issues。</p>
     </div></div>
-</div>`).appendTo($ex_admin_form_layout)
+</div>`).appendTo($ex_admin_form_layout);
 
 
         $(
@@ -1452,7 +1452,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
         <span class="exlgset-span">版本&更新</span>
     </span><div style="display: block;width: 100%;"><div id="ex-settings-update-versions">
     </div></div>
-</div>`).appendTo($ex_admin_form_layout)
+</div>`).appendTo($ex_admin_form_layout);
         $(
             `<div data-v-22efe7ee="" class="row">
     <span class="exlgset-span">
@@ -1460,7 +1460,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     </span><div style="display: block;width: 100%;"><div id="ex-settings-features-laboratory">
         <p class="lfe-caption exlg-caption">一些脑洞会先在这里测试。</p>
     </div></div>
-</div>`).appendTo($ex_admin_form_layout)
+</div>`).appendTo($ex_admin_form_layout);
         $(
             `<div data-v-22efe7ee="" class="row">
     <span class="exlgset-span">
@@ -1468,88 +1468,88 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     </span><div style="display: block;width: 100%;"><div id="ex-settings-data-debug">
         <p class="lfe-caption exlg-caption">警告，非开发者不要乱动这玩意，否则出什么事情我不负责。</p>
     </div></div>
-</div>`).appendTo($ex_admin_form_layout)
+</div>`).appendTo($ex_admin_form_layout);
         //end.
 
 
         //这里是顶层的栏目设置
         //总共5个~
-        const $ex_entry_info = $(`<li><span data-v-7092f3a4 class="entry">个人信息</span><!----></li>`).appendTo($(".items"))
-        const $ex_entry_pref = $(`<li><span data-v-7092f3a4 class="entry">使用偏好</span><!----></li>`).appendTo($(".items"))
-        const $ex_entry_secu = $(`<li><span data-v-7092f3a4 class="entry">安全设置</span><!----></li>`).appendTo($(".items"))
-        const $ex_entry_exte = $(`<li><span data-v-7092f3a4 class="entry">扩展设置</span><!----></li>`).appendTo($(".items"))
-        const $ex_entry_admn = $(`<li><span data-v-7092f3a4 class="entry">高级设置</span><!----></li>`).appendTo($(".items"))
-        const $ex_entry = [$ex_entry_info, $ex_entry_pref, $ex_entry_secu, $ex_entry_exte, $ex_entry_admn]
+        const $ex_entry_info = $(`<li><span data-v-7092f3a4 class="entry">个人信息</span><!----></li>`).appendTo($(".items"));
+        const $ex_entry_pref = $(`<li><span data-v-7092f3a4 class="entry">使用偏好</span><!----></li>`).appendTo($(".items"));
+        const $ex_entry_secu = $(`<li><span data-v-7092f3a4 class="entry">安全设置</span><!----></li>`).appendTo($(".items"));
+        const $ex_entry_exte = $(`<li><span data-v-7092f3a4 class="entry">扩展设置</span><!----></li>`).appendTo($(".items"));
+        const $ex_entry_admn = $(`<li><span data-v-7092f3a4 class="entry">高级设置</span><!----></li>`).appendTo($(".items"));
+        const $ex_entry = [$ex_entry_info, $ex_entry_pref, $ex_entry_secu, $ex_entry_exte, $ex_entry_admn];
         if (href_list.includes(window.location.href.substr(38))) {
-            $ex_entry[href_list.indexOf(window.location.href.substr(38))].children().addClass("selected")
+            $ex_entry[href_list.indexOf(window.location.href.substr(38))].children().addClass("selected");
         }
         else {
-            $ex_entry_info.children().addClass("selected")
+            $ex_entry_info.children().addClass("selected");
         }
-        log(window.location.href.substr(38))
+        log(window.location.href.substr(38));
         if (window.location.href.substr(38) === "extension") {
-            log("extension settings~")
-            $lg_form_layout.hide()
-            $ex_form_layout.show()
-            $ex_admin_form_layout.hide()
+            log("extension settings~");
+            $lg_form_layout.hide();
+            $ex_form_layout.show();
+            $ex_admin_form_layout.hide();
         }
         if (window.location.href.substr(38) === "extension-admin") {
-            log("hidden extension settings~")
-            $lg_form_layout.hide()
-            $ex_form_layout.hide()
-            $ex_admin_form_layout.show()
+            log("hidden extension settings~");
+            $lg_form_layout.hide();
+            $ex_form_layout.hide();
+            $ex_admin_form_layout.show();
         }
         $ex_entry[0].on("click", () => {
-            $lg_entry[0].click()
-            $(".entry").removeClass("selected")
-            $ex_entry[0].children().addClass("selected")
-            $lg_form_layout.show()
-            $ex_form_layout.hide()
-            $ex_admin_form_layout.hide()
-        })
+            $lg_entry[0].click();
+            $(".entry").removeClass("selected");
+            $ex_entry[0].children().addClass("selected");
+            $lg_form_layout.show();
+            $ex_form_layout.hide();
+            $ex_admin_form_layout.hide();
+        });
         $ex_entry[1].on("click", () => {
-            $lg_entry[1].click()
-            $(".entry").removeClass("selected")
-            $ex_entry[1].children().addClass("selected")
-            $lg_form_layout.show()
-            $ex_form_layout.hide()
-            $ex_admin_form_layout.hide()
-        })
+            $lg_entry[1].click();
+            $(".entry").removeClass("selected");
+            $ex_entry[1].children().addClass("selected");
+            $lg_form_layout.show();
+            $ex_form_layout.hide();
+            $ex_admin_form_layout.hide();
+        });
         $ex_entry[2].on("click", () => {
-            $lg_entry[2].click()
-            $(".entry").removeClass("selected")
-            $ex_entry[2].children().addClass("selected")
-            $lg_form_layout.show()
-            $ex_form_layout.hide()
-            $ex_admin_form_layout.hide()
-        })
+            $lg_entry[2].click();
+            $(".entry").removeClass("selected");
+            $ex_entry[2].children().addClass("selected");
+            $lg_form_layout.show();
+            $ex_form_layout.hide();
+            $ex_admin_form_layout.hide();
+        });
         $ex_entry[3].on("click", () => {
-            $(".entry").removeClass("selected")
-            $ex_entry[3].children().addClass("selected")
-            $lg_form_layout.hide()
-            $ex_form_layout.show()
-            $ex_admin_form_layout.hide()
-            window.location.href = "https://www.luogu.com.cn/user/setting#extension"
-        })
+            $(".entry").removeClass("selected");
+            $ex_entry[3].children().addClass("selected");
+            $lg_form_layout.hide();
+            $ex_form_layout.show();
+            $ex_admin_form_layout.hide();
+            window.location.href = "https://www.luogu.com.cn/user/setting#extension";
+        });
         $ex_entry[4].on("click", () => {
-            $(".entry").removeClass("selected")
-            $ex_entry[4].children().addClass("selected")
-            $lg_form_layout.hide()
-            $ex_form_layout.hide()
-            $ex_admin_form_layout.show()
-            window.location.href = "https://www.luogu.com.cn/user/setting#extension-admin"
-        })
+            $(".entry").removeClass("selected");
+            $ex_entry[4].children().addClass("selected");
+            $lg_form_layout.hide();
+            $ex_form_layout.hide();
+            $ex_admin_form_layout.show();
+            window.location.href = "https://www.luogu.com.cn/user/setting#extension-admin";
+        });
 
         //module设置
         mod._.forEach((m) => {
             if (!unclosable_list.includes(m.name) && !["user-css-edit", "update"].includes(m.name)) {
                 $(`<div></div>`)
                     .append($get_button_of_mod_map(m.name, m.info))
-                    .appendTo($("#ex-settings-module-switch"))
+                    .appendTo($("#ex-settings-module-switch"));
             }
-        })
+        });
 
-        $(`<div><h4>代码块功能优化</h4></div>`).append($get_button_of_sth("copy_code_block_language", "代码块显示语言", true)).append($("<br>")).append($get_button_of_sth("copy_code_button_rightfloat", "复制按钮右对齐", true)).appendTo($("#ex-settings-module-settings"))
+        $(`<div><h4>代码块功能优化</h4></div>`).append($get_button_of_sth("copy_code_block_language", "代码块显示语言", true)).append($("<br>")).append($get_button_of_sth("copy_code_button_rightfloat", "复制按钮右对齐", true)).appendTo($("#ex-settings-module-settings"));
 
         $(`<div><h4>设置代码块字体</h4></div>`)
             .append(
@@ -1560,25 +1560,25 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
             .append(
                 $(`<p></p>`).append(
                     (() => {
-                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">保存</button>`)
+                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">保存</button>`);
                         $btn.on("click", () => {
                             //log($('#code-fonts-input').val())
-                            $btn.prop("disabled", true)
-                            $btn.text("保存成功")
-                            storage.code_fonts_val = $("#code-fonts-input").val()
+                            $btn.prop("disabled", true);
+                            $btn.text("保存成功");
+                            storage.code_fonts_val = $("#code-fonts-input").val();
                             setTimeout(() => {
-                                $btn.removeAttr("disabled")
-                                $btn.text("保存")
-                            }, 1000)
+                                $btn.removeAttr("disabled");
+                                $btn.text("保存");
+                            }, 1000);
                         })
-                            .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                            .mouseleave(e => { $(e.target).css("opacity", "1") })
+                            .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                            .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                         return $btn;
                     })()
                 )
-            ).appendTo($("#ex-settings-module-settings"))
+            ).appendTo($("#ex-settings-module-settings"));
 
-        $(`<div><h4>讨论保存</h4></div>`).append($get_button_of_sth("discuss_auto_save", "讨论自动保存", true)).appendTo($("#ex-settings-module-settings"))
+        $(`<div><h4>讨论保存</h4></div>`).append($get_button_of_sth("discuss_auto_save", "讨论自动保存", true)).appendTo($("#ex-settings-module-settings"));
 
         $(`<div><h4>自定义css</h4></div>`).append(
             $(`<div class="am-form-group am-form"></div>`).append(
@@ -1588,184 +1588,184 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
             .append(
                 $(`<p></p>`).append(
                     (() => {
-                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">保存</button>`)
+                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">保存</button>`);
                         $btn.on("click", () => {
-                            $btn.prop("disabled", true)
-                            $btn.text("保存成功")
-                            storage.user_css = $("#custom-css-input").val()
+                            $btn.prop("disabled", true);
+                            $btn.text("保存成功");
+                            storage.user_css = $("#custom-css-input").val();
                             setTimeout(() => {
-                                location.reload()
-                            }, 1000)
+                                location.reload();
+                            }, 1000);
                         })
-                            .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                            .mouseleave(e => { $(e.target).css("opacity", "1") })
+                            .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                            .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                         return $btn;
                     })()
                 )
             )
-            .appendTo($("#ex-settings-module-settings"))
+            .appendTo($("#ex-settings-module-settings"));
 
         //数据&调试
         $(`<div></div>`).append($get_button_of_sth("exlg-debug-mode", "debug_mode", false))
-            .append($(`&nbsp;`))
+            .append($(`<span>&nbsp;</span>`))
             .append(
                 (() => {
-                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color: rgb(191, 191, 191);background-color: rgb(191, 191, 191)" id="show-all-settings">显示其他设置版块</button>`)
+                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color: rgb(191, 191, 191);background-color: rgb(191, 191, 191)" id="show-all-settings">显示其他设置版块</button>`);
                     $btn[0].onclick = () => {
-                        $lg_form_layout.show()
-                        $ex_form_layout.show()
-                        $ex_admin_form_layout.show()
+                        $lg_form_layout.show();
+                        $ex_form_layout.show();
+                        $ex_admin_form_layout.show();
                         $btn[0].onclick = () => {
-                            location.reload()
-                        }
-                        $btn.text("隐藏其他设置版块")
-                    }
-                        $btn.mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                        .mouseleave(e => { $(e.target).css("opacity", "1") })
+                            location.reload();
+                        };
+                        $btn.text("隐藏其他设置版块");
+                    };
+                    $btn.mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                        .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                     return $btn;
                 })()
             )
-            .appendTo($("#ex-settings-data-debug"))
+            .appendTo($("#ex-settings-data-debug"));
 
         $(`<div></div>`).append($(`<p></p>`).append(
             (() => {
-                const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">清除exlg数据</button>`)
+                const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">清除exlg数据</button>`);
                 $btn.on("click", () => {
-                    storage.clear()
-                    window.location.href = "https://www.luogu.com.cn/"
+                    storage.clear();
+                    window.location.href = "https://www.luogu.com.cn/";
                 })
-                    .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                    .mouseleave(e => { $(e.target).css("opacity", "1") })
+                    .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                    .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                 return $btn;
             })()
-        ).append($(`&nbsp;`))
+        ).append($(`<span>&nbsp;</span>`))
             .append(
                 (() => {
-                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color:rgb(14, 29, 105);background-color: rgb(14, 29, 105)">清除GM数据</button>`)
+                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color:rgb(14, 29, 105);background-color: rgb(14, 29, 105)">清除GM数据</button>`);
                     $btn.on("click", () => {
                         GM_listValues().forEach((_) => {
-                            GM_deleteValue(_)
-                        })
-                        window.location.href = "https://www.luogu.com.cn/"
+                            GM_deleteValue(_);
+                        });
+                        window.location.href = "https://www.luogu.com.cn/";
                     })
-                        .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                        .mouseleave(e => { $(e.target).css("opacity", "1") })
+                        .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                        .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                     return $btn;
                 })()
-            )).appendTo($("#ex-settings-data-debug"))
+            )).appendTo($("#ex-settings-data-debug"));
 
         $(`<p class="lfe-caption exlg-caption">当前版本为：${ GM_info.script.version }</p>`)
-            .append($(`&nbsp;`))
+            .append($(`<span>&nbsp;</span>`))
             .append(
                 (() => {
-                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">更新日志</button>`)
+                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">更新日志</button>`);
                     $btn.on("click", () => {
-                        GM_deleteValue("exlg-last-used-version")
-                        window.location.href = "https://www.luogu.com.cn/"
+                        GM_deleteValue("exlg-last-used-version");
+                        window.location.href = "https://www.luogu.com.cn/";
                     })
-                        .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                        .mouseleave(e => { $(e.target).css("opacity", "1") })
+                        .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                        .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                     return $btn;
                 })()
-            ).appendTo($("#ex-settings-update-versions"))
+            ).appendTo($("#ex-settings-update-versions"));
 
         $(`<p class="lfe-caption exlg-caption">最新版本为：<text id="newest-version-display">${ GM_info.script.version }</text></p>`)
-            .append($(`&nbsp;`))
+            .append($(`<span>&nbsp;</span>`))
             .append(
                 (() => {
-                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">检查更新</button>`)
+                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">检查更新</button>`);
                     $btn.on("click", () => mod.execute("^update"))
-                        .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                        .mouseleave(e => { $(e.target).css("opacity", "1") })
+                        .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                        .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                     return $btn;
                 })()
-            ).appendTo($("#ex-settings-update-versions"))
-        $(`<p class="lfe-caption exlg-caption">更新源</p>`).append($(`&nbsp;`))
+            ).appendTo($("#ex-settings-update-versions"));
+        $(`<p class="lfe-caption exlg-caption">更新源</p>`).append($(`<span>&nbsp;</span>`))
             .append(
                 (() => {
-                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">Raw</button>`)
+                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">Raw</button>`);
                     $btn.on("click", () => {
-                        window.location.href = "https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js"
+                        window.location.href = "https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js";
                     })
-                        .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                        .mouseleave(e => { $(e.target).css("opacity", "1") })
+                        .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                        .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                     return $btn;
                 })()
-            ).append($(`&nbsp;`)).append(
+            ).append($(`<span>&nbsp;</span>`)).append(
                 (() => {
-                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">Jsdelivr</button>`)
+                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">Jsdelivr</button>`);
                     $btn.on("click", () => {
-                        window.location.href = "https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js"
+                        window.location.href = "https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js";
                     })
-                        .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                        .mouseleave(e => { $(e.target).css("opacity", "1") })
+                        .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                        .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                     return $btn;
                 })()
-            ).append($(`&nbsp;`)).append(
+            ).append($(`<span>&nbsp;</span>`)).append(
                 (() => {
-                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(82, 196, 26);background-color: rgb(82, 196, 26)">FastGit</button>`)
+                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(82, 196, 26);background-color: rgb(82, 196, 26)">FastGit</button>`);
                     $btn.on("click", () => {
-                        window.location.href = "https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js"
+                        window.location.href = "https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js";
                     })
-                        .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                        .mouseleave(e => { $(e.target).css("opacity", "1") })
+                        .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                        .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                     return $btn;
                 })()
             )
-            .appendTo($("#ex-settings-update-versions"))
-        $(`<p class="lfe-caption exlg-caption">项目有关</p>`).append(`&nbsp;`)
+            .appendTo($("#ex-settings-update-versions"));
+        $(`<p class="lfe-caption exlg-caption">项目有关</p>`).append(`<span>&nbsp;</span>`)
             .append(
                 $(`<a href="https://github.com/optimize-2/extend-luogu"></a>`).append(
                     (() => {
-                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(0, 0, 0);background-color: rgb(0, 0, 0)">Github - 主站</button>`)
+                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(0, 0, 0);background-color: rgb(0, 0, 0)">Github - 主站</button>`);
                         $btn.on("click", () => {
 
                         })
-                            .mouseenter(e => { $(e.target).css("opacity", "0.8") })
-                            .mouseleave(e => { $(e.target).css("opacity", "1") })
+                            .mouseenter((e) => { $(e.target).css("opacity", "0.8"); })
+                            .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                         return $btn;
                     })()
                 )
-            ).append(`&nbsp;`)
+            ).append(`<span>&nbsp;</span>`)
             .append(
                 $(`<a href="https://www.luogu.com.cn/blog/100250/extend-luogu-si-yong-zhi-na"></a>`).append(
                     (() => {
-                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(255, 193, 22);background-color: rgb(255, 193, 22)">Help</button>`)
+                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(255, 193, 22);background-color: rgb(255, 193, 22)">Help</button>`);
                         $btn.on("click", () => {
 
                         })
-                            .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-                            .mouseleave(e => { $(e.target).css("opacity", "1") })
+                            .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                            .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                         return $btn;
                     })()
                 )
-            ).append(`&nbsp;`)
+            ).append(`<span>&nbsp;</span>`)
             .append(
                 $(`<a href="https://github.com/bossbaby2005/extend-luogu"></a>`).append(
                     (() => {
-                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(11, 45, 14);background-color: rgb(11, 45, 14)">Github - 分站</button>`)
+                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(11, 45, 14);background-color: rgb(11, 45, 14)">Github - 分站</button>`);
                         $btn.on("click", () => {
 
                         })
-                            .mouseenter(e => { $(e.target).css("opacity", "0.8") })
-                            .mouseleave(e => { $(e.target).css("opacity", "1") })
+                            .mouseenter((e) => { $(e.target).css("opacity", "0.8"); })
+                            .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                         return $btn;
                     })()
                 )
-            ).append(`&nbsp;`)
+            ).append(`<span>&nbsp;</span>`)
             .append(
                 $(`<a href="https://www.luogu.com.cn/paste/xdrs7184"></a>`).append(
                     (() => {
-                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(191, 98, 10);background-color: rgb(191, 98, 10)">洛谷笔记文档</button>`)
+                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(191, 98, 10);background-color: rgb(191, 98, 10)">洛谷笔记文档</button>`);
                         $btn.on("click", () => {
 
                         })
-                            .mouseenter(e => { $(e.target).css("opacity", "0.8") })
-                            .mouseleave(e => { $(e.target).css("opacity", "1") })
+                            .mouseenter((e) => { $(e.target).css("opacity", "0.8"); })
+                            .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                         return $btn;
                     })()
                 )
-            ).appendTo($("#ex-settings-update-versions"))
+            ).appendTo($("#ex-settings-update-versions"));
         /*    uindow.addEventListener("message", e => {
             log("Listening message:", e.data)
             if (e.data[0] !== "update") return
@@ -1821,7 +1821,7 @@ p.lfe-caption.exlg-caption {
 .input {
     width: 200px;
 }
-`)
+`);
 
 mod.reg("discuss-save", "讨论保存", "@/*", () => {
     if (!/\/discuss\/show\/[1-9]\d*$/.test(location.pathname)) {
@@ -1832,42 +1832,42 @@ mod.reg("discuss-save", "讨论保存", "@/*", () => {
         url: `https://luogulo.gq/save.php?url=${window.location.href}`,
         onload: (res) => {
             if (res.status === 200) {
-                log("Discuss saved")
+                log("Discuss saved");
             }
             else {
-                log(`Fail: ${res}`)
+                log(`Fail: ${res}`);
             }
         },
         onerror: (err) => {
-            log(`Error:${err}`)
+            log(`Error:${err}`);
         }
-    })
+    });
     //am-btn-success
-    const $btn = $(`<button class="am-btn am-btn-success am-btn-sm" name="save-discuss">保存讨论</button>`)
+    const $btn = $(`<button class="am-btn am-btn-success am-btn-sm" name="save-discuss">保存讨论</button>`);
     $($(".am-u-md-4.lg-right").children().children().get(1)).append($btn.on("click", () => {
-        $btn.prop("disabled", true)
-        $btn.text("保存成功")
-        save_func()
+        $btn.prop("disabled", true);
+        $btn.text("保存成功");
+        save_func();
         setTimeout(() => {
-            $btn.removeAttr("disabled")
-            $btn.text("保存讨论")
-        }, 1000)
-    }))
-    if (storage.discuss_auto_save !== 0) save_func()
-})
+            $btn.removeAttr("disabled");
+            $btn.text("保存讨论");
+        }, 1000);
+    }));
+    if (storage.discuss_auto_save !== 0) save_func();
+});
 
 mod.reg("update-log", "更新日志显示", "@/*", () => {
     if (window.location.href === "https://www.luogu.com.cn/" && storage.exlg_last_used_version !== GM_info.script.version) {
-        show_exlg_updlog()
+        show_exlg_updlog();
         storage.exlg_last_used_version = GM_info.script.version;
     }
     else if (storage.exlg_last_used_version !== GM_info.script.version) {
-        log("It's able to show the update log but not at mainpage")
+        log("It's able to show the update log but not at mainpage");
     }
     else {
-        log("The version is the lateset.")
+        log("The version is the lateset.");
     }
-})
+});
 
 mod.reg("dbc-jump", "双击题号跳题", "@/*", () => {
     const judge_problem = (text) => {
@@ -1880,21 +1880,21 @@ mod.reg("dbc-jump", "双击题号跳题", "@/*", () => {
         if (text.match(/T[0-9]{1,6}/) === text) return true;
         return false;
     };
-    const jump = () => {
-        const selection = window.getSelection()
-        const selected = selection.toString().replace(" ", "").toUpperCase()
+    const jump = (event) => {
+        const selection = window.getSelection();
+        const selected = selection.toString().replace(" ", "").toUpperCase();
         let url;
 
         if (event.ctrlKey) {
             const myBlog = document.querySelectorAll(".ops>a[href*=blog]")[0];
-            url = myBlog.href + "solution-"
+            url = myBlog.href + "solution-";
         }
-        else url = "https://www.luogu.com.cn/problem/"
+        else url = "https://www.luogu.com.cn/problem/";
 
-        if (judge_problem(selected)) window.open(url + selected)
+        if (judge_problem(selected)) window.open(url + selected);
     };
     document.ondblclick = jump;
-})
+});
 
 mod.reg("notepad", "洛谷笔记", "@/*", () => {
     const DBName = "Luogu Notepad",
@@ -1909,14 +1909,14 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                 request.setRequestHeader(
                     "x-csrf-token",
                     $("meta[name='csrf-token']")[0].content
-                )
+                );
             },
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify({
                 public: false,
                 data: "#lgnote" + JSON.stringify(config),
             }),
-        })
+        });
     };
 
     // load config
@@ -1929,63 +1929,63 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                     try {
                         if (u[i].data.substr(0, 7) !== "#lgnote") continue;
                         const k = u[i].data;
-                        nc = JSON.parse(k.substr(7, k.lentgh))
+                        nc = JSON.parse(k.substr(7, k.lentgh));
                         break;
                     }
                     catch (e) { }
                 }
-                resolve(nc)
-            })
-        })
+                resolve(nc);
+            });
+        });
     };
 
     function openDB(name, ver) {
         return new Promise((resolve, reject) => {
-            const req = window.indexedDB.open(name, ver)
+            const req = window.indexedDB.open(name, ver);
             req.onsuccess = (event) => {
-                resolve(event.target.result)
+                resolve(event.target.result);
             };
             req.onerror = (event) => {
-                console.error("Open IndexedDB Error!")
+                console.error("Open IndexedDB Error!");
                 window.alert(
                     "洛谷Notepad出错, 请到控制台-应用程序-IndexedDB里删除数据库`Luogu Notepad`后重试, 并在第一次重试时不要立即关闭标签页"
-                )
+                );
             };
             req.onupgradeneeded = (event) => {
                 const db = event.target.result;
                 if (!db.objectStoreNames.contains("notes")) {
-                    const notes = db.createObjectStore("notes", { keyPath: "pid" })
-                    notes.createIndex("tag", "tag", { unique: false, multiEntry: true })
+                    const notes = db.createObjectStore("notes", { keyPath: "pid" });
+                    notes.createIndex("tag", "tag", { unique: false, multiEntry: true });
                 }
                 if (!db.objectStoreNames.contains("pnotes")) {
-                    db.createObjectStore("pnotes", { keyPath: "tag" })
+                    db.createObjectStore("pnotes", { keyPath: "tag" });
                 }
             };
-        })
+        });
     }
 
     function getTagLink(u) {
-        if (!u.tag) return ""
-        let tagp = ""
+        if (!u.tag) return "";
+        let tagp = "";
         for (const t of u.tag)
-            tagp += `<a href="/?notepad&tag=${t}">${t}</a>&nbsp;&nbsp;`
+            tagp += `<a href="/?notepad&tag=${t}">${t}</a>&nbsp;&nbsp;`;
         return tagp;
     }
 
     function render(u) {
-        if (u) return markdown.render(u)
-        return ""
+        if (u) return markdown.render(u);
+        return "";
     }
 
     async function inject() {
         if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)\d+[A-Z]*$/.test(location.pathname)) {
             return;
         }
-        const db = await openDB(DBName, DBVer)
+        const db = await openDB(DBName, DBVer);
 
         let code;
 
-        const [pid] = window.location.pathname.split("/").slice(-1)
+        const [pid] = window.location.pathname.split("/").slice(-1);
 
         $("section.main>section>div>div").prepend(
             `   <details id="notepad-detail" open>
@@ -2016,42 +2016,42 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                 </div>
             </details>
             <style>.mp-editor-zone-full{width:100%!important;}</style>`
-        )
+        );
 
         $("#notepad-opencode").click((event) => {
             window.open(
                 `/record/list?pid=${pid}&user=${uindow._feInstance.currentUser.uid}&scode`
-            )
-        })
+            );
+        });
 
-        const editor = new MarkdownPalettes("#notepad-editor")
-        $("#notepad-detail").removeAttr("open")
+        const editor = new MarkdownPalettes("#notepad-editor");
+        $("#notepad-detail").removeAttr("open");
 
         $("#notepad-import-solution").click(async (event) => {
-            const u = await getContent(`/problem/solution/${pid}`)
+            const u = await getContent(`/problem/solution/${pid}`);
             editor.content = (editor.content || "") + u.currentData.solutions.result[0].content;
-        })
+        });
 
-        const req = db.transaction("notes", "readonly").objectStore("notes").get(pid)
+        const req = db.transaction("notes", "readonly").objectStore("notes").get(pid);
         req.onsuccess = (event) => {
             if (req.result) {
                 editor.content = req.result.content;
-                $("#notepad-important").prop("checked", req.result.important)
-                const p = $("#notepad-summary").html()
-                $("#notepad-summary").html(`${p}<font color="red">*</font>`)
-                if (req.result.tag) $("#notepad-tag").val(req.result.tag.join(", "))
-                $("#notepad-tag-content").html(getTagLink(req.result))
+                $("#notepad-important").prop("checked", req.result.important);
+                const p = $("#notepad-summary").html();
+                $("#notepad-summary").html(`${p}<font color="red">*</font>`);
+                if (req.result.tag) $("#notepad-tag").val(req.result.tag.join(", "));
+                $("#notepad-tag-content").html(getTagLink(req.result));
                 if (req.result.code) {
                     $("#notepad-code").html(
                         `<a href="/record/${req.result.code}" target="_blank">代码</a>`
-                    )
+                    );
                 }
                 code = req.result.code;
             }
         };
 
         function saveNote() {
-            const obj_store = db.transaction("notes", "readwrite").objectStore("notes")
+            const obj_store = db.transaction("notes", "readwrite").objectStore("notes");
             let q;
             if (editor.content || $("#notepad-tag").val())
                 q = obj_store.put({
@@ -2066,28 +2066,28 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                     title: uindow._feInjection.currentData.problem.title,
                     code,
                     important: $("#notepad-important").prop("checked")
-                })
-            else q = obj_store.delete(pid)
+                });
+            else q = obj_store.delete(pid);
             q.onsuccess = (event) => {
-                uindow._feInstance.$swalToastSuccess("保存成功")
+                uindow._feInstance.$swalToastSuccess("保存成功");
             };
         }
 
         $("#notepad-container").keydown(function (event) {
             if ((event.ctrlKey || event.metaKey) && event.which === 83) {
-                saveNote()
-                event.preventDefault()
+                saveNote();
+                event.preventDefault();
                 return false;
             }
-        })
+        });
         $("#notepad-tag").keydown(function (event) {
             if (
                 ((event.ctrlKey || event.metaKey) && event.which === 83) ||
                 event.keyCode === 13
             ) {
-                saveNote()
-                $("#notepad-tag").hide()
-                $("#notepad-tag-content").show()
+                saveNote();
+                $("#notepad-tag").hide();
+                $("#notepad-tag-content").show();
                 const u = {
                     tag: $("#notepad-tag")
                         .val()
@@ -2096,16 +2096,16 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                         .map((u) => u.trim())
                         .filter((u) => u),
                 };
-                $("#notepad-tag-content").html(getTagLink(u))
-                $("#notepad-tag").val(u.tag.join(", "))
-                event.preventDefault()
+                $("#notepad-tag-content").html(getTagLink(u));
+                $("#notepad-tag").val(u.tag.join(", "));
+                event.preventDefault();
                 return false;
             }
-        })
+        });
         $("#notepad-tag-label").click((event) => {
-            $("#notepad-tag").show()
-            $("#notepad-tag-content").hide()
-        })
+            $("#notepad-tag").show();
+            $("#notepad-tag-content").hide();
+        });
     }
 
     async function panel() {
@@ -2117,9 +2117,9 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                 </div>
             </div>
         </div>
-    </div>`)
+    </div>`);
 
-        const db = await openDB(DBName, DBVer)
+        const db = await openDB(DBName, DBVer);
 
         function queryTag(tag) {
             return new Promise((resolve, reject) => {
@@ -2127,51 +2127,51 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                     .transaction("notes", "readonly")
                     .objectStore("notes")
                     .index("tag")
-                    .getAll(tag)
+                    .getAll(tag);
                 req.onsuccess = (event) => {
-                    resolve(req.result)
+                    resolve(req.result);
                 };
-            })
+            });
         }
         function queryAll(cond = null) {
             return new Promise((resolve, reject) => {
                 const req = db
                     .transaction("notes", "readonly")
                     .objectStore("notes")
-                    .getAll(cond)
+                    .getAll(cond);
                 req.onsuccess = (event) => {
-                    resolve(req.result)
+                    resolve(req.result);
                 };
-            })
+            });
         }
         function queryPNote(tag) {
             return new Promise((resolve, reject) => {
                 const req = db
                     .transaction("pnotes", "readonly")
                     .objectStore("pnotes")
-                    .get(tag)
+                    .get(tag);
                 req.onsuccess = (event) => {
-                    resolve(req.result)
+                    resolve(req.result);
                 };
-            })
+            });
         }
         function queryAllPNote(cond = null) {
             return new Promise((resolve, reject) => {
                 const req = db
                     .transaction("pnotes", "readonly")
                     .objectStore("pnotes")
-                    .getAll(cond)
+                    .getAll(cond);
                 req.onsuccess = (event) => {
-                    resolve(req.result)
+                    resolve(req.result);
                 };
-            })
+            });
         }
 
-        const url = new URL(window.location.href)
+        const url = new URL(window.location.href);
         if (!url.searchParams.has("notepad")) return;
         function renderProblem(u) {
-            let pcode = ""
-            if (u.code) pcode = `<a href="/record/${u.code}">代码</a>`
+            let pcode = "";
+            if (u.code) pcode = `<a href="/record/${u.code}">代码</a>`;
             return `
             <div style="display:flex;justify-content:flex-start;flex-direction:row;">
                 <p><a href="/problem/${u.pid}">${u.pid} - ${u.title}<font color="red">${u.important ? "*" : ""}</font></a></p>&nbsp;&nbsp;&nbsp;
@@ -2183,7 +2183,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                     </div>
                 </details>
             </div>
-            `
+            `;
         }
         function renderPnote(u) {
             return `
@@ -2193,156 +2193,156 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                     ${render(u.content)}<hr />
                 </details>
             </div>
-            `
+            `;
         }
         if (url.searchParams.has("edit")) {
-            const tag = url.searchParams.get("tag").trim()
+            const tag = url.searchParams.get("tag").trim();
 
-            $("head > title").text(`编辑"${tag}"内容 | 洛谷笔记`)
+            $("head > title").text(`编辑"${tag}"内容 | 洛谷笔记`);
 
             $("#notepad-content").html(
                 `<div style="height:700px;width:100%" id="notepad-container"><div id="notepad-editor"></div></div><style>.mp-editor-zone-full{width:100%!important;}</style>`
-            )
-            const editor = new MarkdownPalettes("#notepad-editor")
-            const pres = await queryPNote(tag)
+            );
+            const editor = new MarkdownPalettes("#notepad-editor");
+            const pres = await queryPNote(tag);
             if (pres) editor.content = pres.content;
             function saveNote() {
                 const obj_store = db
                     .transaction("pnotes", "readwrite")
-                    .objectStore("pnotes")
+                    .objectStore("pnotes");
                 let q;
                 if (editor.content)
                     q = obj_store.put({
                         tag,
                         content: editor.content,
-                    })
-                else q = obj_store.delete(tag)
+                    });
+                else q = obj_store.delete(tag);
                 q.onsuccess = (event) => {
-                    uindow._feInstance.$swalToastSuccess("保存成功")
+                    uindow._feInstance.$swalToastSuccess("保存成功");
                 };
             }
             $("#notepad-container").keydown(function (event) {
                 if ((event.ctrlKey || event.metaKey) && event.which === 83) {
-                    saveNote()
-                    event.preventDefault()
+                    saveNote();
+                    event.preventDefault();
                     return false;
                 }
-            })
+            });
         }
         else if (url.searchParams.has("tag")) {
-            const tag = url.searchParams.get("tag").trim()
-            let res = await queryTag(tag)
+            const tag = url.searchParams.get("tag").trim();
+            let res = await queryTag(tag);
 
-            $("head > title").text(`标签"${tag}" | 洛谷笔记`)
+            $("head > title").text(`标签"${tag}" | 洛谷笔记`);
 
             if (tag === "无") {
-                res = await queryAll()
-                res = res.filter((u) => !u.tag.length)
+                res = await queryAll();
+                res = res.filter((u) => !u.tag.length);
             }
 
-            let p = `${tag}&nbsp;&nbsp;<a href="/?notepad&tag=${tag}&edit" target="_blank"><svg data-v-29a65e17="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-29a65e17="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></a><hr/>`
+            let p = `${tag}&nbsp;&nbsp;<a href="/?notepad&tag=${tag}&edit" target="_blank"><svg data-v-29a65e17="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-29a65e17="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></a><hr/>`;
 
-            const pres = await queryPNote(tag)
+            const pres = await queryPNote(tag);
 
-            if (pres) p += `<div>${render(pres.content)}</div><hr/>`
+            if (pres) p += `<div>${render(pres.content)}</div><hr/>`;
 
             res.sort((u, v) => {
                 if ((u.important && v.important) || (!u.important && !v.important)) return u.pid < v.pid ? -1 : 1;
                 return u.important ? -1 : 1;
-            })
+            });
 
-            for (const u of res) p += renderProblem(u)
+            for (const u of res) p += renderProblem(u);
 
-            $("#notepad-content").html(p)
+            $("#notepad-content").html(p);
         }
         else {
-            $("head > title").text("主页 | 洛谷笔记")
+            $("head > title").text("主页 | 洛谷笔记");
 
-            const res = await queryAll()
-            let p = ""
+            const res = await queryAll();
+            let p = "";
             const cnt = {};
             const list = [];
             for (const u of res) {
                 if (!u.tag) return;
-                if (u.tag.length === 0) u.tag.push("无")
+                if (u.tag.length === 0) u.tag.push("无");
                 for (const t of u.tag) {
                     if (!cnt[t]) cnt[t] = 0;
                     ++cnt[t];
                 }
             }
-            for (const i in cnt) list.push([i, cnt[i]])
+            for (const i in cnt) list.push([i, cnt[i]]);
 
-            const pnotes = await queryAllPNote()
-            for (const u of pnotes) p += renderPnote(u)
+            const pnotes = await queryAllPNote();
+            for (const u of pnotes) p += renderPnote(u);
 
-            p += `<hr /><div><canvas id="notepad-wordcloud" width="2300px" height="1200px" style="width:100%;height:600px;"></canvas></div><hr />`
+            p += `<hr /><div><canvas id="notepad-wordcloud" width="2300px" height="1200px" style="width:100%;height:600px;"></canvas></div><hr />`;
 
             for (const u of res) {
                 if (u.important)
-                    p += renderProblem(u)
+                    p += renderProblem(u);
             }
 
-            p += "<br /><hr /><br />"
+            p += "<br /><hr /><br />";
 
-            p += `<div style="display:flex;margin-top: 6px;margin-bottom: 6px;"><a href="#" id="notepad-dump"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: border-color: rgb(82, 196, 26);background-color: rgb(82, 196, 26)">导出</button></a>&nbsp;<input type="file" id="notepad-import"/><a href="#" id="notepad-import-submit">&nbsp;<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">导入</button></a></div>`
-            p += `<div style="display:flex;margin-top: 6px;margin-bottom: 6px;"><a href="#" id="notepad-dump-cloud"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(255, 193, 22);background-color: rgb(255, 193, 22)">保存到云剪贴板</button></a>&nbsp;<a href="#" id="notepad-import-cloud"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">从云剪贴板读取</button></a></div>`
-            p += `<div style="margin-top: 6px;margin-bottom: 6px;"><a href="https://www.luogu.com.cn/paste/xdrs7184"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(200, 200, 200);background-color: rgb(200, 200, 200)">文档在此</button></a></div>`
+            p += `<div style="display:flex;margin-top: 6px;margin-bottom: 6px;"><a href="#" id="notepad-dump"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: border-color: rgb(82, 196, 26);background-color: rgb(82, 196, 26)">导出</button></a>&nbsp;<input type="file" id="notepad-import"/><a href="#" id="notepad-import-submit">&nbsp;<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">导入</button></a></div>`;
+            p += `<div style="display:flex;margin-top: 6px;margin-bottom: 6px;"><a href="#" id="notepad-dump-cloud"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(255, 193, 22);background-color: rgb(255, 193, 22)">保存到云剪贴板</button></a>&nbsp;<a href="#" id="notepad-import-cloud"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">从云剪贴板读取</button></a></div>`;
+            p += `<div style="margin-top: 6px;margin-bottom: 6px;"><a href="https://www.luogu.com.cn/paste/xdrs7184"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(200, 200, 200);background-color: rgb(200, 200, 200)">文档在此</button></a></div>`;
 
-            $("#notepad-content").html(p)
-			
-			$(".am-u-md-12").find("button")
-            .mouseenter(e => { $(e.target).css("opacity", "0.9") })
-            .mouseleave(e => { $(e.target).css("opacity", "1") })
+            $("#notepad-content").html(p);
 
-            const d = document.getElementById("notepad-dump")
-            const o = JSON.stringify({ notes: res, pnotes: await queryAllPNote() })
+            $(".am-u-md-12").find("button")
+                .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                .mouseleave((e) => { $(e.target).css("opacity", "1"); });
 
-            d.download = "LuoguNotepad-dump.json"
-            d.hrefObject = new Blob([o])
+            const d = document.getElementById("notepad-dump");
+            const o = JSON.stringify({ notes: res, pnotes: await queryAllPNote() });
+
+            d.download = "LuoguNotepad-dump.json";
+            d.hrefObject = new Blob([o]);
 
             $("#notepad-import-submit").click((event) => {
                 const files = document.getElementById("notepad-import").files;
                 if (files.length) {
                     const file = files[0];
-                    const reader = new FileReader()
+                    const reader = new FileReader();
                     if (/json+/.test(file.type)) {
                         reader.onload = function () {
-                            const o = JSON.parse(this.result)
+                            const o = JSON.parse(this.result);
                             if (o.notes)
                                 for (const u of o.notes)
                                     db.transaction("notes", "readwrite")
                                         .objectStore("notes")
-                                        .put(u)
+                                        .put(u);
                             if (o.pnotes)
                                 for (const u of o.pnotes)
                                     db.transaction("pnotes", "readwrite")
                                         .objectStore("pnotes")
-                                        .put(u)
+                                        .put(u);
                             uindow._feInstance
                                 .$swalToastSuccess("导入成功")
-                                .then(() => location.reload())
+                                .then(() => location.reload());
                         };
-                        reader.readAsText(file)
+                        reader.readAsText(file);
                     }
                 }
-            })
+            });
             $("#notepad-dump-cloud").click(async (event) => {
-                saveConfig({ notes: res, pnotes: await queryAllPNote() })
-                uindow._feInstance.$swalToastSuccess("保存成功")
-            })
+                saveConfig({ notes: res, pnotes: await queryAllPNote() });
+                uindow._feInstance.$swalToastSuccess("保存成功");
+            });
             $("#notepad-import-cloud").click(async (event) => {
-                const o = await loadConfig()
-                if (!o) return uindow._feInstance.$swalToastError("导入失败")
+                const o = await loadConfig();
+                if (!o) return uindow._feInstance.$swalToastError("导入失败");
                 if (o.notes)
                     for (const u of o.notes)
-                        db.transaction("notes", "readwrite").objectStore("notes").put(u)
+                        db.transaction("notes", "readwrite").objectStore("notes").put(u);
                 if (o.pnotes)
                     for (const u of o.pnotes)
-                        db.transaction("pnotes", "readwrite").objectStore("pnotes").put(u)
+                        db.transaction("pnotes", "readwrite").objectStore("pnotes").put(u);
                 uindow._feInstance
                     .$swalToastSuccess("导入成功")
-                    .then(() => location.reload())
-            })
+                    .then(() => location.reload());
+            });
 
             WordCloud(document.getElementById("notepad-wordcloud"), {
                 list,
@@ -2356,9 +2356,9 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                 fontFamily: "Microsoft YaHei",
                 shuffle: true,
                 click: (item) => {
-                    window.open(`/?notepad&tag=${item[0]}`)
+                    window.open(`/?notepad&tag=${item[0]}`);
                 },
-            })
+            });
         }
     }
 
@@ -2367,7 +2367,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
             `<a data-v-303bbf52="" data-v-cd9b963e="" data-v-1316252e="" href="/?notepad" colorscheme="none" class="color-none" data-v-27b2cd59="" style="color: inherit;"><span data-v-cd9b963e="" data-v-303bbf52="" class="icon"><svg data-v-4b8033a4="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-4b8033a4="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></span> <span data-v-cd9b963e="" data-v-303bbf52="" class="text">
       Note
     </span></a>`
-        )
+        );
     }
 
     async function select() {
@@ -2376,59 +2376,59 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                 const q = db
                     .transaction("notes", "readwrite")
                     .objectStore("notes")
-                    .get(pid)
+                    .get(pid);
                 q.onsuccess = (event) => {
-                    resolve(q.result)
+                    resolve(q.result);
                 };
-            })
+            });
         }
 
         // uindow.history.pushState = uindow.history.replaceState = null
 
-        const db = await openDB(DBName, DBVer)
-        const url = new URL(window.location.href)
-        const pid = url.searchParams.get("pid")
+        const db = await openDB(DBName, DBVer);
+        const url = new URL(window.location.href);
+        const pid = url.searchParams.get("pid");
         $("a.status-link").click(async (u) => {
-            u.preventDefault()
-            const [code] = u.currentTarget.href.split("/").slice(-1)
+            u.preventDefault();
+            const [code] = u.currentTarget.href.split("/").slice(-1);
             const orig = (await queryPid(pid)) || { pid };
             const q = db
                 .transaction("notes", "readwrite")
                 .objectStore("notes")
-                .put(Object.assign(orig, { code }))
+                .put(Object.assign(orig, { code }));
             q.onsuccess = (event) => {
-                uindow.close()
+                uindow.close();
             };
             return false;
-        })
+        });
     }
     // unsafeWindow.markdown = markdown;
     // unsafeWindow.MarkdownPalettes = MarkdownPalettes;
     // unsafeWindow.WordCloud = WordCloud;
     // unsafeWindow.hljs = hljs;
     (function inj() {
-        const url = new URL(window.location.href)
-        setTimeout(entry, 0)
-        if (url.pathname.includes("problem")) setTimeout(inject, 0)
-        else if (url.searchParams.has("notepad")) setTimeout(panel, 0)
+        const url = new URL(window.location.href);
+        setTimeout(entry, 0);
+        if (url.pathname.includes("problem")) setTimeout(inject, 0);
+        else if (url.searchParams.has("notepad")) setTimeout(panel, 0);
         else if (url.pathname.includes("record") && url.searchParams.has("scode"))
-            setTimeout(select, 0)
+            setTimeout(select, 0);
         // setTimeout(() => {
         //     $("pre").each((u, v) => {
         //         hljs.highlightBlock(v)
         //     })
         // }, 400)
-    })()
-})
+    })();
+});
 
 mod.reg("submission-color", "记录难度可视化", "@/*", async () => {
-    const url = new URL(window.location.href)
+    const url = new URL(window.location.href);
     if (url.pathname !== "/record/list") return;
 
-    const u = await getContent(window.location.href)
+    const u = await getContent(window.location.href);
 
-    const dif = u.currentData.records.result.map((u) => u.problem.difficulty)
-    $("div.problem>div>a>span.pid").each((u, v) => { $(v).addClass(`exlg-difficulty-color-${dif[u]}`) })
+    const dif = u.currentData.records.result.map((u) => u.problem.difficulty);
+    $("div.problem>div>a>span.pid").each((u, v) => { $(v).addClass(`exlg-difficulty-color-${dif[u]}`); });
 }, `
 .exlg-difficulty-color-0{ color: rgb(191, 191, 191)!important;font-weight: bold; }
 .exlg-difficulty-color-1{ color: rgb(254, 76, 97)!important;font-weight: bold; }
@@ -2438,66 +2438,66 @@ mod.reg("submission-color", "记录难度可视化", "@/*", async () => {
 .exlg-difficulty-color-5{ color: rgb(52, 152, 219)!important;font-weight: bold; }
 .exlg-difficulty-color-6{ color: rgb(157, 61, 207)!important;font-weight: bold; }
 .exlg-difficulty-color-7{ color: rgb(14, 29, 105)!important;font-weight: bold; }
-`)
+`);
 
 uindow.console.info = (function () {
     const orig = console.info;
     return function () {
-        const newEvent = orig.apply(this, arguments)
+        const newEvent = orig.apply(this, arguments);
         if (arguments[0] === "[@lfe/loader]")
-            window.dispatchEvent(new Event("lfeloaded"))
+            window.dispatchEvent(new Event("lfeloaded"));
         return newEvent;
     };
-})()
+})();
 
 async function injectLuogu() {
     if (!/luogu.[com|org]/.test(window.location.href)) return;
-    await sleep(200)
+    await sleep(200);
 
     if ($("pre:has(> code):not([exlg-copy-code-block=''])").length) {
-        console.log($("pre:has(> code):not([exlg-copy-code-block=''])")[0])
-        mod.execute("copy-code-block")
+        console.log($("pre:has(> code):not([exlg-copy-code-block=''])")[0]);
+        mod.execute("copy-code-block");
     }
 
     if ($("#exlg-nav-icon").length || !$("main.lfe-body").html()) return;
 
-    mod.execute()
-    log("injected")
+    mod.execute();
+    log("injected");
 }
 function injectSpringboard() {
     if (window.location.host !== "www.bilibili.com" &&
     window.location.host !== "service-psscsax9-1305163805.sh.apigw.tencentcs.com" &&
     window.location.host !== "service-ig5px5gh-1305163805.sh.apigw.tencentcs.com") return;
 
-    mod.execute()
-    log("injected")
+    mod.execute();
+    log("injected");
 }
-window.addEventListener("lfeloaded", injectLuogu)
-setTimeout(injectLuogu, 400)
-injectSpringboard()
+window.addEventListener("lfeloaded", injectLuogu);
+setTimeout(injectLuogu, 400);
+injectSpringboard();
 
-log("Lauching")
-log(GM_listValues())
+log("Lauching");
+log(GM_listValues());
 
 Object.assign(uindow, {
     exlg: { mod, log, error },
     $$: $, xss, version_cmp
-})
+});
 
-const GM_LIST = GM_listValues()
+const GM_LIST = GM_listValues();
 if (GM_LIST.includes("mod-map") || GM_LIST.includes("mod_map")) {
     if (GM_LIST.includes("mod_map")) {
         ["exlg_last_used_version", "user_css", "mod_chore_rec", "mod_map", "mod_rand_difficulty", "mod_rand_source", "cli_lang", "copy_code_block_language", "code_fonts_val", "copy_code_button_rightfloat"].forEach((_) => {
-            if (GM_LIST.includes(_)) GM_setValue("exlg_" + _, GM_getValue(_))
-        })
+            if (GM_LIST.includes(_)) GM_setValue("exlg_" + _, GM_getValue(_));
+        });
     }
     else {
         ["exlg-last-used-version", "user-css", "mod-chore-rec", "mod-map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val", "copy-code-button-rightfloat"].forEach((_) => {
-            if (GM_LIST.includes(_)) GM_setValue("exlg_" + _, GM_getValue(_))
-        })
+            if (GM_LIST.includes(_)) GM_setValue("exlg_" + _, GM_getValue(_));
+        });
     }
     ["exlg-last-used-version", "user-css", "mod-chore-rec", "mod-map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val", "exlg_last_used_version", "user_css", "mod_chore_rec", "mod_map", "mod_rand_difficulty", "mod_rand_source", "cli_lang", "copy_code_block_language", "code_fonts_val", "copy-code-button-rightfloat", "copy_code_button_rightfloat"].forEach((_) => {
-        if (GM_LIST.includes(_)) GM_deleteValue(_)
+        if (GM_LIST.includes(_)) GM_deleteValue(_);
     });
 }
 
