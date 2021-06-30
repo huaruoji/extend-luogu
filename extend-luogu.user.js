@@ -1730,7 +1730,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                         $btn.on("click", () => {
 
                         })
-                            .mouseenter((e) => { $(e.target).css("opacity", "0.8"); })
+                            .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
                             .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                         return $btn;
                     })()
