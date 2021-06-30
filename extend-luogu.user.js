@@ -65,6 +65,12 @@ function sleep(t) {
     });
 }
 
+function addScript(s) {
+    const t = document.createElement("script");
+    t.innerHTML = s;
+    document.body.append(t);
+}
+
 Date.prototype.format = function (f, UTC) {
     UTC = UTC ? "UTC" : "";
     const re = {
