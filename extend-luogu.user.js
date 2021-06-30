@@ -36,8 +36,8 @@ const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusab
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"></path></svg>`;
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${GM_info.script.version} 更新日志`, `
-1.修了回滚版本后的一大堆bug 　　　　　　　　　　　　
-2.去除一大堆的data-v的attr标签  　　　　　　　　　　
+1.修了回滚版本后的一大堆bug
+2.去除一大堆的data-v的attr标签
 3.优化了亿些UI
 4.代码重构
 `);
@@ -55,6 +55,7 @@ const error = (...s) => {
     uindow.console.error("%c[exlg]", "color: #0e90d2;", ...s);
     throw Error(s.join(" "));
 };
+
 const xss = new filterXSS.FilterXSS({
     onTagAttr: (_, k, v, __) => {
         if (k === "style") return `${k}="${v}"`;
@@ -1187,7 +1188,7 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
             $e.before($(`<p></p>`));
             if (!$cb.children("code").hasClass("hljs")) $cb.children("code").addClass("hljs").css("background", "white");
             const code_fonts_val = storage.code_fonts_val;
-            if (code_fonts_val && code_fonts_val != "") $cb.children("code").css("font-family", code_fonts_val);
+            if (code_fonts_val && code_fonts_val !== "") $cb.children("code").css("font-family", code_fonts_val);
         });
     };
     if (window.location.href.indexOf("https://www.luogu.com.cn/record/") !== 0) func_code();
@@ -1209,7 +1210,7 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
                 }
                 const $cb = $("pre:has(> code)");
                 const code_fonts_val = storage.code_fonts_val;
-                if (code_fonts_val && code_fonts_val != "") $cb.children("code").css("font-family", code_fonts_val);
+                if (code_fonts_val && code_fonts_val !== "") $cb.children("code").css("font-family", code_fonts_val);
                 $cb.children("code").addClass("hljs").css("background", "white");
                 $cb.children(".copy-btn").attr("style", ((storage.copy_code_button_rightfloat) ? ("float: right;") : ("")));
             }, 100);
