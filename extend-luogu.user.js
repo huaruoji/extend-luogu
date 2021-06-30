@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        6.2.0
+// @version        6.2.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite OwO
 // @match          https://*.luogu.com.cn/*
@@ -1620,21 +1620,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                     .mouseleave((e) => { $(e.target).css("opacity", "1"); });
                 return $btn;
             })()
-        ).append($(`<span>&nbsp;</span>`))
-            .append(
-                (() => {
-                    const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color:rgb(14, 29, 105);background-color: rgb(14, 29, 105)">清除GM数据</button>`);
-                    $btn.on("click", () => {
-                        GM_listValues().forEach((_) => {
-                            GM_deleteValue(_);
-                        });
-                        window.location.href = "https://www.luogu.com.cn/";
-                    })
-                        .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
-                        .mouseleave((e) => { $(e.target).css("opacity", "1"); });
-                    return $btn;
-                })()
-            )).appendTo($("#ex-settings-data-debug"));
+        ).appendTo($("#ex-settings-data-debug"));
 
         $(`<p class="lfe-caption exlg-caption">当前版本为：${ GM_info.script.version }</p>`)
             .append($(`<span>&nbsp;</span>`))
