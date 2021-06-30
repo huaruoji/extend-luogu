@@ -36,8 +36,8 @@ const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusab
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"></path></svg>`;
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${GM_info.script.version} 更新日志`, `
-1.修了回滚版本后的一大堆bug 　　　　　　　　　　　　
-2.去除一大堆的data-v的attr标签  　　　　　　　　　　
+1.修了回滚版本后的一大堆bug
+2.去除一大堆的data-v的attr标签
 3.优化了亿些UI
 4.代码重构
 `);
@@ -115,39 +115,24 @@ const lg_alert = (msg) => uindow.show_alert("exlg 提醒您", msg);
 
 const storage = new Proxy({}, {
     get(tar, key) {
-        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key;
-        log("visit", key, "as", GM_getValue(key));
         return GM_getValue(key);
     },
     set(tar, key, val) {
-        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key;
-        log("set", key, "to", val);
-        GM_setValue(key, val);
-        log("now", key, "is", val);
+        return GM_setValue(key, val);
     },
     deleteProperty: (tar, key) => {
-        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key;
         GM_deleteValue(key);
         return true;
     },
     getValue: (tar, key) => {
-        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key;
         return GM_getValue(key);
     },
     setValue: (tar, key, val) => {
-        if (!/exlg_(.*)/.test(key)) key = "exlg_" + key;
-        return GM_setValue(key, val);
-    },
-    getRealValue: (tar, key) => {
-        return GM_getValue(key);
-    },
-    setRealValue: (tar, key, val) => {
         return GM_setValue(key, val);
     },
     clear: (tar) => {
         GM_listValues().forEach((_) => {
             if (typeof(_) !== "string") return;
-            if (!/exlg_(.*)/.test(_)) return;
             GM_deleteValue(_);
         });
     }
@@ -275,8 +260,8 @@ mod.reg("dash", "控制面板", "@/*", () => {
     $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon"><svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg></a>`).prependTo($("nav.user-nav, div.user-nav > nav"));
 }, `
 #exlg-nav-icon {
-	color: inherit; 
-	text-decoration: none; 
+	color: inherit;
+	text-decoration: none;
 	margin-right: .3em;
 }
 
@@ -679,8 +664,6 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
     const fackYouCCF = ["P", "CF", "SP", "AT", "UVA"];
     const difficulty_select = storage.mod_rand_difficulty || [false, false, false, false, false, false, false, false];
     const source_select = storage.mod_rand_source || [false, false, false, false, false];
-    console.log(storage.mod_rand_difficulty, storage.mod_rand_source);
-    console.log(difficulty_select, source_select);
     const difficulty_html = [
         `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">入门</div>`,
         `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">普及-</div>`,
@@ -788,7 +771,6 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
         return false;
     };
     const $func_jump_problem = (str) => {
-        log("problem input is:", str);
         if (judge_problem(str)) str = str.toUpperCase();
         if (str === "" || typeof (str) === "undefined") uindow.show_alert("提示", "请输入题号");
         else location.href = "https://www.luogu.com.cn/problemnew/show/" + str;
@@ -1783,9 +1765,9 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 }
 #exlg-padding {
     padding: 1.3em;
-    margin-bottom: 1.3em; 
+    margin-bottom: 1.3em;
     background-color: rgb(255, 255, 255) ;
-    box-shadow: rgba(26, 26, 26, 0.1) 0px 1px 3px; 
+    box-shadow: rgba(26, 26, 26, 0.1) 0px 1px 3px;
     box-sizing: border-box;
 }
 .exlgset-span {
@@ -2483,21 +2465,4 @@ Object.assign(uindow, {
     exlg: { mod, log, error },
     $$: $, xss, version_cmp
 });
-
-const GM_LIST = GM_listValues();
-if (GM_LIST.includes("mod-map") || GM_LIST.includes("mod_map")) {
-    if (GM_LIST.includes("mod_map")) {
-        ["exlg_last_used_version", "user_css", "mod_chore_rec", "mod_map", "mod_rand_difficulty", "mod_rand_source", "cli_lang", "copy_code_block_language", "code_fonts_val", "copy_code_button_rightfloat"].forEach((_) => {
-            if (GM_LIST.includes(_)) GM_setValue("exlg_" + _, GM_getValue(_));
-        });
-    }
-    else {
-        ["exlg-last-used-version", "user-css", "mod-chore-rec", "mod-map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val", "copy-code-button-rightfloat"].forEach((_) => {
-            if (GM_LIST.includes(_)) GM_setValue("exlg_" + _, GM_getValue(_));
-        });
-    }
-    ["exlg-last-used-version", "user-css", "mod-chore-rec", "mod-map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val", "exlg_last_used_version", "user_css", "mod_chore_rec", "mod_map", "mod_rand_difficulty", "mod_rand_source", "cli_lang", "copy_code_block_language", "code_fonts_val", "copy-code-button-rightfloat", "copy_code_button_rightfloat"].forEach((_) => {
-        if (GM_LIST.includes(_)) GM_deleteValue(_);
-    });
-}
 
