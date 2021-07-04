@@ -34,7 +34,7 @@ function html([x]) { return x; } // a function to help highlight in vscode
 //please not use this anymore
 
 function GM_addStyle(str) {
-	return $(`<style class="exlg-css">${str}</style>`).appendTo($("head"))[0]
+    return $(`<style class="exlg-css">${str}</style>`).appendTo($("head"))[0]
 }
 
 const unclosable_list = ["dash", "luogu-settings-extension", "keyboard-and-cli", "update-log", "@springboard", "@benben-data", "@version-data"];
@@ -257,13 +257,13 @@ const mod = {
 };
 
 mod.reg("dash", "控制面板", "@/*", () => {
-	if ($("#exlg-nav-icon").length) return;
+    if ($("#exlg-nav-icon").length) return;
     $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon"><svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg></a>`).prependTo($("nav.user-nav, div.user-nav > nav"));
 }, `
 #exlg-nav-icon {
-	color: inherit;
-	text-decoration: none;
-	margin-right: .3em;
+    color: inherit;
+    text-decoration: none;
+    margin-right: .3em;
 }
 
 button.exlg-btn {
@@ -325,7 +325,7 @@ mod.regMain("version-data", "版本数据", "@tcs2/release/exlg-version", () =>
 );
 
 mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], () => {
-	if ($(".exlg-emo").length) return;
+    if ($(".exlg-emo").length) return;
     /*
     const emo = [
         [ "62224", [ "qq" ] ],
@@ -668,7 +668,7 @@ mod.reg("benben", "全网犇犇", "@/", () => {
 });
 
 mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
-	if ($("#exlg-rand-diffs").length) return;
+    if ($("#exlg-rand-diffs").length) return;
     $("[name='gotorandom']").text("随机");
     const $start_rand = $(`<button class="am-btn am-btn-success am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`).appendTo($("[name='gotorandom']").parent());
     //$(".lg-index-stat>h2").after($(`<div><h2>问题跳转</h2><div id="exlg-dash-0" class="exlg-rand-settings">...</div></div>`)).remove()
@@ -879,7 +879,7 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
 `);
 
 mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
-	if ($("#exlg-cli").length) return;
+    if ($("#exlg-cli").length) return;
     const $cli = $(`<div id="exlg-cli"></div>`).appendTo($("body"));
     const $cli_input = $(`<input id="exlg-cli-input" />`).appendTo($cli);
 
@@ -1261,7 +1261,7 @@ div.exlg-copied {
 `);
 
 mod.regBoard("search-user", "查找用户名", ($board) => {
-	if ($("#search-user").length) return;
+    if ($("#search-user").length) return;
     $board.html(`
 <h3>查找用户</h3>
 <div class="am-input-group am-input-group-primary am-input-group-sm">
@@ -1353,7 +1353,7 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
 
 mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*", () => {
     //"https://www.luogu.com.cn/user/setting#extension"
-	if ($("#exlg-padding").length) return;
+    if ($("#exlg-padding").length) return;
 
     log("exlg-settings!");
 
@@ -1397,75 +1397,75 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
             //log('23333')
             //window.location.href = "https://www.luogu.com.cn/user/setting#information"
         }
-		if (location.href === "https://www.luogu.com.cn/user/setting#update-log") {
-			$(".items").remove();
-			const $lg_form_layout = $(".padding-default").html("");
-			$(".lfe-h1").text(`extend-luogu Ver. ${GM_info.script.version} 更新日志`);
-			((lf) => {
-				lf.forEach(_ => {
-					if (_.type === "title") {
-						$(`<span class="exlgset-span">${_.value}</span>`).appendTo($lg_form_layout);
-					}
-					if (_.type === "real-title") {
-						$(`<h2>${_.value}</h2>`).appendTo($lg_form_layout);
-					}
-					if (_.type === "paragraph") {
-						const para = $("<p class=\"lfe-caption exlg-caption\"></p>").appendTo($lg_form_layout);
-						if (typeof(_.value) === "string") _.value = [_.value];
-						_.value.forEach(e => {
-							para.append(e);
-							if (e.slice(-1) === "\n") para.append($("<br>"));
-						});
-					}
-					if (_.type === "html") {
-						$(_.value).appendTo($lg_form_layout);
-					}
-				})
-			})([
-			{
-				type: "real-title",
-				value: "新特性",
-			},
-			{
-				type: "paragraph",
-				value: "没有加, 这玩意算半个",
-			},
-			{
-				type: "real-title",
-				value: "bug修复",
-			},
-			{
-				type: "title",
-				value: "各种东西的二次加载",
-			},
-			{
-				type: "paragraph",
-				value: "（note二次加载还没动）我就不信还有",
-			},
-			{
-				type: "real-title",
-				value: "其他",
-			},
-			{
-				type: "html",
-				value: "<p class=\"lfe-caption exlg-caption\">加回了一些<strong>被回滚掉的特性</strong></p>",
-			},
-			{
-				type: "paragraph",
-				
-				value: [
-					"比如说跳转luogulo",
-					"之类的啊\n",
-					"自己看好了",
-				]
-			},
-			{
-				type: "html",
-				value: `<button class="lfe-form-sz-middle exlg-btn" onclick="window.location.href='https://luogu.com.cn'" style="background-color: #66ccff;border-color: #66ccff;">回到首页</button>`
-			}
-			]);
-			return;
-		}
+        if (location.href === "https://www.luogu.com.cn/user/setting#update-log") {
+            $(".items").remove();
+            const $lg_form_layout = $(".padding-default").html("");
+            $(".lfe-h1").text(`extend-luogu Ver. ${GM_info.script.version} 更新日志`);
+            ((lf) => {
+                lf.forEach(_ => {
+                    if (_.type === "title") {
+                        $(`<span class="exlgset-span">${_.value}</span>`).appendTo($lg_form_layout);
+                    }
+                    if (_.type === "real-title") {
+                        $(`<h2>${_.value}</h2>`).appendTo($lg_form_layout);
+                    }
+                    if (_.type === "paragraph") {
+                        const para = $("<p class=\"lfe-caption exlg-caption\"></p>").appendTo($lg_form_layout);
+                        if (typeof(_.value) === "string") _.value = [_.value];
+                        _.value.forEach(e => {
+                            para.append(e);
+                            if (e.slice(-1) === "\n") para.append($("<br>"));
+                        });
+                    }
+                    if (_.type === "html") {
+                        $(_.value).appendTo($lg_form_layout);
+                    }
+                })
+            })([
+            {
+                type: "real-title",
+                value: "新特性",
+            },
+            {
+                type: "paragraph",
+                value: "没有加, 这玩意算半个",
+            },
+            {
+                type: "real-title",
+                value: "bug修复",
+            },
+            {
+                type: "title",
+                value: "各种东西的二次加载",
+            },
+            {
+                type: "paragraph",
+                value: "（note二次加载还没动）我就不信还有",
+            },
+            {
+                type: "real-title",
+                value: "其他",
+            },
+            {
+                type: "html",
+                value: "<p class=\"lfe-caption exlg-caption\">加回了一些<strong>被回滚掉的特性</strong></p>",
+            },
+            {
+                type: "paragraph",
+                
+                value: [
+                    "比如说跳转luogulo",
+                    "之类的啊\n",
+                    "自己看好了",
+                ]
+            },
+            {
+                type: "html",
+                value: `<button class="lfe-form-sz-middle exlg-btn" onclick="window.location.href='https://luogu.com.cn'" style="background-color: #66ccff;border-color: #66ccff;">回到首页</button>`
+            }
+            ]);
+            return;
+        }
 
         const $lg_entry = $(".items").children("li");
         const $lg_form_layout = $(".padding-default");
@@ -1905,7 +1905,7 @@ mod.reg("discuss-save", "讨论保存", "@/*", () => {
             $btn.text("保存讨论");
         }, 1000);
     });
-	const $btn2 = $(`<a href="https://luogulo.gq/show.php?url=${location.href}"><button class="am-btn am-btn-success am-btn-sm" name="save-discuss" style="border-color: rgb(255, 193, 22); background-color: rgb(255, 193, 22);color: #fff;">查看备份</button></a>`);
+    const $btn2 = $(`<a href="https://luogulo.gq/show.php?url=${location.href}"><button class="am-btn am-btn-success am-btn-sm" name="save-discuss" style="border-color: rgb(255, 193, 22); background-color: rgb(255, 193, 22);color: #fff;">查看备份</button></a>`);
     $($(".am-u-md-4.lg-right").children().children().get(1)).append($btn).append($("<span>&nbsp;</span>")).append($btn2);
     if (storage.discuss_auto_save !== 0) save_func();
 });
@@ -2475,9 +2475,9 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
 mod.reg("submission-color", "记录难度可视化", "@/*", async () => {
     const url = new URL(window.location.href);
     if (url.pathname !== "/record/list") return;
-	for (let i = 0; i < 8; ++ i) {
-		if ($(`.exlg-difficulty-color-${i}`).length) return;
-	}
+    for (let i = 0; i < 8; ++ i) {
+        if ($(`.exlg-difficulty-color-${i}`).length) return;
+    }
 
     const u = await getContent(window.location.href);
 
