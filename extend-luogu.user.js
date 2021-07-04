@@ -1714,7 +1714,8 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 (() => {
                     const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">更新日志</button>`);
                     $btn.on("click", () => {
-                        window.location.href = "user/setting#update-log";
+                        window.location.href = "https://www.luogu.com.cn/user/setting#update-log";
+						location.reload();
                     })
                         .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
                         .mouseleave((e) => { $(e.target).css("opacity", "1"); });
@@ -1912,7 +1913,7 @@ mod.reg("discuss-save", "讨论保存", "@/*", () => {
 
 mod.reg("update-log", "更新日志显示", "@/*", () => {
     if (storage.exlg_last_used_version !== GM_info.script.version) {
-        location.href = "user/setting#update-log"
+        location.href = "https://www.luogu.com.cn/user/setting#update-log"
         storage.exlg_last_used_version = GM_info.script.version;
     }
     else {
