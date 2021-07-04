@@ -41,13 +41,6 @@ const unclosable_list = ["dash", "luogu-settings-extension", "keyboard-and-cli",
 const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="dot-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-dot-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 56c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m0-48C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 168c-44.183 0-80 35.817-80 80s35.817 80 80 80 80-35.817 80-80-35.817-80-80-80z"></path></svg>`;
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"></path></svg>`;
 
-const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${GM_info.script.version} 更新日志`, `
-1.修了回滚版本后的一大堆bug
-2.去除一大堆的data-v的attr标签
-3.优化了亿些UI
-4.代码重构
-`);
-
 const uindow = unsafeWindow;
 const $ = jQuery;
 const $$ = jQuery;
@@ -552,15 +545,29 @@ mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
 
 mod.reg("user-css-load", "加载用户样式", "@/*", () => {
     if (window.location.href === "https://www.luogu.com.cn/theme/list" || window.location.href === "https://www.luogu.com.cn/theme/list/") {
-        const $ps = $(`
-    <div id="exlg-user-css">
-    <h4>自定义css</h4>
-        <div class="am-form-group am-form"><textarea rows="3" id="custom-css-input"></textarea></div><p>
-        <button type="button" class="lfe-form-sz-middle exlg-btn" style="
-        color: white;border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)" id="save-css-button">保存</button>
-    </p>
-    </div>
-    `).appendTo(".full-container");
+    $(`<div><h4>自定义css</h4></div>`).append(
+            $(`<div class="am-form-group am-form"></div>`).append(
+                $(`<textarea rows="3" id="custom-css-input"` + (((storage.code_fonts_val || "") !== "") ? (`style="font-family: ` + (storage.code_fonts_val || "") + `"`) : (``)) + `></textarea>`).val(storage.user_css)
+            )
+        )
+            .append(
+                $(`<p></p>`).append(
+                    (() => {
+                        const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">保存</button>`);
+                        $btn.on("click", () => {
+                            $btn.prop("disabled", true);
+                            $btn.text("保存成功");
+                            storage.user_css = $("#custom-css-input").val();
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+                        })
+                            .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
+                            .mouseleave((e) => { $(e.target).css("opacity", "1"); });
+                        return $btn;
+                    })()
+                )
+            ).appendTo(".full-container");
         $("#custom-css-input").val(storage.user_css);
         $("#save-css-button").on("click", () => {
             storage.user_css = $("#custom-css-input").val();
@@ -1161,7 +1168,6 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
                 if (language !== "") language = " - " + language;
             }
             log("Language:" + language);
-            log($cb[i], e, $e);
             const $$cb = $($cb[i]).parent();
             $e.before($(`<p></p>`));
             $e.before($(`<h3 class="exlg-code-title">源代码${language}</h3>`));
@@ -1385,12 +1391,81 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
         return $fte;
     };
 
-    const href_list = ["information", "preference", "security", "extension", "extension-admin"];
-    if (window.location.href === "https://www.luogu.com.cn/user/setting" || window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") === 0) {
+    const href_list = ["information", "preference", "security", "extension", "extension-admin", "update-log"];
+    if (window.location.href === "https://www.luogu.com.cn/user/setting" || window.location.pathname === "/user/setting") {
         if (window.location.href === "https://www.luogu.com.cn/user/setting" || href_list.indexOf(window.location.href.substr(38)) === -1) {
             //log('23333')
             //window.location.href = "https://www.luogu.com.cn/user/setting#information"
         }
+		if (location.href === "https://www.luogu.com.cn/user/setting#update-log") {
+			$(".items").remove();
+			const $lg_form_layout = $(".padding-default").html("");
+			$(".lfe-h1").text(`extend-luogu Ver. ${GM_info.script.version} 更新日志`);
+			((lf) => {
+				lf.forEach(_ => {
+					if (_.type === "title") {
+						$(`<span class="exlgset-span">${_.value}</span>`).appendTo($lg_form_layout);
+					}
+					if (_.type === "real-title") {
+						$(`<h2>${_.value}</h2>`).appendTo($lg_form_layout);
+					}
+					if (_.type === "paragraph") {
+						const para = $("<p class=\"lfe-caption exlg-caption\"></p>").appendTo($lg_form_layout);
+						if (typeof(_.value) === "string") _.value = [_.value];
+						_.value.forEach(e => {
+							para.append(e);
+							if (e.slice(-1) === "\n") para.append($("<br>"));
+						});
+					}
+					if (_.type === "html") {
+						$(_.value).appendTo($lg_form_layout);
+					}
+				})
+			})([
+			{
+				type: "real-title",
+				value: "新特性",
+			},
+			{
+				type: "paragraph",
+				value: "没有加, 这玩意算半个",
+			},
+			{
+				type: "real-title",
+				value: "bug修复",
+			},
+			{
+				type: "title",
+				value: "各种东西的二次加载",
+			},
+			{
+				type: "paragraph",
+				value: "（note二次加载还没动）我就不信还有",
+			},
+			{
+				type: "real-title",
+				value: "其他",
+			},
+			{
+				type: "html",
+				value: "<p class=\"lfe-caption exlg-caption\">加回了一些<strong>被回滚掉的特性</strong></p>",
+			},
+			{
+				type: "paragraph",
+				
+				value: [
+					"比如说跳转luogulo",
+					"之类的啊\n",
+					"自己看好了",
+				]
+			},
+			{
+				type: "html",
+				value: `<button class="lfe-form-sz-middle exlg-btn" onclick="window.location.href='https://luogu.com.cn'" style="background-color: #66ccff;border-color: #66ccff;">回到首页</button>`
+			}
+			]);
+			return;
+		}
 
         const $lg_entry = $(".items").children("li");
         const $lg_form_layout = $(".padding-default");
@@ -1639,8 +1714,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 (() => {
                     const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">更新日志</button>`);
                     $btn.on("click", () => {
-                        GM_deleteValue("exlg-last-used-version");
-                        window.location.href = "https://www.luogu.com.cn/";
+                        window.location.href = "user/setting#update-log";
                     })
                         .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
                         .mouseleave((e) => { $(e.target).css("opacity", "1"); });
@@ -1822,8 +1896,7 @@ mod.reg("discuss-save", "讨论保存", "@/*", () => {
         }
     });
     //am-btn-success
-    const $btn = $(`<button class="am-btn am-btn-success am-btn-sm" name="save-discuss">保存讨论</button>`);
-    $($(".am-u-md-4.lg-right").children().children().get(1)).append($btn.on("click", () => {
+    const $btn = $(`<button class="am-btn am-btn-success am-btn-sm" name="save-discuss">保存讨论</button>`).on("click", () => {
         $btn.prop("disabled", true);
         $btn.text("保存成功");
         save_func();
@@ -1831,17 +1904,16 @@ mod.reg("discuss-save", "讨论保存", "@/*", () => {
             $btn.removeAttr("disabled");
             $btn.text("保存讨论");
         }, 1000);
-    }));
+    });
+	const $btn2 = $(`<a href="https://luogulo.gq/show.php?url=${location.href}"><button class="am-btn am-btn-success am-btn-sm" name="save-discuss" style="border-color: rgb(255, 193, 22); background-color: rgb(255, 193, 22);color: #fff;">查看备份</button></a>`);
+    $($(".am-u-md-4.lg-right").children().children().get(1)).append($btn).append($("<span>&nbsp;</span>")).append($btn2);
     if (storage.discuss_auto_save !== 0) save_func();
 });
 
 mod.reg("update-log", "更新日志显示", "@/*", () => {
-    if (window.location.href === "https://www.luogu.com.cn/" && storage.exlg_last_used_version !== GM_info.script.version) {
-        show_exlg_updlog();
+    if (storage.exlg_last_used_version !== GM_info.script.version) {
+        location.href = "user/setting#update-log"
         storage.exlg_last_used_version = GM_info.script.version;
-    }
-    else if (storage.exlg_last_used_version !== GM_info.script.version) {
-        log("It's able to show the update log but not at mainpage");
     }
     else {
         log("The version is the lateset.");
