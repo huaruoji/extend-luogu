@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        6.2.4
+// @version        6.2.5
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite OwO
 // @match          https://*.luogu.com.cn/*
@@ -140,8 +140,10 @@ const storage = new Proxy({}, {
 const mod = {
     _: [],
 
+    injecting: 0,
+
     reg: (name, info, path, func, styl) => mod._.push({
-        name, info, path: Array.isArray(path) ? path : [path], func, styl, alive: 0
+        name, info, path: Array.isArray(path) ? path : [path], func, styl
     }),
     regMain: (name, info, path, func, styl) =>
         mod.reg("@" + name, info, path, () => (func(), false), styl),
@@ -207,12 +209,14 @@ const mod = {
     enable: (name) => { mod.find(name).on = true; },
 
     execute: (name) => {
+        if (mod.injecting) return;
+        mod.injecting = 1;
+        setTimeout(() => { mod.injecting = 0; }, 400);
+
         const exe = (m, named) => {
-            if (m.alive) return 0;
             if (!m) error(`Executing named mod but not found: "${name}"`);
             if (m.styl && !mod.first_injection) GM_addStyle(m.styl);
             log(`Executing ${named ? "named " : ""}mod: "${m.name}"`);
-            m.alive = 1;
             return m.func(named);
         };
         if (name) {
@@ -1433,6 +1437,10 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 {
                     type: "title",
                     value: "各种东西的二次加载",
+                },
+                {
+                    type: "title",
+                    value: "钩子稳定性",
                 },
                 {
                     type: "paragraph",
