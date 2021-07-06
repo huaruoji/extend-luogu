@@ -30,9 +30,6 @@
 
 // ==Utilities==
 
-function html([x]) { return x; } // a function to help highlight in vscode
-//please not use this anymore
-
 function GM_addStyle(str) {
     return $(`<style class="exlg-css">${str}</style>`).appendTo($("head"))[0];
 }
