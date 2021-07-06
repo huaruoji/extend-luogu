@@ -220,20 +220,20 @@ const mod = {
     enable: (name) => { mod.find(name).on = true; },
 
     execute: async (name) => {
-        if (mod.injecting) return;
-        mod.injecting = 1;
-        setTimeout(() => { mod.injecting = 0; }, 400);
-
-        const exe = (m, named) => {
+        const exe = async (m, named) => {
             if (!m) error(`Executing named mod but not found: "${name}"`);
             if (m.styl && !mod.first_injection) GM_addStyle(m.styl);
             log(`Executing ${named ? "named " : ""}mod: "${m.name}"`);
-            return m.func(named);
+            return await m.func(named);
         };
         if (name) {
             const m = mod.find(name);
             return await exe(m, true);
         }
+
+        if (mod.injecting) return;
+        mod.injecting = 1;
+        setTimeout(() => { mod.injecting = 0; }, 400);
 
         mod.map = await storage.mod_map;
 
@@ -251,9 +251,9 @@ const mod = {
                 p.startsWith("@tcs1/") && location.host === "service-ig5px5gh-1305163805.sh.apigw.tencentcs.com" ||
                 p.startsWith("@tcs2/") && location.host === "service-psscsax9-1305163805.sh.apigw.tencentcs.com"
             ) && (
-                p.endsWith("*") && pn.startsWith(pr.slice(0, -1)) ||
+                    p.endsWith("*") && pn.startsWith(pr.slice(0, -1)) ||
                     pn === pr
-            )))
+                )))
 
                 if (await exe(m) === false) return;
         }
@@ -268,7 +268,7 @@ const mod = {
     }
 };
 
-mod.reg("dash", "控制面板", "@/*", () => {
+mod.reg("dash", "控制面板", "@/*", async () => {
     if ($("#exlg-nav-icon").length) return;
     $(`<a href="/user/setting#extension" title="exlg" id="exlg-nav-icon"><svg data-v-78704ac9="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-cog fa-w-20"><path data-v-78704ac9="" data-v-303bbf52="" fill="currentColor" d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" class=""></path></svg></a>`).prependTo($("nav.user-nav, div.user-nav > nav"));
 }, `
@@ -294,7 +294,7 @@ button.exlg-btn {
 }
 `);
 
-mod.regMain("springboard", "跨域跳板", "@bili/robots.txt", () => {
+mod.regMain("springboard", "跨域跳板", "@bili/robots.txt", async () => {
     const q = new URLSearchParams(location.search);
     console.log("started");
     if (q.has("benben")) {
@@ -328,15 +328,15 @@ iframe::-webkit-scrollbar {
 }
 `);
 
-mod.regMain("benben-data", "犇犇数据", "@tcs1/release/APIGWHtmlDemo-1615602121", () =>
+mod.regMain("benben-data", "犇犇数据", "@tcs1/release/APIGWHtmlDemo-1615602121", async () =>
     uindow.parent.postMessage(JSON.parse(document.body.innerText), "*")
 );
 
-mod.regMain("version-data", "版本数据", "@tcs2/release/exlg-version", () =>
+mod.regMain("version-data", "版本数据", "@tcs2/release/exlg-version", async () =>
     uindow.parent.postMessage([document.body.innerText], "*")
 );
 
-mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], () => {
+mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], async () => {
     if ($(".exlg-emo").length) return;
     /*
     const emo = [
@@ -435,7 +435,7 @@ mod.reg("emoticon", "表情输入", ["@/discuss/lists", "@/discuss/show/*"], () 
 }
 `);
 
-mod.regChore("update", "脚本升级", "1D", "@/*", () => {
+mod.regChore("update", "脚本升级", "1D", "@/*", async () => {
     let loaded = false;
     if (loaded) $("#exlg-benben").attr("src", $("#exlg-benben").attr("src"));
     else {
@@ -476,7 +476,7 @@ mod.regChore("update", "脚本升级", "1D", "@/*", () => {
     });
 });
 
-mod.regUserTab("user-intro-ins", "主页指令", "main", null, () => {
+mod.regUserTab("user-intro-ins", "主页指令", "main", null, async () => {
     $(".introduction > *").each((_, e, $e = $(e)) => {
         const t = $e.text();
         let [, , ins, arg] = t.match(/^(exlg.|%)([a-z]+):([^]+)$/) ?? [];
@@ -485,19 +485,19 @@ mod.regUserTab("user-intro-ins", "主页指令", "main", null, () => {
         arg = arg.split(/(?<!!)%/g).map((s) => s.replace(/!%/g, "%"));
         const $blog = $($(".user-action").children()[0]);
         switch (ins) {
-        case "html":
-            $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`));
-            break;
-        case "frame":
-            $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
+            case "html":
+                $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`));
+                break;
+            case "frame":
+                $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
                     + `style="width: ${arg[1]}; height: ${arg[2]};"></iframe>`
-            ));
-            break;
-        case "blog":
-            if ($blog.text().trim() !== "个人博客") return;
-            $blog.attr("href", arg);
-            $e.remove();
-            break;
+                ));
+                break;
+            case "blog":
+                if ($blog.text().trim() !== "个人博客") return;
+                $blog.attr("href", arg);
+                $e.remove();
+                break;
         }
     });
 }, `
@@ -510,7 +510,7 @@ iframe::-webkit-scrollbar {
 }
 `);
 
-mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
+mod.regUserTab("user-problem", "题目颜色和比较", "practice", async () => ({
     color: [
         "rgb(191, 191, 191)",
         "rgb(254, 76, 97)",
@@ -596,7 +596,7 @@ mod.reg("user-css-load", "加载用户样式", "@/*", async () => {
     background-color: white;
 }`);
 
-mod.reg("benben", "全网犇犇", "@/", () => {
+mod.reg("benben", "全网犇犇", "@/", async () => {
     const color = {
         Gray: "gray",
         Blue: "bluelight",
@@ -1009,20 +1009,20 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", async () => {
             /* 当 <action> 为 "enable|disable|toggle"，对名为 <name> 的模块执行对应操作：启用|禁用|切换。当 <action> 为 "save"，保存修改。 */
             const i = mod.find_i(name);
             switch (action) {
-            case "enable":
-            case "disable":
-            case "toggle":
-                if (i < 0) return cli_error`mod: unknown mod "${name}"`;
-                const $mod = $($("#exlg-dash-mods").children()[i]).children();
-                $mod.prop("checked", {
-                    enable: () => true, disable: () => false, toggle: (now) => !now
-                }[action]($mod.prop("checked"))).trigger("change");
-                break;
-            case "save":
-                storage.mod_map = mod.map;
-                break;
-            default:
-                return cli_error`mod: unknown action "${action}"`;
+                case "enable":
+                case "disable":
+                case "toggle":
+                    if (i < 0) return cli_error`mod: unknown mod "${name}"`;
+                    const $mod = $($("#exlg-dash-mods").children()[i]).children();
+                    $mod.prop("checked", {
+                        enable: () => true, disable: () => false, toggle: (now) => !now
+                    }[action]($mod.prop("checked"))).trigger("change");
+                    break;
+                case "save":
+                    storage.mod_map = mod.map;
+                    break;
+                default:
+                    return cli_error`mod: unknown action "${action}"`;
             }
         },
         dash: (action/*!string*/) => {
@@ -1090,27 +1090,27 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", async () => {
 
     $cli_input.on("keydown", (e) => {
         switch (e.key) {
-        case "Enter":
-            if (cli_is_log) return cli_clean();
-            const cmd = $cli_input.val();
-            cli_history.push(cmd);
-            cli_history_index = cli_history.length;
-            parse(cmd);
-            if (!cli_is_log) return cli_clean();
-            break;
-        case "/":
-            if (cli_is_log) cli_clean();
-            break;
-        case "Escape":
-            $cli.hide();
-            break;
-        case "ArrowUp":
-        case "ArrowDown":
-            const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[e.key];
-            if (i < 0 || i >= cli_history.length) return;
-            cli_history_index = i;
-            $cli_input.val(cli_history[i]);
-            break;
+            case "Enter":
+                if (cli_is_log) return cli_clean();
+                const cmd = $cli_input.val();
+                cli_history.push(cmd);
+                cli_history_index = cli_history.length;
+                parse(cmd);
+                if (!cli_is_log) return cli_clean();
+                break;
+            case "/":
+                if (cli_is_log) cli_clean();
+                break;
+            case "Escape":
+                $cli.hide();
+                break;
+            case "ArrowUp":
+            case "ArrowDown":
+                const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[e.key];
+                if (i < 0 || i >= cli_history.length) return;
+                cli_history_index = i;
+                $cli_input.val(cli_history[i]);
+                break;
         }
     });
 
@@ -1273,7 +1273,7 @@ div.exlg-copied {
 }
 `);
 
-mod.regBoard("search-user", "查找用户名", ($board) => {
+mod.regBoard("search-user", "查找用户名", async ($board) => {
     if ($("#search-user").length) return;
     $board.html(`
 <h3>查找用户</h3>
@@ -1284,20 +1284,21 @@ mod.regBoard("search-user", "查找用户名", ($board) => {
     <button class="am-btn am-btn-danger am-btn-sm" id="search-user">跳转</button>
 </p>
 `);
-    const func = async () => {
-        $search_user.prop("disabled", true);
-        const res = await getContent(`/api/user/search?keyword=${$("[name=username]").val()}`, 0);
-        if (!res.users[0]) {
-            $search_user.prop("disabled", false);
-            lg_alert("无法找到指定用户");
-        }
-        else location.href = "/user/" + res.users[0].uid;
-    };
     const $search_user = $("#search-user").on("click", func);
-    $("#search-user-input").keydown((e) => { if (e.keyCode === 13) func(); });
+    $("#search-user-input").keydown(async (e) => {
+        if (e.keyCode === 13) {
+            $search_user.prop("disabled", true);
+            const res = await getContent(`/api/user/search?keyword=${$("[name=username]").val()}`, 0);
+            if (!res.users[0]) {
+                $search_user.prop("disabled", false);
+                lg_alert("无法找到指定用户");
+            }
+            else location.href = "/user/" + res.users[0].uid;
+        }
+    });
 });
 
-mod.reg("problem-export", "题目导出", "@/*", () => {
+mod.reg("problem-export", "题目导出", "@/*", async () => {
     if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)\d+[A-Z]*$/.test(location.pathname)) {
         return;
     }
@@ -1872,7 +1873,7 @@ mod.reg("update-log", "更新日志显示", "@/*", async () => {
     }
 });
 
-mod.reg("dbc-jump", "双击题号跳题", "@/*", () => {
+mod.reg("dbc-jump", "双击题号跳题", "@/*", async () => {
     const judge_problem = (text) => {
         if (text.match(/AT[0-9]{1,4}/) === text) return true;
         if (text.match(/CF[0-9]{1,4}[A-Z][0-9]{0,1}/) === text) return true;
@@ -1899,7 +1900,7 @@ mod.reg("dbc-jump", "双击题号跳题", "@/*", () => {
     document.ondblclick = jump;
 });
 
-mod.reg("notepad", "洛谷笔记", "@/*", () => {
+mod.reg("notepad", "洛谷笔记", "@/*", async () => {
     const DBName = "Luogu Notepad",
         DBVer = 2;
 
