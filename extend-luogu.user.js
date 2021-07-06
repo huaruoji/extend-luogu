@@ -34,7 +34,7 @@ function html([x]) { return x; } // a function to help highlight in vscode
 //please not use this anymore
 
 function GM_addStyle(str) {
-    return $(`<style class="exlg-css">${str}</style>`).appendTo($("head"))[0]
+    return $(`<style class="exlg-css">${str}</style>`).appendTo($("head"))[0];
 }
 
 const unclosable_list = ["dash", "luogu-settings-extension", "keyboard-and-cli", "update-log", "@springboard", "@benben-data", "@version-data"];
@@ -107,7 +107,7 @@ function getContent(url, contentOnly = 1) {
     if (contentOnly)
         url = url + (url.includes("?") ? "&" : "?") + "_contentOnly";
     return new Promise((resolve, reject) => {
-        $.get(url, (u) =>  resolve(u));
+        $.get(url, (u) => resolve(u));
     });
 }
 
@@ -132,7 +132,7 @@ const storage = new Proxy({}, {
     },
     clear: (tar) => {
         GM_listValues().forEach((_) => {
-            if (typeof(_) !== "string") return;
+            if (typeof (_) !== "string") return;
             GM_deleteValue(_);
         });
     }
@@ -143,10 +143,8 @@ const storage = new Proxy({}, {
 const mod = {
     _: [],
 
-    first_injection: 0,
-
     reg: (name, info, path, func, styl) => mod._.push({
-        name, info, path: Array.isArray(path) ? path : [path], func, styl
+        name, info, path: Array.isArray(path) ? path : [path], func, styl, alive: 0
     }),
     regMain: (name, info, path, func, styl) =>
         mod.reg("@" + name, info, path, () => (func(), false), styl),
@@ -213,9 +211,11 @@ const mod = {
 
     execute: (name) => {
         const exe = (m, named) => {
+            if (m.alive) return 0;
             if (!m) error(`Executing named mod but not found: "${name}"`);
             if (m.styl && !mod.first_injection) GM_addStyle(m.styl);
             log(`Executing ${named ? "named " : ""}mod: "${m.name}"`);
+            m.alive = 1;
             return m.func(named);
         };
         if (name) {
@@ -246,7 +246,6 @@ const mod = {
         }
 
         if (map_init) storage.mod_map = mod.map;
-        mod.first_injection = 1;
     },
 
     get_settings_element() {
@@ -545,7 +544,7 @@ mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
 
 mod.reg("user-css-load", "加载用户样式", "@/*", () => {
     if (window.location.href === "https://www.luogu.com.cn/theme/list" || window.location.href === "https://www.luogu.com.cn/theme/list/") {
-    $(`<div><h4>自定义css</h4></div>`).append(
+        $(`<div><h4>自定义css</h4></div>`).append(
             $(`<div class="am-form-group am-form"></div>`).append(
                 $(`<textarea rows="3" id="custom-css-input"` + (((storage.code_fonts_val || "") !== "") ? (`style="font-family: ` + (storage.code_fonts_val || "") + `"`) : (``)) + `></textarea>`).val(storage.user_css)
             )
@@ -887,7 +886,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
     const cli_log = (sp, ...tp) => {
         cli_is_log = true;
         const m = sp.map((s, i) =>
-            s.split(/\b/).map((w) => cli_lang_dict[w]?.[ cli_lang - 1 ] ?? w).join("") +
+            s.split(/\b/).map((w) => cli_lang_dict[w]?.[cli_lang - 1] ?? w).join("") +
             (tp[i] || "")
         ).join("");
         return $cli_input.val(m);
@@ -900,29 +899,29 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
     };
     const cli_history = [];
     let cli_history_index = 0;
-    const cli_langs = [ "en", "zh" ], cli_lang_dict = {
-        ".": [ "。" ],
-        ",": [ "，" ],
-        "!": [ "！" ],
-        "?": [ "？" ],
-        "cli":        [ "命令行" ],
-        "current":    [ "当前" ],
-        "language":   [ "语言" ],
-        "available":  [ "可用" ],
-        "command":    [ "命令" ],
-        "commands":   [ "命令" ],
-        "unknown":    [ "未知" ],
-        "forum":      [ "板块" ],
-        "target":     [ "目标" ],
-        "mod":        [ "模块" ],
-        "action":     [ "操作" ],
-        "illegal":    [ "错误" ],
-        "param":      [ "参数" ],
-        "expected":   [ "期望" ],
-        "type":       [ "类型" ],
-        "lost":       [ "缺失" ],
-        "essential":  [ "必要" ],
-        "user":       [ "用户" ]
+    const cli_langs = ["en", "zh"], cli_lang_dict = {
+        ".": ["。"],
+        ",": ["，"],
+        "!": ["！"],
+        "?": ["？"],
+        "cli": ["命令行"],
+        "current": ["当前"],
+        "language": ["语言"],
+        "available": ["可用"],
+        "command": ["命令"],
+        "commands": ["命令"],
+        "unknown": ["未知"],
+        "forum": ["板块"],
+        "target": ["目标"],
+        "mod": ["模块"],
+        "action": ["操作"],
+        "illegal": ["错误"],
+        "param": ["参数"],
+        "expected": ["期望"],
+        "type": ["类型"],
+        "lost": ["缺失"],
+        "essential": ["必要"],
+        "user": ["用户"]
     };
     let cli_lang = storage.cli_lang || 0;
 
@@ -930,17 +929,17 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
         help: (cmd/*string*/) => {
             /* get the help of <cmd>. or list all cmds. */
             /* 获取 <cmd> 的帮助。空则列出所有。 */
-            if (! cmd)
-                cli_log`exlg cli. current language: ${cli_lang}, available commands: ${ Object.keys(cmds).join(", ") }`;
+            if (!cmd)
+                cli_log`exlg cli. current language: ${cli_lang}, available commands: ${Object.keys(cmds).join(", ")}`;
             else {
                 const f = cmds[cmd];
-                if (! f) return cli_error`help: unknown command "${cmd}"`;
+                if (!f) return cli_error`help: unknown command "${cmd}"`;
 
                 const arg = f.arg.map((a) => {
                     const i = a.name + ": " + a.type;
                     return a.essential ? `<${i}>` : `[${i}]`;
                 }).join(" ");
-                cli_log`${cmd} ${arg} ${ f.help[cli_lang] }`;
+                cli_log`${cmd} ${arg} ${f.help[cli_lang]}`;
             }
         },
         cd: (path/*!string*/) => {
@@ -964,14 +963,14 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
             /* jump to the forum named <forum> of discussion. use all the names you can think of. */
             /* 跳转至名为 <forum> 的讨论板块，你能想到的名字基本都有用。 */
             const tar = [
-                [ "relevantaffairs",    "gs", "gsq",    "灌水", "灌水区",               "r", "ra" ],
-                [ "academics",          "xs", "xsb",    "学术", "学术版",               "a", "ac" ],
-                [ "siteaffairs",        "zw", "zwb",    "站务", "站务版",               "s", "sa" ],
-                [ "problem",            "tm", "tmzb",   "灌水", "题目总版",             "p"       ],
-                [ "service",            "fk", "fksqgd", "反馈", "反馈、申请、工单专版",      "se" ]
+                ["relevantaffairs", "gs", "gsq", "灌水", "灌水区", "r", "ra"],
+                ["academics", "xs", "xsb", "学术", "学术版", "a", "ac"],
+                ["siteaffairs", "zw", "zwb", "站务", "站务版", "s", "sa"],
+                ["problem", "tm", "tmzb", "灌水", "题目总版", "p"],
+                ["service", "fk", "fksqgd", "反馈", "反馈、申请、工单专版", "se"]
             ];
             forum = tar.find((ns) => ns.includes(forum))?.[0];
-            if (! tar) return cli_error`cdd: unknown forum "${forum}"`;
+            if (!tar) return cli_error`cdd: unknown forum "${forum}"`;
             cmds.cd(`/discuss/lists?forumname=${forum}`);
         },
         cc: (name/*char*/) => {
@@ -1002,7 +1001,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
                 if (i < 0) return cli_error`mod: unknown mod "${name}"`;
                 const $mod = $($("#exlg-dash-mods").children()[i]).children();
                 $mod.prop("checked", {
-                    enable: () => true, disable: () => false, toggle: (now) => ! now
+                    enable: () => true, disable: () => false, toggle: (now) => !now
                 }[action]($mod.prop("checked"))).trigger("change");
                 break;
             case "save":
@@ -1015,7 +1014,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
         dash: (action/*!string*/) => {
             /* for <action> "show|hide|toggle", opearte the exlg dashboard. */
             /* 当 <action> 为 "show|hide|toggle", 显示|隐藏|切换 exlg 管理面板。 */
-            if (! [ "show", "hide", "toggle" ].includes(action))
+            if (!["show", "hide", "toggle"].includes(action))
                 return cli_error`dash: unknown action "${action}"`;
             $("#exlg-dash-window")[action]();
         },
@@ -1035,7 +1034,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
             /* jumps to homepage of user whose username is like <name>. */
             /* 跳转至用户名与 <name> 类似的用户主页。 */
             $.get("/api/user/search?keyword=" + name, (res) => {
-                if (! res.users[0])
+                if (!res.users[0])
                     cli_error`un: unknown user "${name}".`;
                 else
                     location.href = "/user/" + res.users[0].uid;
@@ -1043,9 +1042,9 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
         }
     };
     for (const f of Object.values(cmds)) {
-        [ , f.arg, f.help ] = f.toString().match(/^\((.*?)\) => {((?:\n +\/\*.+?\*\/)+)/);
+        [, f.arg, f.help] = f.toString().match(/^\((.*?)\) => {((?:\n +\/\*.+?\*\/)+)/);
         f.arg = f.arg.split(", ").map((a) => {
-            const [ , name, type ] = a.match(/([a-z_]+)\/\*(.+)\*\//);
+            const [, name, type] = a.match(/([a-z_]+)\/\*(.+)\*\//);
             return {
                 name, essential: type[0] === "!", type: type.replace(/^!/, "")
             };
@@ -1057,21 +1056,21 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
 
         const tk = cmd.trim().replace(/^\//, "").split(" ");
         const n = tk.shift();
-        if (! n) return;
+        if (!n) return;
         const f = cmds[n];
-        if (! f) return cli_error`exlg: unknown command "${n}"`;
-        let i = -1, a; for ([ i, a ] of tk.entries()) {
+        if (!f) return cli_error`exlg: unknown command "${n}"`;
+        let i = -1, a; for ([i, a] of tk.entries()) {
             const t = f.arg[i].type;
             if (t === "number" || t === "integer") tk[i] = Number(a);
             if (
                 t === "char" && a.length === 1 ||
-                t === "number" && ! isNaN(tk[i]) ||
-                t === "integer" && ! isNaN(tk[i]) && ! (tk[i] % 1) ||
+                t === "number" && !isNaN(tk[i]) ||
+                t === "integer" && !isNaN(tk[i]) && !(tk[i] % 1) ||
                 t === "string"
-            ) ;
+            );
             else return cli_error`${n}: illegal param "${a}", expected type ${t}.`;
         }
-        if (f.arg[i + 1]?.essential) return cli_error`${n}: lost essential param "${ f.arg[i + 1].name }"`;
+        if (f.arg[i + 1]?.essential) return cli_error`${n}: lost essential param "${f.arg[i + 1].name}"`;
         f(...tk);
     };
 
@@ -1083,7 +1082,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
             cli_history.push(cmd);
             cli_history_index = cli_history.length;
             parse(cmd);
-            if (! cli_is_log) return cli_clean();
+            if (!cli_is_log) return cli_clean();
             break;
         case "/":
             if (cli_is_log) cli_clean();
@@ -1093,7 +1092,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
             break;
         case "ArrowUp":
         case "ArrowDown":
-            const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[ e.key ];
+            const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[e.key];
             if (i < 0 || i >= cli_history.length) return;
             cli_history_index = i;
             $cli_input.val(cli_history[i]);
@@ -1104,11 +1103,11 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
     $(uindow).on("keydown", (e) => {
         const $act = $(document.activeElement);
         if ($act.is("body")) {
-            const rel = { ArrowLeft: "prev", ArrowRight: "next" }[ e.key ];
+            const rel = { ArrowLeft: "prev", ArrowRight: "next" }[e.key];
             if (rel) return $(`a[rel=${rel}]`)[0].click();
 
             if (e.shiftKey) {
-                const y = { ArrowUp: 0, ArrowDown: 1e6 }[ e.key ];
+                const y = { ArrowUp: 0, ArrowDown: 1e6 }[e.key];
                 if (y !== undefined) uindow.scrollTo(0, y);
             }
 
@@ -1359,7 +1358,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
     const $get_button_of_sth = (GMid, GMdesc, default_value/*boolean*/) => {
         default_value = storage[GMid] || default_value;
-        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${ GMdesc } </label>`);
+        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${GMdesc} </label>`);
         const $csd = $("<span>" + ((default_value) ? (html_circleswitch_on) : (html_circleswitch_off)) + "</span>").prependTo($fte);
         $fte.on("click", () => {
             if ($csd.children().attr("data-icon") === "dot-circle") {
@@ -1374,7 +1373,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
         return $fte;
     };
     const $get_button_of_mod_map = (sxid, sxdesc) => {
-        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${ sxdesc } </label>`);
+        const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${sxdesc} </label>`);
         const $csd = $("<span>" + ((mod.map[sxid]) ? (html_circleswitch_on) : (html_circleswitch_off)) + "</span>").prependTo($fte);
         $fte.on("click", () => {
             if ($csd.children().attr("data-icon") === "dot-circle") {
@@ -1402,7 +1401,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
             const $lg_form_layout = $(".padding-default").html("");
             $(".lfe-h1").text(`extend-luogu Ver. ${GM_info.script.version} 更新日志`);
             ((lf) => {
-                lf.forEach(_ => {
+                lf.forEach((_) => {
                     if (_.type === "title") {
                         $(`<span class="exlgset-span">${_.value}</span>`).appendTo($lg_form_layout);
                     }
@@ -1411,8 +1410,8 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                     }
                     if (_.type === "paragraph") {
                         const para = $("<p class=\"lfe-caption exlg-caption\"></p>").appendTo($lg_form_layout);
-                        if (typeof(_.value) === "string") _.value = [_.value];
-                        _.value.forEach(e => {
+                        if (typeof (_.value) === "string") _.value = [_.value];
+                        _.value.forEach((e) => {
                             para.append(e);
                             if (e.slice(-1) === "\n") para.append($("<br>"));
                         });
@@ -1420,49 +1419,49 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                     if (_.type === "html") {
                         $(_.value).appendTo($lg_form_layout);
                     }
-                })
+                });
             })([
-            {
-                type: "real-title",
-                value: "新特性",
-            },
-            {
-                type: "paragraph",
-                value: "没有加, 这玩意算半个",
-            },
-            {
-                type: "real-title",
-                value: "bug修复",
-            },
-            {
-                type: "title",
-                value: "各种东西的二次加载",
-            },
-            {
-                type: "paragraph",
-                value: "（note二次加载还没动）我就不信还有",
-            },
-            {
-                type: "real-title",
-                value: "其他",
-            },
-            {
-                type: "html",
-                value: "<p class=\"lfe-caption exlg-caption\">加回了一些<strong>被回滚掉的特性</strong></p>",
-            },
-            {
-                type: "paragraph",
-                
-                value: [
-                    "比如说跳转luogulo",
-                    "之类的啊\n",
-                    "自己看好了",
-                ]
-            },
-            {
-                type: "html",
-                value: `<button class="lfe-form-sz-middle exlg-btn" onclick="window.location.href='https://luogu.com.cn'" style="background-color: #66ccff;border-color: #66ccff;">回到首页</button>`
-            }
+                {
+                    type: "real-title",
+                    value: "新特性",
+                },
+                {
+                    type: "paragraph",
+                    value: "没有加, 这玩意算半个",
+                },
+                {
+                    type: "real-title",
+                    value: "bug修复",
+                },
+                {
+                    type: "title",
+                    value: "各种东西的二次加载",
+                },
+                {
+                    type: "paragraph",
+                    value: "（note二次加载还没动）我就不信还有",
+                },
+                {
+                    type: "real-title",
+                    value: "其他",
+                },
+                {
+                    type: "html",
+                    value: "<p class=\"lfe-caption exlg-caption\">加回了一些<strong>被回滚掉的特性</strong></p>",
+                },
+                {
+                    type: "paragraph",
+
+                    value: [
+                        "比如说跳转luogulo",
+                        "之类的啊\n",
+                        "自己看好了",
+                    ]
+                },
+                {
+                    type: "html",
+                    value: `<button class="lfe-form-sz-middle exlg-btn" onclick="window.location.href='https://luogu.com.cn'" style="background-color: #66ccff;border-color: #66ccff;">回到首页</button>`
+                }
             ]);
             return;
         }
@@ -1708,14 +1707,14 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
             })()
         )).appendTo($("#ex-settings-data-debug"));
 
-        $(`<p class="lfe-caption exlg-caption">当前版本为：${ GM_info.script.version }</p>`)
+        $(`<p class="lfe-caption exlg-caption">当前版本为：${GM_info.script.version}</p>`)
             .append($(`<span>&nbsp;</span>`))
             .append(
                 (() => {
                     const $btn = $(`<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">更新日志</button>`);
                     $btn.on("click", () => {
                         window.location.href = "https://www.luogu.com.cn/user/setting#update-log";
-						location.reload();
+                        location.reload();
                     })
                         .mouseenter((e) => { $(e.target).css("opacity", "0.9"); })
                         .mouseleave((e) => { $(e.target).css("opacity", "1"); });
@@ -1723,7 +1722,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                 })()
             ).appendTo($("#ex-settings-update-versions"));
 
-        $(`<p class="lfe-caption exlg-caption">最新版本为：<text id="newest-version-display">${ GM_info.script.version }</text></p>`)
+        $(`<p class="lfe-caption exlg-caption">最新版本为：<text id="newest-version-display">${GM_info.script.version}</text></p>`)
             .append($(`<span>&nbsp;</span>`))
             .append(
                 (() => {
@@ -1913,7 +1912,7 @@ mod.reg("discuss-save", "讨论保存", "@/*", () => {
 
 mod.reg("update-log", "更新日志显示", "@/*", () => {
     if (storage.exlg_last_used_version !== GM_info.script.version) {
-        location.href = "https://www.luogu.com.cn/user/setting#update-log"
+        location.href = "https://www.luogu.com.cn/user/setting#update-log";
         storage.exlg_last_used_version = GM_info.script.version;
     }
     else {
@@ -2476,7 +2475,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
 mod.reg("submission-color", "记录难度可视化", "@/*", async () => {
     const url = new URL(window.location.href);
     if (url.pathname !== "/record/list") return;
-    for (let i = 0; i < 8; ++ i) {
+    for (let i = 0; i < 8; ++i) {
         if ($(`.exlg-difficulty-color-${i}`).length) return;
     }
 
@@ -2521,8 +2520,8 @@ async function injectLuogu() {
 }
 function injectSpringboard() {
     if (window.location.host !== "www.bilibili.com" &&
-    window.location.host !== "service-psscsax9-1305163805.sh.apigw.tencentcs.com" &&
-    window.location.host !== "service-ig5px5gh-1305163805.sh.apigw.tencentcs.com") return;
+        window.location.host !== "service-psscsax9-1305163805.sh.apigw.tencentcs.com" &&
+        window.location.host !== "service-ig5px5gh-1305163805.sh.apigw.tencentcs.com") return;
 
     mod.execute();
     log("injected");
