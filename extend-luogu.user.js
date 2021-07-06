@@ -1284,17 +1284,18 @@ mod.regBoard("search-user", "查找用户名", async ($board) => {
     <button class="am-btn am-btn-danger am-btn-sm" id="search-user">跳转</button>
 </p>
 `);
-    const $search_user = $("#search-user").on("click", func);
-    $("#search-user-input").keydown(async (e) => {
-        if (e.keyCode === 13) {
-            $search_user.prop("disabled", true);
-            const res = await getContent(`/api/user/search?keyword=${$("[name=username]").val()}`, 0);
-            if (!res.users[0]) {
-                $search_user.prop("disabled", false);
-                lg_alert("无法找到指定用户");
-            }
-            else location.href = "/user/" + res.users[0].uid;
+    async function func() {
+        $search_user.prop("disabled", true);
+        const res = await getContent(`/api/user/search?keyword=${$("[name=username]").val()}`, 0);
+        if (!res.users[0]) {
+            $search_user.prop("disabled", false);
+            lg_alert("无法找到指定用户");
         }
+        else location.href = "/user/" + res.users[0].uid;
+    }
+    const $search_user = $("#search-user").on("click", func);
+    $("#search-user-input").keydown((e) => {
+        if (e.keyCode === 13) func();
     });
 });
 
