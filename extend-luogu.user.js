@@ -16,6 +16,7 @@
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@3a564ba0d30d88848ec486b2c36553cce87f0c7f/mp.js
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@e8d2f7699466341bfd85b0a2182d2747d7cab728/md.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.js
+// @require        https://cdn.bootcdn.net/ajax/libs/localforage/1.9.0/localforage.nopromises.min.js
 // @updateURL      https://github.com/optimize-2/extend-luogu
 // @grant          GM_getValue
 // @grant          GM_setValue
@@ -49,6 +50,7 @@ const markdown = window.markdown;
 const MarkdownPalettes = window.MarkdownPalettes;
 const WordCloud = window.WordCloud;
 const mdp = uindow.markdownPalettes;
+const forage = localforage;
 const log = (...s) => uindow.console.log("%c[exlg]", "color: #0e90d2;", ...s);
 const warn = (...s) => uindow.console.warn("%c[exlg]", "color: #0e90d2;", ...s);
 const error = (...s) => {
@@ -120,21 +122,21 @@ function getContent(url, contentOnly = 1) {
 const lg_alert = (msg) => uindow.show_alert("exlg 提醒您", msg);
 
 const storage = new Proxy({}, {
-    get(tar, key) {
-        return GM_getValue(key);
+    async get(tar, key) {
+        let t = GM_getValue(key);
+        if (t === null) {
+            t = await forage.getItem(key);
+            if (t !== null) GM_setValue(key, t);
+        }
+        return t;
     },
-    set(tar, key, val) {
+    async set(tar, key, val) {
+        forage.setItem(key, val);
         return GM_setValue(key, val);
     },
     deleteProperty: (tar, key) => {
         GM_deleteValue(key);
         return true;
-    },
-    getValue: (tar, key) => {
-        return GM_getValue(key);
-    },
-    setValue: (tar, key, val) => {
-        return GM_setValue(key, val);
     },
     clear: (tar) => {
         GM_listValues().forEach((_) => {
@@ -183,8 +185,8 @@ const mod = {
             else error(`Parsing period failed: "${period}"`);
         }
         mod.reg(
-            "^" + name, info, path, (named) => {
-                const rec = storage.mod_chore_rec ?? {};
+            "^" + name, info, path, async (named) => {
+                const rec = await storage.mod_chore_rec ?? {};
                 const last = rec[name], now = Date.now();
 
                 let nostyl = true;
@@ -217,7 +219,7 @@ const mod = {
     disable: (name) => { mod.find(name).on = false; },
     enable: (name) => { mod.find(name).on = true; },
 
-    execute: (name) => {
+    execute: async (name) => {
         if (mod.injecting) return;
         mod.injecting = 1;
         setTimeout(() => { mod.injecting = 0; }, 400);
@@ -230,10 +232,10 @@ const mod = {
         };
         if (name) {
             const m = mod.find(name);
-            return exe(m, true);
+            return await exe(m, true);
         }
 
-        mod.map = storage.mod_map;
+        mod.map = await storage.mod_map;
 
 
         const map_init = mod.map ? false : (mod.map = {});
@@ -252,7 +254,8 @@ const mod = {
                     p.endsWith("*") && pn.startsWith(pr.slice(0, -1)) ||
                     pn === pr
                 )))
-                if (exe(m) === false) return;
+
+                if (await exe(m) === false) return;
         }
 
         if (map_init) storage.mod_map = mod.map;
@@ -552,11 +555,12 @@ mod.regUserTab("user-problem", "题目颜色和比较", "practice", () => ({
 }
 `);//lack of hook
 
-mod.reg("user-css-load", "加载用户样式", "@/*", () => {
+mod.reg("user-css-load", "加载用户样式", "@/*", async () => {
+    GM_addStyle(await storage.user_css);
     if (window.location.href === "https://www.luogu.com.cn/theme/list" || window.location.href === "https://www.luogu.com.cn/theme/list/") {
         $(`<div><h4>自定义css</h4></div>`).append(
             $(`<div class="am-form-group am-form"></div>`).append(
-                $(`<textarea rows="3" id="custom-css-input"` + (((storage.code_fonts_val || "") !== "") ? (`style="font-family: ` + (storage.code_fonts_val || "") + `"`) : (``)) + `></textarea>`).val(storage.user_css)
+                $(`<textarea rows="3" id="custom-css-input"` + ((((await storage.code_fonts_val) || "") !== "") ? (`style="font-family: ` + (await storage.code_fonts_val || "") + `"`) : (``)) + `></textarea>`).val(await storage.user_css)
             )
         )
             .append(
@@ -577,13 +581,13 @@ mod.reg("user-css-load", "加载用户样式", "@/*", () => {
                     })()
                 )
             ).appendTo(".full-container");
-        $("#custom-css-input").val(storage.user_css);
+        $("#custom-css-input").val(await storage.user_css);
         $("#save-css-button").on("click", () => {
             storage.user_css = $("#custom-css-input").val();
             location.reload();
         });
     }
-}, (storage.user_css || "") + `
+}, `
 #exlg-user-css {
     display: block;
     box-sizing: border-box;
@@ -676,7 +680,7 @@ mod.reg("benben", "全网犇犇", "@/", () => {
     });
 });
 
-mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
+mod.regBoard("rand-problem-ex", "随机跳题ex", async ($board) => {
     if ($("#exlg-rand-diffs").length) return;
     $("[name='gotorandom']").text("随机");
     const $start_rand = $(`<button class="am-btn am-btn-success am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`).appendTo($("[name='gotorandom']").parent());
@@ -687,8 +691,8 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
     const iLoveMinecraft = [0, 1, 2, 3, 4, 5, 6, 7];
     const iLoveTouhou = [0, 1, 2, 3, 4];
     const fackYouCCF = ["P", "CF", "SP", "AT", "UVA"];
-    const difficulty_select = storage.mod_rand_difficulty || [false, false, false, false, false, false, false, false];
-    const source_select = storage.mod_rand_source || [false, false, false, false, false];
+    const difficulty_select = (await storage.mod_rand_difficulty) || [false, false, false, false, false, false, false, false];
+    const source_select = (await storage.mod_rand_source) || [false, false, false, false, false];
     const difficulty_html = [
         `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">入门</div>`,
         `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">普及-</div>`,
@@ -887,7 +891,7 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", ($board) => {
 }
 `);
 
-mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
+mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", async () => {
     if ($("#exlg-cli").length) return;
     const $cli = $(`<div id="exlg-cli"></div>`).appendTo($("body"));
     const $cli_input = $(`<input id="exlg-cli-input" />`).appendTo($cli);
@@ -933,7 +937,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
         "essential": ["必要"],
         "user": ["用户"]
     };
-    let cli_lang = storage.cli_lang || 0;
+    let cli_lang = (await storage.cli_lang) || 0;
 
     const cmds = {
         help: (cmd/*string*/) => {
@@ -1153,14 +1157,14 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
 }
 `);
 
-mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
-    const language_show = storage.copy_code_block_language !== 0;
+mod.reg("copy-code-block", "代码块功能优化", "@/*", async () => {
+    const language_show = (await storage.copy_code_block_language !== 0);
     const func_code = () => {
         const $cb = $("pre:has(> code):not([exlg-copy-code-block=''])");
         if ($cb.length) log(`Scanning code block:`, $cb.length);
-        $cb.each((i, e, $e = $(e)) => {
+        $cb.each(async (i, e, $e = $(e)) => {
             $e.attr("exlg-copy-code-block", "");
-            const btn = $(`<div class="exlg-copy">复制</div>`).attr("style", ((storage.copy_code_button_rightfloat) ? ("float: right;") : ("")));
+            const btn = $(`<div class="exlg-copy">复制</div>`).attr("style", ((await storage.copy_code_button_rightfloat) ? ("float: right;") : ("")));
             const language_list = ["c", "cpp", "pascal", "python", "java", "javascript", "php", "latex"];
             let language = "";
             if (language_show) {
@@ -1193,7 +1197,7 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
             }));
             $e.before($(`<p></p>`));
             if (!$cb.children("code").hasClass("hljs")) $cb.children("code").addClass("hljs").css("background", "white");
-            const code_fonts_val = storage.code_fonts_val;
+            const code_fonts_val = await storage.code_fonts_val;
             if (code_fonts_val && code_fonts_val !== "") $cb.children("code").css("font-family", code_fonts_val);
         });
     };
@@ -1208,17 +1212,17 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
     }//以防万一
     if (window.location.href.indexOf("https://www.luogu.com.cn/record/") === 0) {
         $($(".entry")[1]).on("click", () => {
-            setTimeout(() => {
+            setTimeout(async () => {
                 if (language_show && (typeof ($(".lfe-h3").attr("exlg-language-show")) === "undefined")) {
                     const language = $($(".value.lfe-caption")[0]).text().toLowerCase();
                     log("Language:" + language);
                     $(".lfe-h3").text($(".lfe-h3").text() + " - " + ((language.substr(-3) === " o2") ? (language.slice(0, -3)) : (language))).attr("exlg-language-show", "");
                 }
                 const $cb = $("pre:has(> code)");
-                const code_fonts_val = storage.code_fonts_val;
+                const code_fonts_val = await storage.code_fonts_val;
                 if (code_fonts_val && code_fonts_val !== "") $cb.children("code").css("font-family", code_fonts_val);
                 $cb.children("code").addClass("hljs").css("background", "white");
-                $cb.children(".copy-btn").attr("style", ((storage.copy_code_button_rightfloat) ? ("float: right;") : ("")));
+                $cb.children(".copy-btn").attr("style", ((await storage.copy_code_button_rightfloat) ? ("float: right;") : ("")));
             }, 100);
         });
     }
@@ -1360,7 +1364,7 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
     });
 });
 
-mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*", () => {
+mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*", async () => {
     //"https://www.luogu.com.cn/user/setting#extension"
     if ($("#exlg-padding").length) return;
 
@@ -1569,7 +1573,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
         $(`<div><h4>设置代码块字体</h4></div>`)
             .append(
                 $(`<div data-v-a7f7c968="" data-v-61c90fba="" class="refined-input input-wrap input frame" data-v-22efe7ee=""></div>`).append(
-                    $(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~" id="code-fonts-input">`).val(storage.code_fonts_val || "")
+                    $(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~" id="code-fonts-input">`).val((await storage.code_fonts_val) ?? "")
                 )
             )
             .append(
@@ -1597,7 +1601,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
         $(`<div><h4>自定义css</h4></div>`).append(
             $(`<div class="am-form-group am-form"></div>`).append(
-                $(`<textarea rows="3" id="custom-css-input"` + (((storage.code_fonts_val || "") !== "") ? (`style="font-family: ` + (storage.code_fonts_val || "") + `"`) : (``)) + `></textarea>`).val(storage.user_css)
+                $(`<textarea rows="3" id="custom-css-input"` + ((((await storage.code_fonts_val) || "") !== "") ? (`style="font-family: ` + ((await storage.code_fonts_val) || "") + `"`) : (``)) + `></textarea>`).val((await storage.user_css))
             )
         )
             .append(
@@ -1824,7 +1828,7 @@ p.lfe-caption.exlg-caption {
 }
 `);
 
-mod.reg("discuss-save", "讨论保存", "@/*", () => {
+mod.reg("discuss-save", "讨论保存", "@/*", async () => {
     if (!/\/discuss\/show\/[1-9]\d*$/.test(location.pathname) || $("button[name='save-discuss']").length) {
         return;
     }
@@ -1855,11 +1859,11 @@ mod.reg("discuss-save", "讨论保存", "@/*", () => {
     });
     const $btn2 = $(`<a href="https://luogulo.gq/show.php?url=${location.href}"><button class="am-btn am-btn-success am-btn-sm" name="save-discuss" style="border-color: rgb(255, 193, 22); background-color: rgb(255, 193, 22);color: #fff;">查看备份</button></a>`);
     $($(".am-u-md-4.lg-right").children().children().get(1)).append($btn).append($("<span>&nbsp;</span>")).append($btn2);
-    if (storage.discuss_auto_save !== 0) save_func();
+    if (await storage.discuss_auto_save !== 0) save_func();
 });
 
-mod.reg("update-log", "更新日志显示", "@/*", () => {
-    if (storage.exlg_last_used_version !== GM_info.script.version) {
+mod.reg("update-log", "更新日志显示", "@/*", async () => {
+    if (await storage.exlg_last_used_version !== GM_info.script.version) {
         location.href = "https://www.luogu.com.cn/user/setting#update-log";
         storage.exlg_last_used_version = GM_info.script.version;
     }
