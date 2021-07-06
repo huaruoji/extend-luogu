@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        6.2.5
+// @version        6.2.6
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite OwO
 // @match          https://*.luogu.com.cn/*
@@ -22,6 +22,7 @@
 // @grant          GM_deleteValue
 // @grant          GM_listValues
 // @grant          GM_xmlhttpRequest
+// @grant          GM_addStyle
 // @grant          unsafeWindow
 // @connect        localhost
 // @connect        luogulo.gq
@@ -30,9 +31,12 @@
 
 // ==Utilities==
 
-function GM_addStyle(str) {
-    return $(`<style class="exlg-css">${str}</style>`).appendTo($("head"))[0];
-}
+const update_log = `
+## 6.2.6
+1. 修改更新日志
+## 6.2.5
+1. 提升钩子稳定性
+`;
 
 const unclosable_list = ["dash", "luogu-settings-extension", "keyboard-and-cli", "update-log", "@springboard", "@benben-data", "@version-data"];
 const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="dot-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-dot-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 56c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m0-48C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 168c-44.183 0-80 35.817-80 80s35.817 80 80 80 80-35.817 80-80-35.817-80-80-80z"></path></svg>`;
@@ -68,6 +72,11 @@ function addScript(s) {
     const t = document.createElement("script");
     t.innerHTML = s;
     document.body.append(t);
+}
+
+function render(u) {
+    if (u) return markdown.render(u);
+    return "";
 }
 
 Date.prototype.format = function (f, UTC) {
@@ -1401,73 +1410,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
             $(".items").remove();
             const $lg_form_layout = $(".padding-default").html("");
             $(".lfe-h1").text(`extend-luogu Ver. ${GM_info.script.version} 更新日志`);
-            ((lf) => {
-                lf.forEach((_) => {
-                    if (_.type === "title") {
-                        $(`<span class="exlgset-span">${_.value}</span>`).appendTo($lg_form_layout);
-                    }
-                    if (_.type === "real-title") {
-                        $(`<h2>${_.value}</h2>`).appendTo($lg_form_layout);
-                    }
-                    if (_.type === "paragraph") {
-                        const para = $("<p class=\"lfe-caption exlg-caption\"></p>").appendTo($lg_form_layout);
-                        if (typeof (_.value) === "string") _.value = [_.value];
-                        _.value.forEach((e) => {
-                            para.append(e);
-                            if (e.slice(-1) === "\n") para.append($("<br>"));
-                        });
-                    }
-                    if (_.type === "html") {
-                        $(_.value).appendTo($lg_form_layout);
-                    }
-                });
-            })([
-                {
-                    type: "real-title",
-                    value: "新特性",
-                },
-                {
-                    type: "paragraph",
-                    value: "没有加, 这玩意算半个",
-                },
-                {
-                    type: "real-title",
-                    value: "bug修复",
-                },
-                {
-                    type: "title",
-                    value: "各种东西的二次加载",
-                },
-                {
-                    type: "title",
-                    value: "钩子稳定性",
-                },
-                {
-                    type: "paragraph",
-                    value: "（note二次加载还没动）我就不信还有",
-                },
-                {
-                    type: "real-title",
-                    value: "其他",
-                },
-                {
-                    type: "html",
-                    value: "<p class=\"lfe-caption exlg-caption\">加回了一些<strong>被回滚掉的特性</strong></p>",
-                },
-                {
-                    type: "paragraph",
-
-                    value: [
-                        "比如说跳转luogulo",
-                        "之类的啊\n",
-                        "自己看好了",
-                    ]
-                },
-                {
-                    type: "html",
-                    value: `<button class="lfe-form-sz-middle exlg-btn" onclick="window.location.href='https://luogu.com.cn'" style="background-color: #66ccff;border-color: #66ccff;">回到首页</button>`
-                }
-            ]);
+            $lg_form_layout.append(render(update_log));
             return;
         }
 
@@ -2026,11 +1969,6 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
         for (const t of u.tag)
             tagp += `<a href="/?notepad&tag=${t}">${t}</a>&nbsp;&nbsp;`;
         return tagp;
-    }
-
-    function render(u) {
-        if (u) return markdown.render(u);
-        return "";
     }
 
     async function inject() {
