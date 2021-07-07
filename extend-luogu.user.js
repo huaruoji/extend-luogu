@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Extend Luogu+
 // @namespace      http://tampermonkey.net/
-// @version        6.2.6
+// @version        6.2.7
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite OwO
 // @match          https://*.luogu.com.cn/*
@@ -121,7 +121,7 @@ function getContent(url, contentOnly = 1) {
     });
 }
 
-const lg_alert = (msg) => uindow.show_alert("exlg 提醒您", msg);
+const lgAlert = (msg) => uindow.show_alert("exlg 提醒您", msg);
 
 const storage = new Proxy({}, {
     async get(tar, key) {
@@ -144,6 +144,7 @@ const storage = new Proxy({}, {
         GM_listValues().forEach((_) => {
             if (typeof (_) !== "string") return;
             GM_deleteValue(_);
+            forage.setItem(_, null);
         });
     }
 });
@@ -1291,7 +1292,7 @@ mod.regBoard("search-user", "查找用户名", async ($board) => {
         const res = await getContent(`/api/user/search?keyword=${$("[name=username]").val()}`, 0);
         if (!res.users[0]) {
             $search_user.prop("disabled", false);
-            lg_alert("无法找到指定用户");
+            lgAlert("无法找到指定用户");
         }
         else location.href = "/user/" + res.users[0].uid;
     }
