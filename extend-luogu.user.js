@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           extend-luogu
+// @name           Extend Luogu+
 // @namespace      http://tampermonkey.net/
 // @version        6.2.6
 // @description    Make Luogu more powerful.
