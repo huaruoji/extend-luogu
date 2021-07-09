@@ -132,7 +132,7 @@ const storage = new Proxy({}, {
         }
         return t;
     },
-    async set(tar, key, val) {
+    set(tar, key, val) {
         forage.setItem(key, val);
         return GM_setValue(key, val);
     },
@@ -254,9 +254,9 @@ const mod = {
                 p.startsWith("@tcs1/") && location.host === "service-ig5px5gh-1305163805.sh.apigw.tencentcs.com" ||
                 p.startsWith("@tcs2/") && location.host === "service-psscsax9-1305163805.sh.apigw.tencentcs.com"
             ) && (
-                p.endsWith("*") && pn.startsWith(pr.slice(0, -1)) ||
+                    p.endsWith("*") && pn.startsWith(pr.slice(0, -1)) ||
                     pn === pr
-            )))
+                )))
 
                 if (await exe(m) === false) return;
         }
@@ -488,19 +488,19 @@ mod.regUserTab("user-intro-ins", "主页指令", "main", null, async () => {
         arg = arg.split(/(?<!!)%/g).map((s) => s.replace(/!%/g, "%"));
         const $blog = $($(".user-action").children()[0]);
         switch (ins) {
-        case "html":
-            $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`));
-            break;
-        case "frame":
-            $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
+            case "html":
+                $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`));
+                break;
+            case "frame":
+                $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
                     + `style="width: ${arg[1]}; height: ${arg[2]};"></iframe>`
-            ));
-            break;
-        case "blog":
-            if ($blog.text().trim() !== "个人博客") return;
-            $blog.attr("href", arg);
-            $e.remove();
-            break;
+                ));
+                break;
+            case "blog":
+                if ($blog.text().trim() !== "个人博客") return;
+                $blog.attr("href", arg);
+                $e.remove();
+                break;
         }
     });
 }, `
@@ -1012,20 +1012,20 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", async () => {
             /* 当 <action> 为 "enable|disable|toggle"，对名为 <name> 的模块执行对应操作：启用|禁用|切换。当 <action> 为 "save"，保存修改。 */
             const i = mod.find_i(name);
             switch (action) {
-            case "enable":
-            case "disable":
-            case "toggle":
-                if (i < 0) return cli_error`mod: unknown mod "${name}"`;
-                const $mod = $($("#exlg-dash-mods").children()[i]).children();
-                $mod.prop("checked", {
-                    enable: () => true, disable: () => false, toggle: (now) => !now
-                }[action]($mod.prop("checked"))).trigger("change");
-                break;
-            case "save":
-                storage.mod_map = mod.map;
-                break;
-            default:
-                return cli_error`mod: unknown action "${action}"`;
+                case "enable":
+                case "disable":
+                case "toggle":
+                    if (i < 0) return cli_error`mod: unknown mod "${name}"`;
+                    const $mod = $($("#exlg-dash-mods").children()[i]).children();
+                    $mod.prop("checked", {
+                        enable: () => true, disable: () => false, toggle: (now) => !now
+                    }[action]($mod.prop("checked"))).trigger("change");
+                    break;
+                case "save":
+                    storage.mod_map = mod.map;
+                    break;
+                default:
+                    return cli_error`mod: unknown action "${action}"`;
             }
         },
         dash: (action/*!string*/) => {
@@ -1093,27 +1093,27 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", async () => {
 
     $cli_input.on("keydown", (e) => {
         switch (e.key) {
-        case "Enter":
-            if (cli_is_log) return cli_clean();
-            const cmd = $cli_input.val();
-            cli_history.push(cmd);
-            cli_history_index = cli_history.length;
-            parse(cmd);
-            if (!cli_is_log) return cli_clean();
-            break;
-        case "/":
-            if (cli_is_log) cli_clean();
-            break;
-        case "Escape":
-            $cli.hide();
-            break;
-        case "ArrowUp":
-        case "ArrowDown":
-            const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[e.key];
-            if (i < 0 || i >= cli_history.length) return;
-            cli_history_index = i;
-            $cli_input.val(cli_history[i]);
-            break;
+            case "Enter":
+                if (cli_is_log) return cli_clean();
+                const cmd = $cli_input.val();
+                cli_history.push(cmd);
+                cli_history_index = cli_history.length;
+                parse(cmd);
+                if (!cli_is_log) return cli_clean();
+                break;
+            case "/":
+                if (cli_is_log) cli_clean();
+                break;
+            case "Escape":
+                $cli.hide();
+                break;
+            case "ArrowUp":
+            case "ArrowDown":
+                const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[e.key];
+                if (i < 0 || i >= cli_history.length) return;
+                cli_history_index = i;
+                $cli_input.val(cli_history[i]);
+                break;
         }
     });
 
@@ -1906,7 +1906,7 @@ mod.reg("dbc-jump", "双击题号跳题", "@/*", async () => {
 
 mod.reg("notepad", "洛谷笔记", "@/*", async () => {
     const DBName = "Luogu Notepad",
-        DBVer = 2;
+        DBVer = 3;
 
     // save config
     const saveConfig = (config) => {
@@ -1947,19 +1947,44 @@ mod.reg("notepad", "洛谷笔记", "@/*", async () => {
         });
     };
 
-    function openDB(name, ver) {
+    // function _openDB(name, ver) {
+    //     return new Promise((resolve, reject) => {
+    //         const req = window.indexedDB.open(name, ver);
+    //         log(name, ver);
+    //         req.onsuccess = (event) => {
+    //             resolve(event.target.result);
+    //         };
+    //         req.onerror = (event) => {
+    //             error(`Open IndexedDB Error!`);
+    //         };
+    //     });
+    // }
+
+    async function openDB(name, ver) {
+        // const [ndb] = (await window.indexedDB.databases()).filter((u) => u.name === "Luogu Notepad");
+        // let o;
+        // if (ndb && ndb.version !== ver) {
+        //     log(`Notepad database need updating`);
+        //     const kdb = await _openDB(name, ndb.version);
+        //     console.log(kdb);
+        //     log(`Saving data`);
+        //     o = JSON.stringify({ notes: await queryAll(null, kdb), pnotes: await queryAllPNote(null, kdb) });
+        //     await kdb.close();
+        //     console.log(o);
+        // }
         return new Promise((resolve, reject) => {
             const req = window.indexedDB.open(name, ver);
             req.onsuccess = (event) => {
                 resolve(event.target.result);
             };
             req.onerror = (event) => {
-                console.error("Open IndexedDB Error!");
+                error("Open IndexedDB Error!");
                 window.alert(
                     "洛谷Notepad出错, 请到控制台-应用程序-IndexedDB里删除数据库`Luogu Notepad`后重试, 并在第一次重试时不要立即关闭标签页"
                 );
             };
             req.onupgradeneeded = (event) => {
+                log(`Updating notepad database...`);
                 const db = event.target.result;
                 if (!db.objectStoreNames.contains("notes")) {
                     const notes = db.createObjectStore("notes", { keyPath: "pid" });
@@ -1968,6 +1993,11 @@ mod.reg("notepad", "洛谷笔记", "@/*", async () => {
                 if (!db.objectStoreNames.contains("pnotes")) {
                     db.createObjectStore("pnotes", { keyPath: "tag" });
                 }
+                if (!db.objectStoreNames.contains("qnotes")) {
+                    db.createObjectStore("qnotes");
+                }
+                // if (o)
+                //     importData(o, db);
             };
         });
     }
@@ -1980,11 +2010,74 @@ mod.reg("notepad", "洛谷笔记", "@/*", async () => {
         return tagp;
     }
 
+    const db = await openDB(DBName, DBVer);
+
+    function queryTag(tag) {
+        return new Promise((resolve, reject) => {
+            const req = db
+                .transaction("notes", "readonly")
+                .objectStore("notes")
+                .index("tag")
+                .getAll(tag);
+            req.onsuccess = (event) => {
+                resolve(req.result);
+            };
+        });
+    }
+    function queryAll(cond = null, ndb = null) {
+        if (!ndb) ndb = db;
+        return new Promise((resolve, reject) => {
+            const req = ndb
+                .transaction("notes", "readonly")
+                .objectStore("notes")
+                .getAll(cond);
+            req.onsuccess = (event) => {
+                resolve(req.result);
+            };
+        });
+    }
+    function queryPNote(tag) {
+        return new Promise((resolve, reject) => {
+            const req = db
+                .transaction("pnotes", "readonly")
+                .objectStore("pnotes")
+                .get(tag);
+            req.onsuccess = (event) => {
+                resolve(req.result);
+            };
+        });
+    }
+    function queryAllPNote(cond = null, ndb = null) {
+        if (!ndb) ndb = db;
+        return new Promise((resolve, reject) => {
+            const req = ndb
+                .transaction("pnotes", "readonly")
+                .objectStore("pnotes")
+                .getAll(cond);
+            req.onsuccess = (event) => {
+                resolve(req.result);
+            };
+        });
+    }
+
+    async function importData(o, dbn = null) {
+        if (!dbn) dbn = db;
+        if (!o) return uindow._feInstance.$swalToastError("导入失败");
+        if (o.notes)
+            for (const u of o.notes)
+                dbn.transaction("notes", "readwrite").objectStore("notes").put(u);
+        if (o.pnotes)
+            for (const u of o.pnotes)
+                dbn.transaction("pnotes", "readwrite").objectStore("pnotes").put(u);
+        uindow._feInstance
+            .$swalToastSuccess("导入成功")
+            .then(() => location.reload());
+    }
+
     async function inject() {
         if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)\d+[A-Z]*$/.test(location.pathname)) {
             return;
         }
-        const db = await openDB(DBName, DBVer);
 
         let code;
 
@@ -2122,54 +2215,6 @@ mod.reg("notepad", "洛谷笔记", "@/*", async () => {
         </div>
     </div>`);
 
-        const db = await openDB(DBName, DBVer);
-
-        function queryTag(tag) {
-            return new Promise((resolve, reject) => {
-                const req = db
-                    .transaction("notes", "readonly")
-                    .objectStore("notes")
-                    .index("tag")
-                    .getAll(tag);
-                req.onsuccess = (event) => {
-                    resolve(req.result);
-                };
-            });
-        }
-        function queryAll(cond = null) {
-            return new Promise((resolve, reject) => {
-                const req = db
-                    .transaction("notes", "readonly")
-                    .objectStore("notes")
-                    .getAll(cond);
-                req.onsuccess = (event) => {
-                    resolve(req.result);
-                };
-            });
-        }
-        function queryPNote(tag) {
-            return new Promise((resolve, reject) => {
-                const req = db
-                    .transaction("pnotes", "readonly")
-                    .objectStore("pnotes")
-                    .get(tag);
-                req.onsuccess = (event) => {
-                    resolve(req.result);
-                };
-            });
-        }
-        function queryAllPNote(cond = null) {
-            return new Promise((resolve, reject) => {
-                const req = db
-                    .transaction("pnotes", "readonly")
-                    .objectStore("pnotes")
-                    .getAll(cond);
-                req.onsuccess = (event) => {
-                    resolve(req.result);
-                };
-            });
-        }
-
         const url = new URL(window.location.href);
         if (!url.searchParams.has("notepad")) return;
         function renderProblem(u) {
@@ -2287,7 +2332,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", async () => {
 
             p += "<br /><hr /><br />";
 
-            p += `<div style="display:flex;margin-top: 6px;margin-bottom: 6px;"><a href="#" id="notepad-dump"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: border-color: rgb(82, 196, 26);background-color: rgb(82, 196, 26)">导出</button></a>&nbsp;<input type="file" id="notepad-import"/><a href="#" id="notepad-import-submit">&nbsp;<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">导入</button></a></div>`;
+            p += `<a id="notepad-dump">导出</a><div style="display:flex;margin-top: 6px;margin-bottom: 6px;">&nbsp;<input type="file" id="notepad-import"/><a href="#" id="notepad-import-submit">&nbsp;<button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(231, 76, 60);background-color: rgb(231, 76, 60)">导入</button></a></div>`;
             p += `<div style="display:flex;margin-top: 6px;margin-bottom: 6px;"><a href="#" id="notepad-dump-cloud"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(255, 193, 22);background-color: rgb(255, 193, 22)">保存到云剪贴板</button></a>&nbsp;<a href="#" id="notepad-import-cloud"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219);background-color: rgb(52, 152, 219)">从云剪贴板读取</button></a></div>`;
             p += `<div style="margin-top: 6px;margin-bottom: 6px;"><a href="https://www.luogu.com.cn/paste/xdrs7184"><button type="button" class="lfe-form-sz-middle exlg-btn" style="font-family: Microsoft YaHei;border-color: rgb(200, 200, 200);background-color: rgb(200, 200, 200)">文档在此</button></a></div>`;
 
@@ -2301,7 +2346,8 @@ mod.reg("notepad", "洛谷笔记", "@/*", async () => {
             const o = JSON.stringify({ notes: res, pnotes: await queryAllPNote() });
 
             d.download = "LuoguNotepad-dump.json";
-            d.hrefObject = new Blob([o]);
+            d.hrefObject = new Blob(["qwq"]);
+            // d.hrefObject = new Blob([o]);
 
             $("#notepad-import-submit").click((event) => {
                 const files = document.getElementById("notepad-import").files;
@@ -2311,19 +2357,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", async () => {
                     if (/json+/.test(file.type)) {
                         reader.onload = function () {
                             const o = JSON.parse(this.result);
-                            if (o.notes)
-                                for (const u of o.notes)
-                                    db.transaction("notes", "readwrite")
-                                        .objectStore("notes")
-                                        .put(u);
-                            if (o.pnotes)
-                                for (const u of o.pnotes)
-                                    db.transaction("pnotes", "readwrite")
-                                        .objectStore("pnotes")
-                                        .put(u);
-                            uindow._feInstance
-                                .$swalToastSuccess("导入成功")
-                                .then(() => location.reload());
+                            importData(o);
                         };
                         reader.readAsText(file);
                     }
@@ -2335,16 +2369,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", async () => {
             });
             $("#notepad-import-cloud").click(async (event) => {
                 const o = await loadConfig();
-                if (!o) return uindow._feInstance.$swalToastError("导入失败");
-                if (o.notes)
-                    for (const u of o.notes)
-                        db.transaction("notes", "readwrite").objectStore("notes").put(u);
-                if (o.pnotes)
-                    for (const u of o.pnotes)
-                        db.transaction("pnotes", "readwrite").objectStore("pnotes").put(u);
-                uindow._feInstance
-                    .$swalToastSuccess("导入成功")
-                    .then(() => location.reload());
+                importData(o);
             });
 
             WordCloud(document.getElementById("notepad-wordcloud"), {
@@ -2388,7 +2413,6 @@ mod.reg("notepad", "洛谷笔记", "@/*", async () => {
 
         // uindow.history.pushState = uindow.history.replaceState = null
 
-        const db = await openDB(DBName, DBVer);
         const url = new URL(window.location.href);
         const pid = url.searchParams.get("pid");
         $("a.status-link").click(async (u) => {
