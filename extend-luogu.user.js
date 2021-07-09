@@ -14,7 +14,7 @@
 // @require        https://cdn.bootcdn.net/ajax/libs/js-xss/0.3.3/xss.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/marked/2.0.1/marked.min.js
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@3a564ba0d30d88848ec486b2c36553cce87f0c7f/mp.js
-// @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@c58f7ee972e295e0e23b5e38d51ab90610e9573d/markdownlg.min.js
+// @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@9822045f011f440432bd0dc301313846a9c1bbb0/markdown.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.js
 // @require        https://cdn.bootcdn.net/ajax/libs/localforage/1.9.0/localforage.min.js
 // @updateURL      https://github.com/optimize-2/extend-luogu
@@ -261,9 +261,9 @@ const mod = {
                 p.startsWith("@tcs1/") && location.host === "service-ig5px5gh-1305163805.sh.apigw.tencentcs.com" ||
                 p.startsWith("@tcs2/") && location.host === "service-psscsax9-1305163805.sh.apigw.tencentcs.com"
             ) && (
-                p.endsWith("*") && pn.startsWith(pr.slice(0, -1)) ||
+                    p.endsWith("*") && pn.startsWith(pr.slice(0, -1)) ||
                     pn === pr
-            )))
+                )))
 
                 if (await exe(m) === false) return;
         }
@@ -495,19 +495,19 @@ mod.regUserTab("user-intro-ins", "主页指令", "main", null, async () => {
         arg = arg.split(/(?<!!)%/g).map((s) => s.replace(/!%/g, "%"));
         const $blog = $($(".user-action").children()[0]);
         switch (ins) {
-        case "html":
-            $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`));
-            break;
-        case "frame":
-            $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
+            case "html":
+                $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`));
+                break;
+            case "frame":
+                $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
                     + `style="width: ${arg[1]}; height: ${arg[2]};"></iframe>`
-            ));
-            break;
-        case "blog":
-            if ($blog.text().trim() !== "个人博客") return;
-            $blog.attr("href", arg);
-            $e.remove();
-            break;
+                ));
+                break;
+            case "blog":
+                if ($blog.text().trim() !== "个人博客") return;
+                $blog.attr("href", arg);
+                $e.remove();
+                break;
         }
     });
 }, `
@@ -1104,20 +1104,20 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", async () => {
             /* 当 <action> 为 "enable|disable|toggle"，对名为 <name> 的模块执行对应操作：启用|禁用|切换。当 <action> 为 "save"，保存修改。 */
             const i = mod.find_i(name);
             switch (action) {
-            case "enable":
-            case "disable":
-            case "toggle":
-                if (i < 0) return cli_error`mod: unknown mod "${name}"`;
-                const $mod = $($("#exlg-dash-mods").children()[i]).children();
-                $mod.prop("checked", {
-                    enable: () => true, disable: () => false, toggle: (now) => !now
-                }[action]($mod.prop("checked"))).trigger("change");
-                break;
-            case "save":
-                storage.mod_map = mod.map;
-                break;
-            default:
-                return cli_error`mod: unknown action "${action}"`;
+                case "enable":
+                case "disable":
+                case "toggle":
+                    if (i < 0) return cli_error`mod: unknown mod "${name}"`;
+                    const $mod = $($("#exlg-dash-mods").children()[i]).children();
+                    $mod.prop("checked", {
+                        enable: () => true, disable: () => false, toggle: (now) => !now
+                    }[action]($mod.prop("checked"))).trigger("change");
+                    break;
+                case "save":
+                    storage.mod_map = mod.map;
+                    break;
+                default:
+                    return cli_error`mod: unknown action "${action}"`;
             }
         },
         dash: (action/*!string*/) => {
@@ -1185,27 +1185,27 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", async () => {
 
     $cli_input.on("keydown", (e) => {
         switch (e.key) {
-        case "Enter":
-            if (cli_is_log) return cli_clean();
-            const cmd = $cli_input.val();
-            cli_history.push(cmd);
-            cli_history_index = cli_history.length;
-            parse(cmd);
-            if (!cli_is_log) return cli_clean();
-            break;
-        case "/":
-            if (cli_is_log) cli_clean();
-            break;
-        case "Escape":
-            $cli.hide();
-            break;
-        case "ArrowUp":
-        case "ArrowDown":
-            const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[e.key];
-            if (i < 0 || i >= cli_history.length) return;
-            cli_history_index = i;
-            $cli_input.val(cli_history[i]);
-            break;
+            case "Enter":
+                if (cli_is_log) return cli_clean();
+                const cmd = $cli_input.val();
+                cli_history.push(cmd);
+                cli_history_index = cli_history.length;
+                parse(cmd);
+                if (!cli_is_log) return cli_clean();
+                break;
+            case "/":
+                if (cli_is_log) cli_clean();
+                break;
+            case "Escape":
+                $cli.hide();
+                break;
+            case "ArrowUp":
+            case "ArrowDown":
+                const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[e.key];
+                if (i < 0 || i >= cli_history.length) return;
+                cli_history_index = i;
+                $cli_input.val(cli_history[i]);
+                break;
         }
     });
 
@@ -1949,6 +1949,7 @@ mod.reg("dbc-jump", "双击题号跳题", "@/*", async () => {
 });
 
 mod.reg("notepad", "洛谷笔记", "@/*", async () => {
+    console.log("qwq");
     const DBName = "Luogu Notepad",
         DBVer = 4;
 
@@ -2468,7 +2469,6 @@ mod.reg("notepad", "洛谷笔记", "@/*", async () => {
             return false;
         });
     }
-    // unsafeWindow.markdown = markdown;
     // unsafeWindow.MarkdownPalettes = MarkdownPalettes;
     // unsafeWindow.WordCloud = WordCloud;
     // unsafeWindow.hljs = hljs;
