@@ -53,7 +53,7 @@ const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusa
 const uindow = unsafeWindow;
 const $ = jQuery;
 const $$ = jQuery;
-const markdown = window.markdown;
+const markdown = window.md;
 const MarkdownPalettes = window.MarkdownPalettes;
 const WordCloud = window.WordCloud;
 const mdp = uindow.markdownPalettes;
