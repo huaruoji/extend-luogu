@@ -1,31 +1,26 @@
 {
-	"name": "extend-luogu",
-	"version": "2.3.0",
-	"description": "Make luogu more powerful.",
-	"main": "extend-luogu.user.js",
-	"scripts": {
-		"lint": "./node_modules/.bin/eslint extend-luogu.user.js --fix"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/optimize-2/extend-luogu.git"
-	},
-	"author": "Optimize_2 ForkKILLET",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/optimize-2/extend-luogu/issues"
-	},
-	"homepage": "https://github.com/optimize-2/extend-luogu#readme",
-	"dependencies": {
-		"@babel/cli": "^7.14.5",
-		"@babel/core": "^7.14.6",
-		"@babel/preset-env": "^7.14.7",
-		"@babel/preset-react": "^7.14.5",
-		"browserify": "^17.0.0",
-		"eslint": "^7.29.0",
-		"eslint-config-standard": "^16.0.2",
-		"eslint-plugin-import": "^2.22.1",
-		"eslint-plugin-node": "^11.1.0",
-		"eslint-plugin-promise": "^4.3.1"
-	}
+  "name": "extend-luogu",
+  "version": "2.3.0",
+  "description": "Make luogu more powerful.",
+  "main": "extend-luogu.user.js",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint extend-luogu.user.js --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/optimize-2/extend-luogu.git"
+  },
+  "author": "Optimize_2 ForkKILLET",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/optimize-2/extend-luogu/issues"
+  },
+  "homepage": "https://github.com/optimize-2/extend-luogu#readme",
+  "dependencies": {
+    "eslint": "^7.29.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1"
+  }
 }
