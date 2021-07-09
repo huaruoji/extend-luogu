@@ -842,20 +842,21 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", async ($board) => {
     const HREF_NEXT = async () => {
         let difs = [];
         iLoveMinecraft.forEach((i) => {
-            if (difficulty_select[i] !== 0) {
+            if (difficulty_select[i]) {
                 if (i === 7) {
                     difs.push(0);
                 }
                 else difs.push(i + 1);
             }
         });
+        let srcs = [];
+        iLoveTouhou.forEach((i) => {
+            if (source_select[i]) srcs.push(i);
+        });
+		//log("exrand", srcs, difs);
         if (difs.length === 0) {
             difs = [0, 1, 2, 3, 4, 5, 6, 7];
         }
-        let srcs = [];
-        iLoveTouhou.forEach((i) => {
-            if (source_select[i] !== 0) srcs.push(i);
-        });
         if (srcs.length === 0) {
             srcs = [0];
         }
