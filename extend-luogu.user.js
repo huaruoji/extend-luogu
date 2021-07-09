@@ -14,7 +14,7 @@
 // @require        https://cdn.bootcdn.net/ajax/libs/js-xss/0.3.3/xss.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/marked/2.0.1/marked.min.js
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@3a564ba0d30d88848ec486b2c36553cce87f0c7f/mp.js
-// @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@e8d2f7699466341bfd85b0a2182d2747d7cab728/md.min.js
+// @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@c58f7ee972e295e0e23b5e38d51ab90610e9573d/markdownlg.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.js
 // @require        https://cdn.bootcdn.net/ajax/libs/localforage/1.9.0/localforage.min.js
 // @updateURL      https://github.com/optimize-2/extend-luogu
@@ -33,6 +33,8 @@
 // ==Utilities==
 
 const update_log = `
+## 6.3.1
+1. 更改markdown渲染
 ## 6.3.0
 1. 改进随机ex
 2. 精简设置页面代码
