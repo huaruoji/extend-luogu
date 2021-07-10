@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Extend Luogu+
 // @namespace      http://tampermonkey.net/
-// @version        6.3.0
+// @version        6.3.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite OwO
 // @match          https://*.luogu.com.cn/*
@@ -699,20 +699,23 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", async ($board) => {
     $("[name='gotorandom']").text("随机");
     const $start_rand = $(`<button class="am-btn am-btn-success am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`).appendTo($("[name='gotorandom']").parent());
     //$(".lg-index-stat>h2").after($(`<div><h2>问题跳转</h2><div id="exlg-dash-0" class="exlg-rand-settings">...</div></div>`)).remove()
-    $(".lg-index-stat>h2").after($(`<h2>问题跳转 <div id="exlg-dash-0" class="exlg-rand-settings">ex设置</div></h2>`).mouseenter(() => {
-        mouse_on_dash = true;
-        $("#exlg-dash-0-window").show();
-    }).mouseleave(() => {
-        mouse_on_dash = false;
-        if (!mouse_on_board) {
-            setTimeout(() => {
-                if (!mouse_on_board) $("#exlg-dash-0-window").hide();
-                storage.mod_rand_difficulty = difficulty_select;
-                storage.mod_rand_source = source_select;
-                log(storage.mod_rand_difficulty, storage.mod_rand_source);
-            }, 200);
-        }
-    })
+    $(".lg-index-stat>h2").after(
+        $(`<h2>问题跳转 <div id="exlg-dash-0" class="exlg-rand-settings">ex设置</div></h2>`)
+            .mouseenter(() => {
+                mouse_on_dash = true;
+                $("#exlg-dash-0-window").show();
+            })
+            .mouseleave(() => {
+                mouse_on_dash = false;
+                if (!mouse_on_board) {
+                    setTimeout(() => {
+                        if (!mouse_on_board) $("#exlg-dash-0-window").hide();
+                        storage.mod_rand_difficulty = difficulty_select;
+                        storage.mod_rand_source = source_select;
+                        log(storage.mod_rand_difficulty, storage.mod_rand_source);
+                    }, 200);
+                }
+            })
 
     ).remove();
     $(`<span id="exlg-dash-0-window" class="exlg-window" style="display: block;"><p></p><ul id="exlg-rand-diffs">
@@ -853,7 +856,7 @@ mod.regBoard("rand-problem-ex", "随机跳题ex", async ($board) => {
         iLoveTouhou.forEach((i) => {
             if (source_select[i]) srcs.push(i);
         });
-		//log("exrand", srcs, difs);
+        //log("exrand", srcs, difs);
         if (difs.length === 0) {
             difs = [0, 1, 2, 3, 4, 5, 6, 7];
         }
