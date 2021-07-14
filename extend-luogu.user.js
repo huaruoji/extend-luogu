@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Extend Luogu+
 // @namespace      http://tampermonkey.net/
-// @version        6.4.1
+// @version        6.4.2
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite OwO
 // @match          https://*.luogu.com.cn/*
@@ -66,7 +66,7 @@ const error = (...s) => {
 };
 
 const forage = window.localforage;
-forage.config({ name: "Extend Luogu Configs" });
+forage.config({ name: "Extend Luogu Config" });
 
 const xss = new filterXSS.FilterXSS({
     onTagAttr: (_, k, v, __) => {
@@ -1973,6 +1973,7 @@ loader.reg("@update-log", "更新日志显示", (conf) => {
     conf.plugin(async () => {
         if (await storage.exlg_last_used_version !== GM_info.script.version) {
             window.open("https://www.luogu.com.cn/user/setting#update-log");
+            delete storage.mod_map;
             storage.exlg_last_used_version = GM_info.script.version;
         }
         else {
