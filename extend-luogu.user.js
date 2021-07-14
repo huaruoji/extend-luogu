@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Extend Luogu+
 // @namespace      http://tampermonkey.net/
-// @version        6.4.0
+// @version        6.4.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite OwO
 // @match          https://*.luogu.com.cn/*
@@ -508,19 +508,19 @@ loader.reg("user-intro-ins", "主页指令", (conf) => {
             arg = arg.split(/(?<!!)%/g).map((s) => s.replace(/!%/g, "%"));
             const $blog = $($(".user-action").children()[0]);
             switch (ins) {
-            case "html":
-                $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`));
-                break;
-            case "frame":
-                $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
+                case "html":
+                    $e.replaceWith($(`<p>${xss.process(arg[0])}</p>`));
+                    break;
+                case "frame":
+                    $e.replaceWith($(`<iframe src="https://www.bilibili.com/robots.txt?url=${encodeURI(arg[0])}"`
                         + `style="width: ${arg[1]}; height: ${arg[2]};"></iframe>`
-                ));
-                break;
-            case "blog":
-                if ($blog.text().trim() !== "个人博客") return;
-                $blog.attr("href", arg);
-                $e.remove();
-                break;
+                    ));
+                    break;
+                case "blog":
+                    if ($blog.text().trim() !== "个人博客") return;
+                    $blog.attr("href", arg);
+                    $e.remove();
+                    break;
             }
         });
     });
@@ -1139,19 +1139,19 @@ loader.reg("keyboard-and-cli", "键盘操作与命令行", (conf) => {
                 /* for <action> "enable|disable|toggle", opearte the mod named <name>. for <action> "save", save modification. */
                 /* 当 <action> 为 "enable|disable|toggle"，对名为 <name> 的模块执行对应操作：启用|禁用|切换。当 <action> 为 "save"，保存修改。 */
                 switch (action) {
-                case "enable":
-                case "disable":
-                case "toggle":
-                    if (loader.switch[name] === undefined) return cli_error`mod: unknown mod "${name}"`;
-                    let now = loader.switch[name];
-                    now = { enable: true, disale: false, toggle: !now }[action];
-                    loader.switch[name] = now;
-                    break;
-                case "save":
-                    storage.mod_map = loader.switch;
-                    break;
-                default:
-                    return cli_error`mod: unknown action "${action}"`;
+                    case "enable":
+                    case "disable":
+                    case "toggle":
+                        if (loader.switch[name] === undefined) return cli_error`mod: unknown mod "${name}"`;
+                        let now = loader.switch[name];
+                        now = { enable: true, disale: false, toggle: !now }[action];
+                        loader.switch[name] = now;
+                        break;
+                    case "save":
+                        storage.mod_map = loader.switch;
+                        break;
+                    default:
+                        return cli_error`mod: unknown action "${action}"`;
                 }
             },
             dash: (action/*!string*/) => {
@@ -1219,27 +1219,27 @@ loader.reg("keyboard-and-cli", "键盘操作与命令行", (conf) => {
 
         $cli_input.on("keydown", (e) => {
             switch (e.key) {
-            case "Enter":
-                if (cli_is_log) return cli_clean();
-                const cmd = $cli_input.val();
-                cli_history.push(cmd);
-                cli_history_index = cli_history.length;
-                parse(cmd);
-                if (!cli_is_log) return cli_clean();
-                break;
-            case "/":
-                if (cli_is_log) cli_clean();
-                break;
-            case "Escape":
-                $cli.hide();
-                break;
-            case "ArrowUp":
-            case "ArrowDown":
-                const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[e.key];
-                if (i < 0 || i >= cli_history.length) return;
-                cli_history_index = i;
-                $cli_input.val(cli_history[i]);
-                break;
+                case "Enter":
+                    if (cli_is_log) return cli_clean();
+                    const cmd = $cli_input.val();
+                    cli_history.push(cmd);
+                    cli_history_index = cli_history.length;
+                    parse(cmd);
+                    if (!cli_is_log) return cli_clean();
+                    break;
+                case "/":
+                    if (cli_is_log) cli_clean();
+                    break;
+                case "Escape":
+                    $cli.hide();
+                    break;
+                case "ArrowUp":
+                case "ArrowDown":
+                    const i = cli_history_index + { ArrowUp: -1, ArrowDown: +1 }[e.key];
+                    if (i < 0 || i >= cli_history.length) return;
+                    cli_history_index = i;
+                    $cli_input.val(cli_history[i]);
+                    break;
             }
         });
 
