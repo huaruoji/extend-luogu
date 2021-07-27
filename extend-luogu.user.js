@@ -1120,6 +1120,13 @@ loader.reg("keyboard-and-cli", "键盘操作与命令行", (conf) => {
                 if (!tar) return cli_error`cdd: unknown forum "${forum}"`;
                 cmds.cd(`/discuss/lists?forumname=${forum}`);
             },
+			cp: (pid/*string*/) => {
+				/* jump to the question with question number <pid> */
+				/* 跳转到题目编号为 <pid> 的题目，如果编号前没有字母添加字母P*/
+				pid = pid.toUpperCase();
+				if(pid[0] >= '0' && pid[0] <= '9') pid = `P` + pid;
+				cmds.cd(`/problem/${pid}`);
+			},
             cc: (name/*char*/) => {
                 /* jump to [name], "h|p|c|r|d|i|m|n" stands for home|problem|record|discuss|I myself|message|notification. or jump home. */
                 /* 跳转至 [name]，"h|p|c|r|d|i|m|n" 代表：主页|题目|评测记录|讨论|个人中心|私信|通知。空则跳转主页。 */
